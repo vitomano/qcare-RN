@@ -5,7 +5,7 @@ import { LoginResponse, User, LoginData, RegisterData } from '../interfaces/inte
 import { authReducer, AuthState } from './authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-import { useEmail } from '../helpers/useEmail';
+import { useEmail } from '../hooks/useEmail';
 
 type AuthContextProps = {
     // token: string | null,

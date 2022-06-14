@@ -7,6 +7,7 @@ import { LoginScreen } from '../pages/LoginScreen';
 import { RegisterScreen } from '../pages/RegisterScreen';
 import { ProtectedScreen } from '../pages/ProtectedScreen';
 import { LoadingScreen } from '../pages/LoadingScreen';
+import { ReportsStack } from './ReportsStack';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +28,10 @@ export const StackNav = () => {
     >
       {
         status == 'loggedIn'
-          ? <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+        ? <>
+            <Stack.Screen name="LoginScreen" component={ReportsStack} />
+            <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+          </>
 
           :
           <>

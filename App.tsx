@@ -3,12 +3,13 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNav } from './src/navigation/StackNav';
 import { AuthProvider } from './src/context/AuthContext';
+import { ReportProvider } from './src/context/ReportContext';
 
 export default function App() {
   return (
     <NavigationContainer>
       <AppState>
-      <StackNav />
+        <StackNav />
       </AppState>
     </NavigationContainer>
   );
@@ -17,7 +18,9 @@ export default function App() {
 const AppState = ({ children }: any) => {
   return (
     <AuthProvider>
-      {children}
+      <ReportProvider>
+        {children}
+      </ReportProvider>
     </AuthProvider>
   );
 }

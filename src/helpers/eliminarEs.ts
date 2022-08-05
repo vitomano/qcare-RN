@@ -1,22 +1,22 @@
 
-export function tituloEs(texto) {
+export function tituloEs(texto:string):string {
     let text = (texto.charAt(0).toUpperCase() + texto.slice(1)).normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     return text.split('_').join(' ');
 }
 
-export function valorEs(texto) {
+export function valorEs(texto:string) {
     return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
 
 // Convierte Texto a formato name (ej: Hola Mundo => "hola_mundo")
-export function inputJson(txt) {
+export function inputJson(txt:string) {
     return txt.split(" ").join("_").toLowerCase()
 }
 
 
 // Convierte cualquier valor (string, number, boolean) a String y reemplaza vacio por "--"
-export function itemValor(valor) {
+export function itemValor(valor:any) {
 
     if (typeof valor === "boolean") {
 
@@ -29,7 +29,7 @@ export function itemValor(valor) {
     }
 }
 
-export function valorPallgrow(valor) {
+export function valorPallgrow(valor:any) {
 
     if (Array.isArray(valor)) {
 
@@ -56,4 +56,4 @@ export function valorPallgrow(valor) {
 
 
 // Solo numeros en input de tipo "number"
-export const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+// export const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();

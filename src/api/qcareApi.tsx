@@ -5,9 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const baseURL = 'http://192.168.1.84:4000/api'
 // const baseURL = 'http://localhost:4000/api'
 
-const qcareApi = axios.create({
-    baseURL: baseURL
-}) 
+const qcareApi = axios.create({ baseURL });
 
 qcareApi.interceptors.request.use(
 

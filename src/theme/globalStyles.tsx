@@ -1,24 +1,23 @@
 import { StyleSheet } from "react-native";
+import { bgColor } from "./variables";
 
 export const globalStyles = StyleSheet.create({
-    globalMargin:{
-        marginHorizontal: 20
+    globalMargin: {
+        padding: 20,
     },
-    mb2:{
-        marginBottom: 12
+    title:{
+        fontSize: 24,
+        fontWeight: 'bold',
     },
-
-
-    mt2:{
-        marginTop: 12
+    container: {
+        flex: 1,
+        backgroundColor: bgColor,
+        alignItems: 'center',
+        padding: 10,
     },
-    mt3:{
-        marginTop: 24
-    },
-    mt4:{
-        marginTop: 36
-    },
-    mt5:{
-        marginTop: 48
+    containerFlex: {
+        flex: 1,
+        backgroundColor: bgColor,
+        alignItems: 'center',
     },
 });

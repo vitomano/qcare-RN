@@ -1,5 +1,5 @@
 
-function objToArray(objeto) {
+function objToArray(objeto:Object) {
     const restArray = Object.entries(objeto)
     return restArray
 }

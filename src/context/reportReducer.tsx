@@ -5,7 +5,7 @@ import { Report } from '../data/pallet';
 
 export interface ReportState {
     mainData: MainInfo | null,
-    pallets: PreReport[] ,
+    pallets: Report[] ,
     fruit: string,
     reload: boolean
 }
@@ -13,7 +13,7 @@ export interface ReportState {
 type ActionType =
     | { type: 'ADD_MAINDATA', payload: {intake:MainInfo, fruit:string} }
     | { type: 'REMOVE_MAINDATA', payload: BatchInfo }
-    | { type: 'SET_PALLETS', payload: PreReport[] }
+    | { type: 'SET_PALLETS', payload: Report[] }
     | { type: 'ADD_NEWPALLET', payload: PreReport }
     | { type: 'CHANGE_VALUE', payload: { id: string, item: keyof PreReport, value: string | null} }
     | { type: 'REMOVE_PALLETS' }

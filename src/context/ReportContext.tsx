@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { createContext, useReducer } from 'react'
 import qcareApi from '../api/qcareApi';
 import { PreReport } from '../data/preReport';
 import { totalKilos, totalSamples, formatSplit } from '../helpers/formatSplit';
 import { fruitType } from '../helpers/fruitType';
-import { IntakeResponse } from '../interfaces/intakes.reports';
+import { AllReportsResponse, IntakeResponse, SingleReport } from '../interfaces/intakes.reports';
 import { reportReducer, ReportState } from './reportReducer';
 
 
@@ -16,6 +16,8 @@ const INITIAL_STATE = {
 }
 
 interface ReportContextProps {
+    allReports: SingleReport[],
+    getAllReports: () => void,
     intakes: ReportState,
     getMainData: (id: string) => void,
     setPallets: (obj: PreReport[]) => void,
@@ -28,41 +30,53 @@ interface ReportContextProps {
 
 export const ReportContext = createContext({} as ReportContextProps)
 
-export const ReportProvider = ({ children }:any) => {
+export const ReportProvider = ({ children }: any) => {
 
     const [intakes, dispatch] = useReducer(reportReducer, INITIAL_STATE)
+    const [allReports, setAllReports] = useState<SingleReport[]>([])
 
-    const getMainData = async(id:string) => {
+    const getAllReports = async () => {
+        try {
+            const { data } = await qcareApi.get<AllReportsResponse>(`/report?page=1`)
+            setAllReports(data.reports)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const getMainData = async (id: string) => {
         const { data } = await qcareApi.get<IntakeResponse>(`/report/new-report/${id}`)
         const intake = data.intakeReport.data
         const fruit = data.intakeReport.fruit
 
         dispatch({
             type: 'ADD_MAINDATA',
-            payload: {intake,fruit}
+            payload: { intake, fruit }
         })
     }
 
-    const setPallets = ( obj: PreReport[]) => {
-        dispatch({type: 'REMOVE_PALLETS'})
-        dispatch({type:'SET_PALLETS', payload: obj})
+    const setPallets = (obj: PreReport[]) => {
+        dispatch({ type: 'REMOVE_PALLETS' })
+        dispatch({ type: 'SET_PALLETS', payload: obj })
     }
 
-    const addNewPallets = ( obj: PreReport) => {
-        dispatch({type:'ADD_NEWPALLET', payload: obj})
+    const addNewPallets = (obj: PreReport) => {
+        dispatch({ type: 'ADD_NEWPALLET', payload: obj })
     }
 
-    const updateValue = (id:string, item: keyof PreReport, value: string | null) => {
-        dispatch({type: 'CHANGE_VALUE', payload:{id, item, value}})
+    const updateValue = (id: string, item: keyof PreReport, value: string | null) => {
+        dispatch({ type: 'CHANGE_VALUE', payload: { id, item, value } })
     }
 
-    const resetAll = () => dispatch({type: 'REMOVE_PALLETS'})
-    const reload = () => dispatch({type: 'RELOAD'})
-    
+    const resetAll = () => dispatch({ type: 'REMOVE_PALLETS' })
+    const reload = () => dispatch({ type: 'RELOAD' })
+
 
     return (
         <ReportContext.Provider value={{
-            intakes, 
+            allReports,
+            getAllReports,
+            intakes,
             getMainData,
             setPallets,
             updateValue,

@@ -5,9 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { LoginScreen } from '../pages/LoginScreen';
 import { RegisterScreen } from '../pages/RegisterScreen';
-import { ProtectedScreen } from '../pages/ProtectedScreen';
 import { LoadingScreen } from '../pages/LoadingScreen';
-import { ReportsStack } from './ReportsStack';
+import { TabStack } from './TabStack';
 
 const Stack = createStackNavigator();
 
@@ -28,15 +27,15 @@ export const StackNav = () => {
     >
       {
         status == 'loggedIn'
-        ? <>
-            <Stack.Screen name="LoginScreen" component={ReportsStack} />
-            <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+          ? <>
+            <Stack.Screen name="TabStack" component={ TabStack } />
+            {/* <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} /> */}
           </>
 
           :
           <>
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
+            <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{headerShown:false}}/>
           </>
 
       }

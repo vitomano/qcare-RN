@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import StyledButton from '../components/StyledButton';
 import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../hooks/useForm';
-import { globalStyles } from '../theme/globalStyles';
+import { marginStyles } from '../theme/marginStyles';
 
 interface Props extends StackScreenProps<any, any>{}
 
@@ -119,7 +119,7 @@ export const RegisterScreen = ({navigation}:Props) => {
         />
 
 
-        <View style={globalStyles.mt4}>
+        <View style={marginStyles.mt4}>
           <TouchableOpacity
             onPress={() => navigation.replace('LoginScreen')}
           >

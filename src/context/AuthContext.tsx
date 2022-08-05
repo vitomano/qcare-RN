@@ -8,12 +8,11 @@ import { Alert } from 'react-native';
 import { useEmail } from '../hooks/useEmail';
 
 type AuthContextProps = {
-    // token: string | null,
     user: User | null,
     status: 'checking' | 'loggedIn' | 'loggedOut',
     errorMessage: string,
-    login: (loginData:LoginData) => void,
-    register: (registerData:RegisterData) => void,
+    login: (loginData: LoginData) => void,
+    register: (registerData: RegisterData) => void,
     logout: () => void,
     removeError: () => void,
 }
@@ -36,16 +35,24 @@ export const AuthProvider = ({ children }: any) => {
 
     const checkToken = async () => {
         const token = await AsyncStorage.getItem('token');
-        
+
         //No hay token
         if (!token) return dispatch({ type: 'NOT_AUTH' })
-        
-        //Hay token
-        console.log('vamos',token)
-        const resp = await qcareApi.get('/auth/me')
-        if (resp.status !== 200) return dispatch({ type: 'NOT_AUTH' })
-        dispatch({ type: 'LOGIN', payload: resp.data.user })
-        await AsyncStorage.setItem('token', resp.data.token)
+
+        try {
+            //Hay token
+            const resp = await qcareApi.get('/auth/me')
+            // if(resp.status !== 200) {
+            //     return dispatch({ type: 'LOGOUT' })
+            // }
+
+            await AsyncStorage.setItem('token', resp.data.token);
+            dispatch({ type: 'LOGIN', payload: resp.data.user })
+
+        } catch (error) {
+            console.log(error)
+            return dispatch({ type: 'NOT_AUTH' })
+        }
 
     }
 
@@ -70,28 +77,26 @@ export const AuthProvider = ({ children }: any) => {
         dispatch({ type: 'REMOVE_ERROR' })
     }
 
-    const logout = async() => {
+    const logout = async () => {
         await AsyncStorage.removeItem('token')
         dispatch({ type: 'LOGOUT' })
     }
 
     const register = async ({ name, company, email, password }: RegisterData) => {
 
-        const {msg, ok} = useEmail(email)
-        console.log('vamos a ver',email)
-        console.log('ok?',ok)
+        const { msg, ok } = useEmail(email)
 
-        if(name.length === 0) return Alert.alert('Name is required')
-        if(!ok) return Alert.alert(msg)
-        if(password.length < 6) return Alert.alert('Password must be at least 6 characters')
+        if (name.length === 0) return Alert.alert('Name is required')
+        if (!ok) return Alert.alert(msg)
+        if (password.length < 6) return Alert.alert('Password must be at least 6 characters')
 
         try {
             const { data } = await qcareApi.post<LoginResponse>('/auth/register', {
                 name,
-                email, 
+                email,
                 password,
                 company,
-                rol:"USER_ROLE"
+                rol: "USER_ROLE"
             })
             dispatch({ type: 'LOGIN', payload: data.user })
 

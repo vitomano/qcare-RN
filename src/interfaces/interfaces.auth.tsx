@@ -19,10 +19,10 @@ export interface LoginResponse {
 }
 
 export interface User {
-    name: string;
-    email: string;
-    rol: string;
-    uid: string;
-    profile: string;
-    company?: string;
+    uid:       string;
+    name:      string;
+    email:     string;
+    rol:       string;
+    profile:   string;
+    company?:  string;
 }

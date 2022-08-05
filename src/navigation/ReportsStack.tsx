@@ -1,16 +1,16 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../context/AuthContext';
+import React from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { ReportsScreen } from '../pages/ReportsScreen';
 import { ReportScreen } from '../pages/ReportScreen';
+import { bgColor, greenMain } from '../theme/variables';
 
-export type ProductStackParams = {
+export type ReportsStackParams = {
   ReportsScreen: undefined,
-  ReportScreen: {id?:string}
+  ReportScreen: { id: string }
 }
 
-const Stack = createStackNavigator<ProductStackParams>();
+const Stack = createStackNavigator<ReportsStackParams>();
 
 export const ReportsStack = () => {
 
@@ -18,16 +18,34 @@ export const ReportsStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
-        cardStyle: {
-          backgroundColor: '#fff'
-        }
+        // headerShown: false,
+
+        headerStyle: {
+          // backgroundColor: bgColor,
+          backgroundColor: greenMain,
+          elevation: 0,
+          shadowColor: 'transparent',
+          
+        },
+        headerTintColor: '#fff',
+        headerBackTitleVisible: false,
+        // cardStyle: {
+        //   backgroundColor: bgColor
+        // }
       }}
     >
-      <Stack.Screen name="ReportsScreen" component={ReportsScreen} />
-      <Stack.Screen name="ReportScreen" component={ReportScreen} />
+      <Stack.Screen
+        options={{ title: "Reports" }}
+        name="ReportsScreen"
+        component={ReportsScreen}
+      />
+      <Stack.Screen
+        options={{ title: "Report" }}
+        name="ReportScreen"
+        component={ReportScreen}
+      />
 
-      
+
     </Stack.Navigator>
   );
 }

@@ -8,6 +8,7 @@ export const useReport = ( id: string ) => {
     const [ mainData, setMainData ] = useState<MainInfo>({} as MainInfo)
     const [ pallets, setPallets ] = useState<Pallet[]>([])
     const [ score, setScore ] = useState<string>("0")
+    const [ comments, setComments ] = useState<string>("")
     const [ date, setDate ] = useState<string|undefined>(undefined)
 
     const loadPokemon = async() => {
@@ -16,6 +17,7 @@ export const useReport = ( id: string ) => {
         setPallets( resp.data.singleReport.pallets );
         setScore( (resp.data.singleReport.score).toString() );
         setDate( resp.data.singleReport.date );
+        setComments( resp.data.singleReport.comments );
         setIsLoading(false);
     }
 
@@ -28,6 +30,7 @@ export const useReport = ( id: string ) => {
         mainData,
         pallets,
         score,
-        date
+        date,
+        comments
     }
 }

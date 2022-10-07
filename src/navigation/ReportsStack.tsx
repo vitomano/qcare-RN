@@ -18,10 +18,7 @@ export const ReportsStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        // headerShown: false,
-
         headerStyle: {
-          // backgroundColor: bgColor,
           backgroundColor: greenMain,
           elevation: 0,
           shadowColor: 'transparent',

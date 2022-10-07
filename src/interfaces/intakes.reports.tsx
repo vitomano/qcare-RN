@@ -31,22 +31,22 @@ export interface BatchInfo {
     variety: string;
     unit_label: string;
     total_boxes: string;
-    total_pallets: number;
+    total_pallets: string;
     quality: string;
     transport: string;
     purchase_order: string;
     delivery_note: string;
     warehouse: string;
 
-    samples?: number,
-    kilos?: number,
-    formatGr?: number
+    samples?: string,
+    kilos?: string,
+    formatGr?: string
 }
 
 export interface MainInfo extends BatchInfo {
-    samples?: number,
-    kilos?: number,
-    formatGr?: number,
+    samples?: string,
+    kilos?: string,
+    formatGr?: string,
 }
 
 export interface IntakesResponse {
@@ -200,4 +200,21 @@ export interface Pallgrow {
     label: string;
     name:  string;
     valor: string[] | string;
+}
+
+export interface IntakeSingleResponse {
+    ok?: boolean;
+    msg: string;
+    intakeReport: Intake;
+}
+
+
+export interface PalletState {
+    id:         string;
+    samples:    number | string,
+    score:      string;
+    images:     Image[];
+    labels:     DetailObject[];
+    appareance: DetailObject[];
+    pallgrow:   DetailObject[];
 }

@@ -1,15 +1,40 @@
 // import { View, StyleSheet, Text } from "@react-pdf/renderer";
 import React from 'react'
 import { StyleSheet, View } from "react-native"
+import { score0, score1, score2, score3, score4, score5, score6, score7, score8 } from '../theme/variables';
 
 // Establece color por score
 
 export function colorScore(score="0"){
 
     if (score === "0") {
-        return <View style={styles.scoreCircle}></View>
+        return <View style={{...styles.scoreCircle, backgroundColor: score0}}></View>
+    } 
+    if (score === "1") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score1}}></View>
+    } 
+    if (score === "2") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score2}}></View>
+    } 
+    if (score === "3") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score3}}></View>
+    } 
+    if (score === "4") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score4}}></View>
+    } 
+    if (score === "5") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score5}}></View>
+    } 
+    if (score === "6") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score6}}></View>
+    } 
+    if (score === "7") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score7}}></View>
+    } 
+    if (score === "8") {
+        return <View style={{...styles.scoreCircle, backgroundColor: score8}}></View>
     } else {
-        return <View style={styles.scoreCircle}></View>
+        return <View style={{...styles.scoreCircle, backgroundColor: score0}}></View>
     }
    
 
@@ -92,6 +117,7 @@ const styles = StyleSheet.create({
     scoreCircle:{
         width: 10,
         height: 10,
+        borderRadius: 5,
     },
 
 

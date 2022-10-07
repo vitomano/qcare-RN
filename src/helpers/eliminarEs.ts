@@ -53,7 +53,10 @@ export function valorPallgrow(valor:any) {
 }
 
 
-
+export function capitalize(text:string):string {
+    const lower = text.toLowerCase();
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
 
 // Solo numeros en input de tipo "number"
 // export const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();

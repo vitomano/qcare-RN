@@ -6,6 +6,8 @@ import { ProfileScreen } from '../pages/ProfileScreen';
 import { ReportsStack } from './ReportsStack';
 import { greenMain } from '../theme/variables';
 import { CreateStack } from './CreateStack';
+import { IntakesScreen } from '../pages/IntakesScreen';
+import { PreReportsScreen } from '../pages/PreReportsScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -17,9 +19,10 @@ export const TabStack = () => {
             activeOpacity={0.9}
             onPress={onPress}
             style={{
-                top: -20,
+                top: -22,
                 justifyContent: 'center',
                 alignItems: 'center',
+                marginHorizontal: 10,
             }}
         >
             <View style={{
@@ -27,8 +30,8 @@ export const TabStack = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 35,
-                width: 70,
-                height: 70
+                width: 60,
+                height: 60
             }}>
                 <Icon name="add-outline" size={35} style={{ color: "#fff" }} />
             </View>
@@ -58,6 +61,18 @@ export const TabStack = () => {
                     </Text>
                 }}
             />
+
+            <Tab.Screen
+                name="IntakesScreen"
+                component={IntakesScreen}
+                options={{
+                    title: 'Intakes',
+                    tabBarIcon: ({ color }) => <Text style={{ color }}>
+                        <Icon name="enter-outline" size={25} style={{ color }} />
+                    </Text>
+                }}
+            />
+
             <Tab.Screen
                 name="CreateStack"
                 component={CreateStack}
@@ -68,13 +83,27 @@ export const TabStack = () => {
                     )
                 }}
             />
+
+
+            <Tab.Screen
+                name="PreReportsScreen"
+                component={PreReportsScreen}
+                options={{
+                    title: 'Pre Reports',
+                    tabBarIcon: ({ color }) => <Text style={{ color }}>
+                        <Icon name="archive-outline" size={25} style={{ color }} />
+                    </Text>
+                }}
+            />
+
+
             <Tab.Screen
                 name="ProfileScreen"
                 component={ProfileScreen}
                 options={{
                     title: 'Profile',
                     tabBarIcon: ({ color }) => <Text style={{ color }}>
-                        <Icon name="person-outline" size={25} style={{ color }} />
+                        <Icon name="leaf-outline" size={25} style={{ color }} />
                     </Text>
                 }}
             />

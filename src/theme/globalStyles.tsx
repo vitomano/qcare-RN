@@ -1,5 +1,6 @@
-import { StyleSheet } from "react-native";
-import { bgColor } from "./variables";
+import { Platform, StyleSheet } from "react-native";
+import { bgColor, inputColor, text } from "./variables";
+
 
 export const globalStyles = StyleSheet.create({
     globalMargin: {
@@ -12,12 +13,39 @@ export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: bgColor,
-        alignItems: 'center',
-        padding: 10,
+        paddingHorizontal: 10,
     },
     containerFlex: {
         flex: 1,
         backgroundColor: bgColor,
-        alignItems: 'center',
+    },
+    shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+    
+        elevation: 5,
+    },
+
+    inputContainer:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        marginBottom: 10,
+    },
+    inputText:{
+        color: text,
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    input:{
+        backgroundColor: inputColor,
+        borderRadius: 10,
+        paddingVertical: Platform.OS === 'android' ? 5 : 10,
+        paddingHorizontal: 10,
     },
 });

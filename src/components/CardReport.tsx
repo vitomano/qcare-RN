@@ -48,10 +48,11 @@ export const CardReport = ({ report }: Props) => {
                 </View>
                 <View style={{
                     position: "absolute",
-                    bottom: 15,
-                    right: 15,
-                    backgroundColor: 'red'
+                    bottom: 10,
+                    right: 10,
+                    borderRadius: 5,
                 }}>
+                    {colorScore((report.score||0).toString())}
                 </View>
             </View>
         </TouchableOpacity>
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginHorizontal: 5,
         borderRadius: 10,
+        position: 'relative',
 
         // shadowColor: "#000",
         // shadowOffset: {

@@ -1,27 +1,25 @@
 import React from 'react'
-import { StyleSheet, Text, View, StyleProp } from 'react-native';
+import { StyleSheet, Text, View, StyleProp, TextStyle } from 'react-native';
 
 interface Props {
     title: string,
-    style?: StyleProp<any>
-    // style?: StyleProp<any>
+    style?: StyleProp<TextStyle>,
 };
 
 
-export const TitleApp = ({title, style={paddingBottom: 20}}:Props) => {
+export const TitleApp = ({ title, style }: Props) => {
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', ...style }}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
+        <Text style={{ ...styles.title, ...style as any }}>{title}</Text>
     )
 }
 
 const styles = StyleSheet.create({
     title: {
-        // textAlign: 'center',
-        marginLeft: 10,
         fontSize: 20,
         fontWeight: 'bold',
+        paddingTop: 30,
+        paddingBottom: 20,
+        textAlign: 'center',
     }
 });

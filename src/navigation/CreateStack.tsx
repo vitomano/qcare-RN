@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ReportScreen } from '../pages/ReportScreen';
-import { bgColor } from '../theme/variables';
+import { greenMain } from '../theme/variables';
 import { NewReportScreen } from '../pages/NewReportScreen';
 import { SelectReport } from '../pages/SelectReport';
+import { Fruit } from '../interfaces/interfaces';
 
 export type ProductStackParams = {
   SelectReport: undefined,
-  NewReportScreen: { id?: string }
+  NewReportScreen: { fruit: Fruit }
 }
 
 const Stack = createStackNavigator<ProductStackParams>();
@@ -18,26 +18,25 @@ export const CreateStack = () => {
 
   return (
     <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: greenMain,
+        elevation: 0,
+        shadowColor: 'transparent',
+        
+      },
+      headerTintColor: '#fff',
+      headerBackTitleVisible: false,
 
-        headerStyle: {
-          backgroundColor: bgColor,
-          elevation: 0,
-          shadowColor: 'transparent',
-        },
-        cardStyle: {
-          backgroundColor: bgColor
-        }
-      }}
+    }}
     >
       <Stack.Screen
-        options={{ title: "Reports" }}
+        options={{ title: "Create New" }}
         name="SelectReport"
         component={SelectReport}
       />
       <Stack.Screen
-        options={{ title: "Report" }}
+        options={{ title: "Create New" }}
         name="NewReportScreen"
         component={NewReportScreen}
       />

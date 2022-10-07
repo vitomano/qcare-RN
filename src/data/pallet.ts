@@ -1,26 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-
-export interface Values{
-    check: boolean,
-    tipe: string,
-    label: string,
-    name: string,
-    valor: string | number | boolean 
-}
-
-export interface Report {
-    id: string,
-    samples?: number,
-    score?: string,
-    images?: object[] | null,
-    labels?: Values[],
-    appareance?: Values[],
-    pallgrow?: Values[],
-}
+import { Fruit } from '../interfaces/interfaces';
+import { PalletState } from '../interfaces/intakes.reports';
 
 
-
-export const palletDataBerries = (allSamples=1) => {
+export const palletDataBerries = (allSamples=1):PalletState => {
     return {
         id: uuidv4(),
         samples: allSamples,
@@ -71,7 +54,205 @@ export const palletDataBerries = (allSamples=1) => {
     }
 } 
 
-export const palletDataPears = (allSamples=1) => {
+export const palletDataRaspberries = (allSamples=1):PalletState => {
+    return {
+        id: uuidv4(),
+        samples: allSamples,
+        score: "0",
+        images: [],
+        labels: [
+            { check: true, tipe: "checkbox", label: "Box Label", name: "box_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Punnet Label", name: "punnet_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Name & Weight", name: "name_weight", valor: true },
+            { check: true, tipe: "text", label: "L Code", name: "l_code", valor: "" },
+            { check: true, tipe: "text", label: "T Code", name: "t_code", valor: "" },
+            { check: true, tipe: "text", label: "EAN Code", name: "ean_code", valor: "" },
+            { check: true, tipe: "text", label: "Variety", name: "variety", valor: "" },
+    
+        ],
+        appareance: [
+            { check: true, tipe: "checkbox", label: "Insect", name: "insect", valor: true },
+            { check: true, tipe: "range", label: "Fresh", name: "fresh", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Size", name: "size", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Coloration", name: "coloration", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Taste", name: "taste", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "checkbox", label: "Pollution", name: "pollution", valor: true },
+            { check: true, tipe: "checkbox", label: "Humidity", name: "humidity", valor: true },
+            { check: true, tipe: "checkbox", label: "Juicing", name: "juicing", valor: true },
+            { check: true, tipe: "checkbox", label: "Wet", name: "wet", valor: true },
+            { check: true, tipe: "range", label: "Pallet Integrity", name: "pallet_integrity", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "number", label: "Temperature C", name: "temperature_c", valor: "" },
+            
+            {check: true, tipe: "arrays", name: "brix", label: "Brix", arrays: 2, valor: ["", ""]},
+            {check: true, tipe: "arrays", name: "weight_check", label: "Weight Check", arrays: 4, valor: ["", "", "", ""]},
+
+        ],
+        pallgrow: [
+            { check: true, tipe: "number", label: "Weight 10 Fruits", name: "weight_10", valor: "" },
+
+            { check: true, tipe: "arrays", label: "Undersized", name: "undersized", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Scars", name: "scars", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Misformed", name: "misformed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Unripe", name: "unripe", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Missing Calyxes", name: "missing_calyxes", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Insect damage", name: "insect_damage", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Not well developed", name: "not_well_developed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Residue / Dirt", name: "residue_dirt", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Sensitive", name: "sensitive", valor: new Array(Number(allSamples)).fill("0") },
+
+            { check: true, tipe: "arrays", label: "Wounds", name: "wounds", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Water cells", name: "water_cells", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Crumbled berries", name: "crumbled berries", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Chrushed", name: "chrushed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Leaking", name: "leaking", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Dehydration", name: "dehydration", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Soft", name: "soft", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Overripe", name: "overripe", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Grub presence", name: "grub_presence", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mould hotspot", name: "mould_hotspot", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Rot hotspot", name: "rot_hotspot", valor: new Array(Number(allSamples)).fill("0") },
+           
+            { check: true, tipe: "arrays", label: "Rot", name: "rot", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Decay", name: "decay", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mould", name: "mould", valor: new Array(Number(allSamples)).fill("0") },
+
+        ]
+    }
+} 
+
+export const palletDataBlackberries = (allSamples=1):PalletState => {
+    return {
+        id: uuidv4(),
+        samples: allSamples,
+        score: "0",
+        images: [],
+        labels: [
+            { check: true, tipe: "checkbox", label: "Box Label", name: "box_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Punnet Label", name: "punnet_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Name & Weight", name: "name_weight", valor: true },
+            { check: true, tipe: "text", label: "L Code", name: "l_code", valor: "" },
+            { check: true, tipe: "text", label: "T Code", name: "t_code", valor: "" },
+            { check: true, tipe: "text", label: "EAN Code", name: "ean_code", valor: "" },
+            { check: true, tipe: "text", label: "Variety", name: "variety", valor: "" },
+    
+        ],
+        appareance: [
+            { check: true, tipe: "checkbox", label: "Insect", name: "insect", valor: true },
+            { check: true, tipe: "range", label: "Fresh", name: "fresh", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Size", name: "size", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Coloration", name: "coloration", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Taste", name: "taste", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "checkbox", label: "Pollution", name: "pollution", valor: true },
+            { check: true, tipe: "checkbox", label: "Humidity", name: "humidity", valor: true },
+            { check: true, tipe: "checkbox", label: "Juicing", name: "juicing", valor: true },
+            { check: true, tipe: "checkbox", label: "Wet", name: "wet", valor: true },
+            { check: true, tipe: "range", label: "Pallet Integrity", name: "pallet_integrity", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "number", label: "Temperature C", name: "temperature_c", valor: "" },
+            
+            {check: true, tipe: "arrays", name: "brix", label: "Brix", arrays: 2, valor: ["", ""]},
+            {check: true, tipe: "arrays", name: "weight_check", label: "Weight Check", arrays: 4, valor: ["", "", "", ""]},
+
+        ],
+        pallgrow: [
+            { check: true, tipe: "number", label: "Weight 10 Fruits", name: "weight_10", valor: "" },
+
+            { check: true, tipe: "arrays", label: "Undersized", name: "undersized", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Scars wounds", name: "scars_wounds", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Deformed", name: "deformed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Unripe", name: "unripe", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Insect damage", name: "insect_damage", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Not well developed", name: "not_well_developed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Residue / Dirt", name: "residue_dirt", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Red drupelets", name: "red_drupelets", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Sensitive", name: "sensitive", valor: new Array(Number(allSamples)).fill("0") },
+            
+
+            { check: true, tipe: "arrays", label: "Insect presence", name: "insect_presence", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Wounds", name: "wounds", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Dehydration", name: "dehydration", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Chrushed", name: "chrushed", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Leaking", name: "leaking", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Overripe", name: "overripe", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Grub presence", name: "grub_presence", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Soft", name: "soft", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mould hotspot", name: "mould_hotspot", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Rot hotspot", name: "rot_hotspot", valor: new Array(Number(allSamples)).fill("0") },
+                       
+            { check: true, tipe: "arrays", label: "Rot", name: "rot", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Decay", name: "decay", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mould", name: "mould", valor: new Array(Number(allSamples)).fill("0") },
+
+        ]
+    }
+} 
+
+export const palletDataBlueberries = (allSamples=1):PalletState => {
+    return {
+        id: uuidv4(),
+        samples: allSamples,
+        score: "0",
+        images: [],
+        labels: [
+            { check: true, tipe: "checkbox", label: "Box Label", name: "box_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Punnet Label", name: "punnet_label", valor: true },
+            { check: true, tipe: "checkbox", label: "Name & Weight", name: "name_weight", valor: true },
+            { check: true, tipe: "text", label: "L Code", name: "l_code", valor: "" },
+            { check: true, tipe: "text", label: "T Code", name: "t_code", valor: "" },
+            { check: true, tipe: "text", label: "EAN Code", name: "ean_code", valor: "" },
+            { check: true, tipe: "text", label: "Variety", name: "variety", valor: "" },
+    
+        ],
+        appareance: [
+            { check: true, tipe: "checkbox", label: "Insect", name: "insect", valor: true },
+            { check: true, tipe: "range", label: "Fresh", name: "fresh", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Size", name: "size", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Coloration", name: "coloration", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "range", label: "Taste", name: "taste", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "checkbox", label: "Pollution", name: "pollution", valor: true },
+            { check: true, tipe: "checkbox", label: "Humidity", name: "humidity", valor: true },
+            { check: true, tipe: "checkbox", label: "Juicing", name: "juicing", valor: true },
+            { check: true, tipe: "checkbox", label: "Wet", name: "wet", valor: true },
+            { check: true, tipe: "range", label: "Pallet Integrity", name: "pallet_integrity", minVal: 1, maxVal: 10, valor: 1 },
+            { check: true, tipe: "number", label: "Temperature C", name: "temperature_c", valor: "" },
+            
+            {check: true, tipe: "arrays", name: "brix", label: "Brix", arrays: 2, valor: ["", ""]},
+            {check: true, tipe: "arrays", name: "weight_check", label: "Weight Check", arrays: 4, valor: ["", "", "", ""]},
+
+        ],
+        pallgrow: [
+            { check: true, tipe: "number", label: "Weight 10 Fruits", name: "weight_10", valor: "" },
+
+            { check: true, tipe: "arrays", label: "Undersized", name: "undersized", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Underripe green", name: "underripe_green", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Underripe red", name: "underripe_red", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Russet / Scar", name: "russet_scar", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Floral remains", name: "floral_remains", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Stems", name: "stems", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Insect damage", name: "insect_damage", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Insect presence", name: "insect_presence", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Pruineless", name: "pruineless", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Sensitive", name: "sensitive", valor: new Array(Number(allSamples)).fill("0") },
+
+            { check: true, tipe: "arrays", label: "Wounds", name: "wounds", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Juicing / Exudated berry", name: "juicing_exudated_berry", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Peeled steam insterion", name: "peeled_steam_insterion", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Crushed berries", name: "crushed_berries", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mechanical damage", name: "mechanical_damage", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Grub presence", name: "grub_presence", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Soft", name: "soft", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Overripe", name: "overripe", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Bruising", name: "bruising", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Dehydration", name: "dehydration", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Hail damage", name: "hail_damage", valor: new Array(Number(allSamples)).fill("0") },
+                       
+            { check: true, tipe: "arrays", label: "Rot", name: "rot", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Decay", name: "decay", valor: new Array(Number(allSamples)).fill("0") },
+            { check: true, tipe: "arrays", label: "Mould", name: "mould", valor: new Array(Number(allSamples)).fill("0") },
+        ]
+    }
+} 
+
+export const palletDataPears = (allSamples=1):PalletState => {
     return {
         id: uuidv4(),
         samples: allSamples,
@@ -142,7 +323,7 @@ export const palletDataPears = (allSamples=1) => {
     }
 } 
 
-export const palletDataApples = (allSamples=1) => {
+export const palletDataApples = (allSamples=1):PalletState => {
     return {
         id: uuidv4(),
         samples: allSamples,
@@ -219,7 +400,7 @@ export const palletDataApples = (allSamples=1) => {
     }
 } 
 
-export const palletDataCherries = (allSamples=1) => {
+export const palletDataCherries = (allSamples=1):PalletState => {
     return {
         id: uuidv4(),
         samples: allSamples,
@@ -293,11 +474,14 @@ export const palletDataCherries = (allSamples=1) => {
 } 
 
 
-export const palletData = (fruit = "other", samples=1) => {
+export const palletData = (fruit:Fruit = "other", samples=1):PalletState => {
 
     if (fruit === "pears") { return palletDataPears(samples) }
     else if (fruit === "apples") { return palletDataApples(samples) }
     else if (fruit === "cherries") { return palletDataCherries(samples) }
-    else { return palletDataBerries(samples) }
+    else if (fruit === "blueberries") { return palletDataBlueberries(samples) }
+    else if (fruit === "blackberries") { return palletDataBlackberries(samples) }
+    else if (fruit === "raspberries") { return palletDataRaspberries(samples) }
+    else { return palletDataBerries(samples) } 
 
 };

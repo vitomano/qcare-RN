@@ -1,4 +1,4 @@
-import { PreReport } from '../data/preReport';
+import { PreReport } from '../helpers/preReport';
 import { BatchInfo, MainInfo } from "../interfaces/intakes.reports"
 import { Report } from '../data/pallet';
 

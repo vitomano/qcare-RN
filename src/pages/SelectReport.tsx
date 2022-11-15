@@ -5,8 +5,6 @@ import { newReport } from '../data/new'
 import { globalStyles } from '../theme/globalStyles'
 import { capitalize } from '../helpers/eliminarEs';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ProductStackParams } from '../navigation/CreateStack';
-import { useNavigation } from '@react-navigation/native';
 
 
 interface Props extends StackScreenProps<any, any> { }

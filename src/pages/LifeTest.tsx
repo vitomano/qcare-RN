@@ -3,9 +3,10 @@ import { Button, SafeAreaView, Text, View } from 'react-native'
 import { AuthContext } from '../context/AuthContext'
 import { bgColor } from '../theme/variables'
 
-export const ProfileScreen = () => {
+export const LifeTest = () => {
 
-  const { user, logout } = useContext(AuthContext)
+
+  const { logout } = useContext(AuthContext)
 
   return (
     <View style={{
@@ -15,14 +16,11 @@ export const ProfileScreen = () => {
       backgroundColor: bgColor
     }}>
       <View>
-        <Text>Hola</Text>
-        <Text>{user?.name}</Text>
-
-        <Button
+        <Text>Life Test</Text>
+        {/* <Button
           title="Logout"
           onPress={logout}
-        />
-
+        /> */}
       </View>
     </View>
   )

@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity, StyleSheetProperties, StyleProp } from 'react-native';
 import React from 'react'
+import { greenMain } from '../theme/variables';
 
 interface Props {
     text: string,
-    width?: 50 | 60 | 70 | 80 | 90 | 100,
+    width?: 40 | 50 | 60 | 70 | 80 | 90 | 100,
     outline?: boolean,
     secondary?: boolean,
+    centered?: boolean,
     onPress?: () => void,
 }
 
@@ -19,19 +21,20 @@ export default function StyledButton({
 
     const buttonStyle = [
         styles.buttonContainer,
+        width === 40 && styles.buttonCont40,
         width === 50 && styles.buttonCont50,
         width === 60 && styles.buttonCont60,
         width === 70 && styles.buttonCont70,
         width === 80 && styles.buttonCont80,
         width === 90 && styles.buttonCont90,
     ]
-    
-    const button= [
+
+    const button = [
         styles.button,
         !outline && styles.buttonFilled,
         (!outline && secondary) && styles.buttonFilledSecondary,
         outline && styles.buttonOutline,
-        (outline && secondary) && styles.buttonOutlineSecondary 
+        (outline && secondary) && styles.buttonOutlineSecondary
     ]
 
     const textStyle = [
@@ -42,6 +45,7 @@ export default function StyledButton({
     ]
 
     return (
+
         <View style={buttonStyle}>
             <TouchableOpacity
                 activeOpacity={0.8}
@@ -56,6 +60,7 @@ export default function StyledButton({
 
 const styles = StyleSheet.create({
     buttonContainer: { width: "100%" },
+    buttonCont40: { width: "40%" },
     buttonCont50: { width: "50%" },
     buttonCont60: { width: "60%" },
     buttonCont70: { width: "70%" },
@@ -70,18 +75,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    buttonFilled:{
-        backgroundColor: "#26633C",
+    buttonFilled: {
+        backgroundColor: greenMain,
     },
-    buttonFilledSecondary:{
+    buttonFilledSecondary: {
         backgroundColor: "#a7c139",
     },
 
-    buttonOutline:{
+    buttonOutline: {
         borderWidth: 1,
-        borderColor: "#26633C",
+        borderColor: greenMain,
     },
-    buttonOutlineSecondary:{
+    buttonOutlineSecondary: {
         borderWidth: 1,
         borderColor: "#a7c139",
     },
@@ -91,6 +96,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     textWhite: { color: "#fff" },
-    textPrimary: { color: "#26633C" },
+    textPrimary: { color: greenMain },
     textSecondary: { color: "#a7c139" }
 })

@@ -13,7 +13,7 @@ export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: bgColor,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
     },
     containerFlex: {
         flex: 1,
@@ -48,4 +48,33 @@ export const globalStyles = StyleSheet.create({
         paddingVertical: Platform.OS === 'android' ? 5 : 10,
         paddingHorizontal: 10,
     },
+    card: {
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        overflow: 'hidden',
+        marginVertical: 5,
+        backgroundColor: '#fff',
+        // marginHorizontal: 5,
+        borderRadius: 10,
+        position: 'relative',
+
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 5,
+        // },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 1,
+
+        elevation: 6,
+    },
+    flexRow:{
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    flexBetween:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    }
 });

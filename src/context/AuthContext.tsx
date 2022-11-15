@@ -41,13 +41,24 @@ export const AuthProvider = ({ children }: any) => {
 
         try {
             //Hay token
-            const resp = await qcareApi.get('/auth/me')
+            const { data } = await qcareApi.get<LoginResponse>('/auth/me')
             // if(resp.status !== 200) {
             //     return dispatch({ type: 'LOGOUT' })
             // }
 
-            await AsyncStorage.setItem('token', resp.data.token);
-            dispatch({ type: 'LOGIN', payload: resp.data.user })
+            await AsyncStorage.setItem('token', data.token);
+            
+            dispatch({
+                type: 'LOGIN', payload: {
+                    uid: data.uid,
+                    name: data.name,
+                    lastname: data.lastname,
+                    profile: data.profile,
+                    company: data.company,
+                    contacts: data.contacts,
+                    rol: data.rol
+                }
+            })
 
         } catch (error) {
             console.log(error)
@@ -61,7 +72,18 @@ export const AuthProvider = ({ children }: any) => {
 
         try {
             const { data } = await qcareApi.post<LoginResponse>("/auth/login", { email, password })
-            dispatch({ type: 'LOGIN', payload: data.user })
+
+            dispatch({
+                type: 'LOGIN', payload: {
+                    uid: data.uid,
+                    name: data.name,
+                    lastname: data.lastname,
+                    profile: data.profile,
+                    company: data.company,
+                    contacts: data.contacts,
+                    rol: data.rol
+                }
+            })
 
             await AsyncStorage.setItem('token', data.token)
 
@@ -82,7 +104,7 @@ export const AuthProvider = ({ children }: any) => {
         dispatch({ type: 'LOGOUT' })
     }
 
-    const register = async ({ name, company, email, password }: RegisterData) => {
+    const register = async ({ name, company, email, password, lastname }: RegisterData) => {
 
         const { msg, ok } = useEmail(email)
 
@@ -93,12 +115,20 @@ export const AuthProvider = ({ children }: any) => {
         try {
             const { data } = await qcareApi.post<LoginResponse>('/auth/register', {
                 name,
+                lastname,
                 email,
                 password,
                 company,
                 rol: "USER_ROLE"
             })
-            dispatch({ type: 'LOGIN', payload: data.user })
+            dispatch({ type: 'LOGIN', payload: {
+                uid: data.uid,
+                name: data.name,
+                lastname: data.lastname,
+                profile: data.profile,
+                company: data.company,
+                contacts: data.contacts
+            } })
 
             await AsyncStorage.setItem('token', data.token)
 

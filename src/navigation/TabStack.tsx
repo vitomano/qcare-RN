@@ -1,13 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { ProfileScreen } from '../pages/ProfileScreen';
 import { ReportsStack } from './ReportsStack';
 import { greenMain } from '../theme/variables';
 import { CreateStack } from './CreateStack';
-import { IntakesScreen } from '../pages/IntakesScreen';
 import { PreReportsScreen } from '../pages/PreReportsScreen';
+import { LifeTest } from '../pages/LifeTest';
+import { ProfileScreen } from '../pages/ProfileScreen';
+import { IntakesStack } from './IntakesStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -44,10 +45,13 @@ export const TabStack = () => {
                 headerShown: false,
                 tabBarActiveTintColor: "#1a9141",
                 tabBarStyle: {
-                    marginBottom: 10,
                     borderTopWidth: 0,
                     elevation: 0,
+                    height: Platform.OS === "android" ? 60 : 80,
+                    // paddingBottom: Platform.OS === "android" ? 10 : null,
                 },
+                tabBarLabelStyle: { paddingVertical: Platform.OS === "android" ? 8 : 0 },
+                // tabBarIconStyle: { height: 'auto' }
             }}
 
         >
@@ -63,8 +67,8 @@ export const TabStack = () => {
             />
 
             <Tab.Screen
-                name="IntakesScreen"
-                component={IntakesScreen}
+                name="IntakesStack"
+                component={IntakesStack}
                 options={{
                     title: 'Intakes',
                     tabBarIcon: ({ color }) => <Text style={{ color }}>
@@ -98,10 +102,10 @@ export const TabStack = () => {
 
 
             <Tab.Screen
-                name="ProfileScreen"
-                component={ProfileScreen}
+                name="LifeTestScreen"
+                component={LifeTest}
                 options={{
-                    title: 'Profile',
+                    title: 'Life Test',
                     tabBarIcon: ({ color }) => <Text style={{ color }}>
                         <Icon name="leaf-outline" size={25} style={{ color }} />
                     </Text>

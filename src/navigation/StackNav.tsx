@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../pages/LoginScreen';
 import { RegisterScreen } from '../pages/RegisterScreen';
 import { LoadingScreen } from '../pages/LoadingScreen';
-import { TabStack } from './TabStack';
+import { DrawerNav } from './DrawerNav';
 
 const Stack = createStackNavigator();
 
@@ -21,21 +21,21 @@ export const StackNav = () => {
       screenOptions={{
         headerShown: false,
         cardStyle: {
-          backgroundColor: '#fff'
+          //backgroundColor: '#fff'
         }
       }}
     >
       {
         status == 'loggedIn'
           ? <>
-            <Stack.Screen name="TabStack" component={ TabStack } />
+            <Stack.Screen name="MainStack" component={ DrawerNav } />
             {/* <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} /> */}
           </>
 
           :
           <>
-            <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
-            <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{headerShown:false}}/>
+            <Stack.Screen name="LoginScreen" component={ LoginScreen } options={{headerShown:false}}/>
+            <Stack.Screen name="RegisterScreen" component={ RegisterScreen } options={{headerShown:false}}/>
           </>
 
       }

@@ -1,19 +1,18 @@
 import React from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ReportsScreen } from '../pages/ReportsScreen';
-import { ReportScreen } from '../pages/ReportScreen';
 import { bgColor, greenMain } from '../theme/variables';
+import { IntakesScreen } from '../pages/IntakesScreen';
+import { IntakeScreen } from '../pages/IntakeScreen';
 
-export type ReportsStackParams = {
-  ReportsScreen: undefined,
-  ReportScreen: { id: string }
+export type IntakesStackParams = {
+  IntakesScreen: undefined,
+  IntakeScreen: { id: string }
 }
 
-const Stack = createStackNavigator<ReportsStackParams>();
+const Stack = createStackNavigator<IntakesStackParams>();
 
-export const ReportsStack = () => {
-
+export const IntakesStack = () => {
 
   return (
     <Stack.Navigator
@@ -32,16 +31,15 @@ export const ReportsStack = () => {
       }}
     >
       <Stack.Screen
-        options={{ title: "Reports" }}
-        name="ReportsScreen"
-        component={ReportsScreen}
+        options={{ title: "Intakes" }}
+        name="IntakesScreen"
+        component={IntakesScreen}
       />
       <Stack.Screen
-        options={{ title: "Report" }}
-        name="ReportScreen"
-        component={ReportScreen}
+        options={{ title: "Prereport" }}
+        name="IntakeScreen"
+        component={IntakeScreen}
       />
-
 
     </Stack.Navigator>
   );

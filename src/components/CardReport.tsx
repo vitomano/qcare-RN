@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { colorScore } from '../helpers/colorScore';
 import { SingleReport } from '../interfaces/intakes.reports'
+import { globalStyles } from '../theme/globalStyles';
 
 interface Props {
     report: SingleReport,
@@ -18,6 +19,8 @@ export const CardReport = ({ report }: Props) => {
 
         <TouchableOpacity
             style={{
+                marginHorizontal: 5,
+                marginBottom: 5,
                 shadowColor: "#000",
                 shadowOffset: {
                     width: 0,
@@ -31,7 +34,7 @@ export const CardReport = ({ report }: Props) => {
             activeOpacity={0.95}
             onPress={() => navigation.navigate('ReportScreen' as never, { id: report._id } as never)}
         >
-            <View style={{ ...styles.card }}>
+            <View style={{ ...globalStyles.card, ...globalStyles.flexRow }}>
                 <Image
                     source={
                         coverImg === undefined
@@ -58,26 +61,3 @@ export const CardReport = ({ report }: Props) => {
         </TouchableOpacity>
     )
 }
-
-const styles = StyleSheet.create({
-    card: {
-        flexDirection: 'row',
-        overflow: 'hidden',
-        alignItems: 'center',
-        marginVertical: 5,
-        backgroundColor: '#fff',
-        marginHorizontal: 5,
-        borderRadius: 10,
-        position: 'relative',
-
-        // shadowColor: "#000",
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 5,
-        // },
-        // shadowOpacity: 0.1,
-        // shadowRadius: 1,
-
-        elevation: 6,
-    },
-});

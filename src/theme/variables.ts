@@ -12,10 +12,12 @@ export const green = "#a7c139";
 export const greenMain = "#1a9141";
 export const excel = "#107c41";
 export const check = "#5ac85d";
+export const danger = "#b52c2c";
 
 export const silver = "#efefef";
 export const lightGrey = "#d8d8d8";
 export const bgColor = "#F6F8FA";
+export const grey = "#E8EBEF";
 export const inputColor = "#dfe1ea";
 export const mediumGrey = "#80868B";
 export const darkGrey = "#363636";

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createContext, useReducer } from 'react'
 import qcareApi from '../api/qcareApi';
-import { PreReport } from '../data/preReport';
+import { PreReport } from '../helpers/preReport';
 import { totalKilos, totalSamples, formatSplit } from '../helpers/formatSplit';
 import { fruitType } from '../helpers/fruitType';
 import { AllReportsResponse, IntakeResponse, SingleReport } from '../interfaces/intakes.reports';

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import qcareApi from '../api/qcareApi';
 import { MainInfo, Pallet, SingleReportResponse } from '../interfaces/intakes.reports';
 
-export const useReport = ( id: string ) => {
+export const useFetchReport = ( id: string ) => {
 
     const [ isLoading, setIsLoading ] = useState(true)
     const [ mainData, setMainData ] = useState<MainInfo>({} as MainInfo)
@@ -11,7 +11,7 @@ export const useReport = ( id: string ) => {
     const [ comments, setComments ] = useState<string>("")
     const [ date, setDate ] = useState<string|undefined>(undefined)
 
-    const loadPokemon = async() => {
+    const loadReport = async() => {
         const resp = await qcareApi.get<SingleReportResponse>(`/report/${id}`);
         setMainData( resp.data.singleReport.mainData );
         setPallets( resp.data.singleReport.pallets );
@@ -22,7 +22,7 @@ export const useReport = ( id: string ) => {
     }
 
     useEffect(() => {
-        loadPokemon();
+        loadReport();
     }, [])
 
     return {

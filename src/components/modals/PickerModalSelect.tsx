@@ -1,6 +1,5 @@
 import React from 'react'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { capitalize } from '../../helpers/eliminarEs';
 import { globalStyles } from '../../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { darkGrey,grey } from '../../theme/variables';
@@ -14,19 +13,21 @@ interface ListType{
 interface Props<T> {
     LIST: T[],
     activeModal: (b: boolean) => void
-    setState: (val: string) => void
+    setState: (val: string, opt?:any) => void
     setCurrent: (val: T) => void
     state: string
+    option?: any
+
 }
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state }:Props<T>) => {
+export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option }:Props<T>) => {
 
     const onPressItem = (val: T) => {
         activeModal(false)
-        setState( val.value )
+        setState( val.value, option )
         setCurrent(val)
     };
 
@@ -36,7 +37,7 @@ export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setSt
             style={styles.container}
         >
             <View
-                style={{ ...styles.modal, width: WIDTH - 20, height: "auto", maxHeight: HEIGHT - 80 }}
+                style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }}
             >
                 <ScrollView>
                     {

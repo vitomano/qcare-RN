@@ -29,6 +29,16 @@ export type Action =
 | "Suitable for Departure"
 | "Suitable for Storage"
 
+export type Status =
+| "grade"
+| "action"
+| "score"
+
 
 
 export type DetailName = "labels" | "appareance" | "pallgrow"
+
+export type GradeNum = "0" | "1" | "2" | "3" | "4" | "5" | "6"
+export type ActionNum = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7"
+export type ScoreNum = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8"
+

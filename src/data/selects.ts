@@ -1,19 +1,6 @@
 
 import { Action, Fruit, Grade } from '../interfaces/interfaces';
 
-// export const FRUITS: Fruit[] = [
-//     "blueberries",
-//     "strawberries",
-//     "raspberries",
-//     "blackberries",
-//     "pears",
-//     "figs",
-//     "kiwiberries",
-//     "apples",
-//     "cherries",
-//     "other"
-// ]
-
 type PropsFruit = {
     value: Fruit,
     label: string
@@ -28,7 +15,6 @@ type PropsAction = {
     value: string,
     label: Action
 }
-
 
 
 export const FRUITS:PropsFruit[] = [
@@ -66,7 +52,7 @@ export const ACTION:PropsAction[] = [
 ]
 
 export const SCORE = [
-    { value: "0", label: "Select an Action" },
+    { value: "0", label: "Select a Score" },
     { value: "1", label: "1 of 8" },
     { value: "2", label: "2 of 8" },
     { value: "3", label: "3 of 8" },
@@ -75,5 +61,19 @@ export const SCORE = [
     { value: "6", label: "6 of 8" },
     { value: "7", label: "7 of 8" },
     { value: "8", label: "8 of 8" }
+]
+
+export const PALLETTYPE = [
+    { value: "0", label: "Select a Pallet type" },
+    { value: "Wooden Block pallet", label:  "Wooden Block pallet" },
+    { value: "Wooden Euro pallet", label:   "Wooden Euro pallet" },
+    { value: "Wooden Air pallet", label:    "Wooden Air pallet" },
+    { value: "Plastic Block pallet", label: "Plastic Block pallet" },
+    { value: "Plastic Euro pallet", label:  "Plastic Euro pallet" },
+    { value: "Plastic Air pallet", label:   "Plastic Air pallet" },
+    { value: "One Way Block pallet", label: "One Way Block pallet" },
+    { value: "One Way Euro pallet", label:  "One Way Euro pallet" },
+    { value: "One Way Air pallet", label:   "One Way Air pallet" },
+    { value: "Other", label:                "Other" },
 ]
 

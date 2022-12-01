@@ -1,9 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { Text, TouchableOpacity, View, Image } from 'react-native';
-import { colorScore } from '../helpers/colorScore';
-import { SingleReport } from '../interfaces/intakes.reports'
-import { globalStyles } from '../theme/globalStyles';
+import { TouchableOpacity, View, Image } from 'react-native';
+import { colorScore } from '../../helpers/colorScore';
+import { SingleReport } from '../../interfaces/intakes.reports';
+import { globalStyles } from '../../theme/globalStyles';
+import { TextApp } from '../ui/TextApp';
+
 
 interface Props {
     report: SingleReport,
@@ -38,17 +40,18 @@ export const CardReport = ({ report }: Props) => {
                 <Image
                     source={
                         coverImg === undefined
-                            ? require('../assets/no-image.jpg')
+                            ? require('../../assets/no-image.jpg')
                             : { uri: coverImg.images[0].imgURL_low || coverImg?.images[0].imgURL }
                     }
                     style={{ width: 100, minHeight: 80, height: "100%", resizeMode: 'cover' }}
                 />
                 <View style={{ padding: 10 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{report.palletRef || "--"}</Text>
-                    <Text style={{ fontSize: 12 }}>{report.mainData.supplier || "--"}</Text>
-                    <Text style={{ fontSize: 12 }}>{report.mainData.total_pallets || "--"}</Text>
-                    <Text style={{ fontSize: 10 }}>{new Date(report.date).toLocaleDateString() || "--"}</Text>
+                    <TextApp bold>{report.palletRef || "--"}</TextApp>
+                    <TextApp size='xs'>{report.mainData.supplier || "--"}</TextApp>
+                    <TextApp size='xs'>{report.mainData.total_pallets || "--"}</TextApp>
+                    <TextApp size='xs'>{new Date(report.date).toLocaleDateString() || "--"}</TextApp>
                 </View>
+
                 <View style={{
                     position: "absolute",
                     bottom: 10,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleProp, Text, TextStyle } from 'react-native'
-import { globalStyles } from '../../theme/globalStyles';
+import { text } from '../../theme/variables';
 
 interface Props {
     style?: StyleProp<TextStyle>,
@@ -9,7 +9,7 @@ interface Props {
 
 export const TextH2 = ({style, children}:Props) => {
   return (
-    <Text style={{ fontSize: 20, fontWeight: 'bold', ...style as any }}>{children}</Text>
+    <Text style={{ color: text, fontSize: 20, fontWeight: 'bold', ...style as any }}>{children}</Text>
   )
 }
 

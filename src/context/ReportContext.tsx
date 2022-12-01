@@ -4,7 +4,7 @@ import qcareApi from '../api/qcareApi';
 import { PreReport } from '../helpers/preReport';
 import { totalKilos, totalSamples, formatSplit } from '../helpers/formatSplit';
 import { fruitType } from '../helpers/fruitType';
-import { AllReportsResponse, IntakeResponse, SingleReport } from '../interfaces/intakes.reports';
+import { AllReportsResponse, IntakesResponse, SingleReport } from '../interfaces/intakes.reports';
 import { reportReducer, ReportState } from './reportReducer';
 
 
@@ -45,14 +45,15 @@ export const ReportProvider = ({ children }: any) => {
     };
 
     const getMainData = async (id: string) => {
-        const { data } = await qcareApi.get<IntakeResponse>(`/report/new-report/${id}`)
-        const intake = data.intakeReport.data
-        const fruit = data.intakeReport.fruit
+        console.log(id)
+        // const { data } = await qcareApi.get<IntakesResponse>(`/report/new-report/${id}`)
+        // const intake = data.intakes.data
+        // const fruit = data.intakes.fruit
 
-        dispatch({
-            type: 'ADD_MAINDATA',
-            payload: { intake, fruit }
-        })
+        // dispatch({
+        //     type: 'ADD_MAINDATA',
+        //     payload: { intake, fruit }
+        // })
     }
 
     const setPallets = (obj: PreReport[]) => {
@@ -70,7 +71,6 @@ export const ReportProvider = ({ children }: any) => {
 
     const resetAll = () => dispatch({ type: 'REMOVE_PALLETS' })
     const reload = () => dispatch({ type: 'RELOAD' })
-
 
     return (
         <ReportContext.Provider value={{

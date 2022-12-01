@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from "react-native";
-import { inputColor } from "./variables";
+import { inputColor, greenMain } from './variables';
 
 
 export const inputStyles = StyleSheet.create({
@@ -13,11 +13,23 @@ export const inputStyles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: Platform.OS === 'android' ? 5 : 10,
         borderRadius: 10,
-        backgroundColor: inputColor
+        backgroundColor: inputColor,
     },
-    select: {
+    inputOutline: {
+        paddingHorizontal: 10,
+        paddingVertical: Platform.OS === 'android' ? 5 : 10,
+        borderRadius: 10,
+        borderColor: greenMain,
+        borderWidth: 1,
+        backgroundColor: "transparent",
+        // color: greenMain
+    },
+    selectShape: {
         padding: 10,
         borderRadius: 10,
+        minHeight: 35
+    },
+    select: {
         backgroundColor: "#fff",
 
         shadowColor: "#000",
@@ -29,6 +41,8 @@ export const inputStyles = StyleSheet.create({
         shadowRadius: 5,
 
         elevation: 2,
-
+    },
+    inputFontSize: {
+        fontSize: 18
     }
 });

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions } from 'react-native';
-import { TitleApp } from '../components/TitleApp'
+import { TitleApp } from '../components/ui/TitleApp'
 import { newReport } from '../data/new'
 import { globalStyles } from '../theme/globalStyles'
 import { capitalize } from '../helpers/eliminarEs';

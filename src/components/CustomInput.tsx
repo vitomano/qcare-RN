@@ -1,8 +1,8 @@
 import React from 'react'
-import { Text, View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 
-import { inputColor } from '../theme/variables';
 import { inputStyles } from '../theme/inputStyles';
+import { TextApp } from './ui/TextApp';
 
 interface Props {
     value: string
@@ -17,7 +17,7 @@ export const CustomInput = ({ label, value, item, editable = true, handleInput }
     return (
 
         <View style={{ ...inputStyles.inputContainer }}>
-            <Text style={{ ...inputStyles.inputLabel, width: "50%" }}>{label}</Text>
+            <TextApp style={{ width: "50%" }}>{label}</TextApp>
 
             <TextInput
                 style={{ ...inputStyles.input, width: "50%" }}

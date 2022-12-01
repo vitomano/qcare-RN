@@ -1,27 +1,36 @@
-import { View, Text, StyleSheet, TouchableOpacity, StyleSheetProperties, StyleProp } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react'
-import { greenMain } from '../theme/variables';
+import { danger, greenMain, inputColor } from '../../theme/variables';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { globalStyles } from '../../theme/globalStyles';
 
 interface Props {
     text: string,
-    width?: 40 | 50 | 60 | 70 | 80 | 90 | 100,
+    width?: 40 | 48 | 50 | 60 | 70 | 80 | 90 | 100,
     outline?: boolean,
     secondary?: boolean,
     centered?: boolean,
+    danger?: boolean,
+    disabled?: boolean,
     onPress?: () => void,
+    icon?: string
 }
 
-export default function StyledButton({
+export default function ButtonStyled({
     text = "Click",
     outline,
     secondary,
+    danger,
+    disabled,
     width,
-    onPress
+    onPress,
+    icon = undefined
 }: Props) {
 
     const buttonStyle = [
         styles.buttonContainer,
         width === 40 && styles.buttonCont40,
+        width === 48 && styles.buttonCont48,
         width === 50 && styles.buttonCont50,
         width === 60 && styles.buttonCont60,
         width === 70 && styles.buttonCont70,
@@ -34,14 +43,26 @@ export default function StyledButton({
         !outline && styles.buttonFilled,
         (!outline && secondary) && styles.buttonFilledSecondary,
         outline && styles.buttonOutline,
-        (outline && secondary) && styles.buttonOutlineSecondary
+        (outline && secondary) && styles.buttonOutlineSecondary,
+        (!outline && danger) && styles.buttonFilledDanger,
+        (outline && danger) && styles.buttonOutlineDanger,
+        (disabled) && styles.buttonDisabled,
     ]
 
     const textStyle = [
         styles.buttonText,
         styles.textPrimary,
         (!outline || secondary) && styles.textWhite,
-        (outline && secondary) && styles.textSecondary
+        (outline && secondary) && styles.textSecondary,
+        (outline && danger) && styles.textDanger,
+
+    ]
+
+    const iconStyle = [
+        styles.marginIcon,
+        styles.imagePrimary ,
+        (!outline || secondary) && styles.imageWhite,
+        (outline && secondary) && styles.imageSecondary,
     ]
 
     return (
@@ -52,7 +73,15 @@ export default function StyledButton({
                 style={button}
                 onPress={onPress}
             >
-                <Text style={textStyle} >{text}</Text>
+                {
+                    icon
+                        ?
+                        <View style={{ ...globalStyles.flexRow }}>
+                            <Icon name={icon} style={ iconStyle } size={25} />
+                            <Text style={textStyle} >{text}</Text>
+                        </View>
+                        : <Text style={textStyle} >{text}</Text>
+                }
             </TouchableOpacity>
         </View>
     )
@@ -61,6 +90,7 @@ export default function StyledButton({
 const styles = StyleSheet.create({
     buttonContainer: { width: "100%" },
     buttonCont40: { width: "40%" },
+    buttonCont48: { width: "48%" },
     buttonCont50: { width: "50%" },
     buttonCont60: { width: "60%" },
     buttonCont70: { width: "70%" },
@@ -70,9 +100,12 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         borderRadius: 100,
-        height: 40,
+        height: 45,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    buttonDisabled:{
+        backgroundColor: inputColor,
     },
 
     buttonFilled: {
@@ -80,6 +113,9 @@ const styles = StyleSheet.create({
     },
     buttonFilledSecondary: {
         backgroundColor: "#a7c139",
+    },
+    buttonFilledDanger: {
+        backgroundColor: danger,
     },
 
     buttonOutline: {
@@ -90,6 +126,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#a7c139",
     },
+    buttonOutlineDanger: {
+        borderWidth: 1,
+        borderColor: danger,
+    },
 
     buttonText: {
         textAlign: 'center',
@@ -97,5 +137,13 @@ const styles = StyleSheet.create({
     },
     textWhite: { color: "#fff" },
     textPrimary: { color: greenMain },
-    textSecondary: { color: "#a7c139" }
+    textSecondary: { color: "#a7c139" },
+    textDanger: { color: danger },
+
+    imageWhite: { color: "#fff" },
+    imagePrimary: { color: greenMain },
+    imageSecondary: { color: "#a7c139" },
+
+    marginIcon: {marginRight: 5, alignSelf: 'center'}
+    
 })

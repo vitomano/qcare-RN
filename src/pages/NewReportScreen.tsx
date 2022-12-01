@@ -1,7 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useState } from 'react'
 import { Text, TextInput, View } from 'react-native'
-import { TitleApp } from '../components/TitleApp'
+import { TitleApp } from '../components/ui/TitleApp'
 import { capitalize } from '../helpers/eliminarEs'
 import { ProductStackParams } from '../navigation/CreateStack'
 import { globalStyles } from '../theme/globalStyles';

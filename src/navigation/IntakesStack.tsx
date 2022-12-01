@@ -36,7 +36,7 @@ export const IntakesStack = () => {
         component={IntakesScreen}
       />
       <Stack.Screen
-        options={{ title: "Prereport" }}
+        options={{ title: "Pre Report" }}
         name="IntakeScreen"
         component={IntakeScreen}
       />

@@ -1,6 +1,5 @@
 import { PreReport } from '../helpers/preReport';
-import { BatchInfo, MainInfo } from "../interfaces/intakes.reports"
-import { Report } from '../data/pallet';
+import { BatchInfo, MainInfo, Report } from "../interfaces/intakes.reports"
 
 
 export interface ReportState {
@@ -14,8 +13,8 @@ type ActionType =
     | { type: 'ADD_MAINDATA', payload: {intake:MainInfo, fruit:string} }
     | { type: 'REMOVE_MAINDATA', payload: BatchInfo }
     | { type: 'SET_PALLETS', payload: Report[] }
-    | { type: 'ADD_NEWPALLET', payload: PreReport }
-    | { type: 'CHANGE_VALUE', payload: { id: string, item: keyof PreReport, value: string | null} }
+    | { type: 'ADD_NEWPALLET', payload: Report }
+    | { type: 'CHANGE_VALUE', payload: { id: string, item: keyof Report, value: string | null} }
     | { type: 'REMOVE_PALLETS' }
     | { type: 'RESET_ALL' }
     | { type: 'RELOAD' }
@@ -42,7 +41,7 @@ export const reportReducer = (state: ReportState, action: ActionType): ReportSta
         case 'ADD_NEWPALLET': 
             return {
                 ...state,
-                pallets: [...state.pallets, action.payload]
+                pallets: [...state.pallets as Report[], action.payload]
             };
         
         case 'REMOVE_PALLETS':
@@ -60,12 +59,12 @@ export const reportReducer = (state: ReportState, action: ActionType): ReportSta
 
         case 'CHANGE_VALUE':{
 
-            const newPallet:PreReport[] = state.pallets.map( (pal:PreReport) => {
+            const newPallet:Report[] = state.pallets.map( (pal:Report) => {
 
-                if( pal.id === action.payload.id){
+                if( pal._id === action.payload.id){
 
-                    if(action.payload.item !== "id"){
-                        pal[action.payload.item] = action.payload.value
+                    if(action.payload.item !== "_id"){
+                        // pal[action.payload.item] = action.payload.value
                         return pal
                     } else { return pal}
 

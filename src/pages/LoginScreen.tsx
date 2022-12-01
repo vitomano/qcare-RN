@@ -4,7 +4,7 @@ import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Tex
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
-import StyledButton from '../components/StyledButton';
+import ButtonStyled from '../components/ui/ButtonStyled';
 import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../hooks/useForm';
 import { marginStyles } from '../theme/marginStyles';
@@ -45,9 +45,7 @@ export const LoginScreen = ({ navigation }: Props) => {
       style={styles.bgColor}
     />
     <KeyboardAvoidingView
-      style={{
-        flex: 1,
-      }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
 
@@ -95,7 +93,7 @@ export const LoginScreen = ({ navigation }: Props) => {
           />
         </View>
 
-        <StyledButton
+        <ButtonStyled
           text='Login'
           width={60}
           outline

@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View, FlatList } from 'react-native'
+import { CardReport } from '../components/cards/CardReport';
 import { ReportContext } from '../context/ReportContext'
-import { CardReport } from '../components/CardReport';
 import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen';
 
 export const ReportsScreen = () => {
 
-  const { getAllReports, allReports } = useContext(ReportContext)
+  const { getAllReports, allReports, resetAll } = useContext(ReportContext)
   const [isLoading, setIsLoading] = useState(false)
 
 
@@ -17,8 +17,10 @@ export const ReportsScreen = () => {
       getAllReports()
     } catch (error) {
       throw new Error('Something went wrong')
-    } finally { setIsLoading( false )
-    }
+    } finally { setIsLoading( false ) }
+
+    return () => resetAll()
+
   }, [])
 
   if(isLoading) return <LoadingScreen />

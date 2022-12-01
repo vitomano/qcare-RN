@@ -1,10 +1,11 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { tituloEs } from '../helpers/eliminarEs'
 import objToArray from '../helpers/objToArray'
 // import { tituloEs } from '../../../helpers/eliminarEs'
 // import objToArray from '../../../helpers/objToArray'
 import { MainInfo } from '../interfaces/intakes.reports'
+import { TextApp } from './ui/TextApp'
 
 
 interface Props{
@@ -22,15 +23,15 @@ export const ReportMain = ({ mainData }:Props) => {
                     <View key={i}
                     style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5}}
                     >
-                        <View>
+                        <View style={{marginBottom: 5}}>
                             {
                                 item[0] === 'gln_ggn'
-                                    ? <Text>GLN/GGN</Text>
-                                    : <Text>{tituloEs(item[0])}</Text>
+                                    ? <TextApp>GLN/GGN</TextApp>
+                                    : <TextApp>{tituloEs(item[0]) || "--"}</TextApp>
                             }
                         </View>
 
-                        <Text style={{width: '45%', fontWeight: 'bold'}}>{item[1]}</Text>
+                        <TextApp bold style={{width: '45%'}}>{item[1] || "--"}</TextApp>
                     </View>
                 ))
 

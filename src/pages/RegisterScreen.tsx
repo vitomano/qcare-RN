@@ -2,7 +2,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
-import StyledButton from '../components/StyledButton';
+import ButtonStyled from '../components/ui/ButtonStyled';
 import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../hooks/useForm';
 import { marginStyles } from '../theme/marginStyles';
@@ -21,8 +21,9 @@ export const RegisterScreen = ({navigation}:Props) => {
         }])
   }, [errorMessage])
 
-  const { email, password, name, company, onChange } = useForm({
+  const { email, lastname, password, name, company, onChange } = useForm({
     name: '',
+    lastname: '',
     email: '',
     company: '',
     password: ''
@@ -30,7 +31,7 @@ export const RegisterScreen = ({navigation}:Props) => {
 
   const onRegister = () => {
     Keyboard.dismiss()
-    register({name, email, password, company})
+    register({name, lastname, email, password, company})
   };
 
 
@@ -112,7 +113,7 @@ export const RegisterScreen = ({navigation}:Props) => {
           />
         </View>
 
-        <StyledButton
+        <ButtonStyled
         width={60}
           text='Register'
           onPress={onRegister}

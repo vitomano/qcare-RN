@@ -9,6 +9,7 @@ import { PreReportsScreen } from '../pages/PreReportsScreen';
 import { LifeTest } from '../pages/LifeTest';
 import { ProfileScreen } from '../pages/ProfileScreen';
 import { IntakesStack } from './IntakesStack';
+import { PrereportsStack } from './PrereportsStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -43,6 +44,7 @@ export const TabStack = () => {
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
+                tabBarHideOnKeyboard: Platform.OS === "android" ? true : false,
                 tabBarActiveTintColor: "#1a9141",
                 tabBarStyle: {
                     borderTopWidth: 0,
@@ -90,8 +92,8 @@ export const TabStack = () => {
 
 
             <Tab.Screen
-                name="PreReportsScreen"
-                component={PreReportsScreen}
+                name="PreReportsStack"
+                component={PrereportsStack}
                 options={{
                     title: 'Pre Reports',
                     tabBarIcon: ({ color }) => <Text style={{ color }}>

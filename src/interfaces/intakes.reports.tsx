@@ -1,4 +1,4 @@
-import { ActionNum, GradeNum, ScoreNum } from "./interfaces";
+import { ActionNum, Fruit, GradeNum, ScoreNum } from "./interfaces";
 import { User } from "./interfaces.auth";
 
 export interface CVSResponse {
@@ -74,6 +74,32 @@ export interface Intake {
     user: string;
 }
 
+// Responde to Finish Report --------------------------------------
+
+export interface IntakeSingleResponse {
+    ok?: boolean;
+    msg: string;
+    intakeReport: IntakeData;
+}
+
+export interface IntakeData {
+    _id: string;
+    palletRef: string;
+    fruit: Fruit;
+    pallets: PrereportPallet[];
+    formatGr: string;
+    mainData: MainInfo | null;
+    user: string;
+    score: string;
+    grade: string;
+    action: string;
+    startDate: string;
+    endDate: string;
+}
+
+// END Responde to Finish Report --------------------------------------
+
+
 export interface UserPop {
     name: string,
     uid: string
@@ -89,7 +115,18 @@ export interface Pallet {
     pid: string;
     details: Details;
     score: ScoreNum;
-    images: Image[];
+    images: ImageType[];
+    prereport: PrereportPallet | null;
+    addGrower: NewGrower | null;
+    
+}
+
+export interface PrereportDone{
+    score: ScoreNum;
+    grade: GradeNum;
+    action: ActionNum;
+    details: Details;
+    images: ImageType[];
 }
 
 export interface SingleReport {
@@ -130,13 +167,6 @@ export interface Report {
 }
 
 
-export interface Image {
-    imgURL: string;
-    imgURL_low: string;
-    key: string;
-    key_low: string;
-}
-
 export interface Details {
     labels: DetailObject[];
     appareance: DetailObject[];
@@ -149,7 +179,6 @@ export interface DetailObject {
     label: string;
     name: string;
     valor: string | boolean | number | string[];
-    // valor: string | boolean | number | string[] | number[];
     minVal?: number;
     maxVal?: number;
     arrays?: object[] | number;
@@ -182,24 +211,64 @@ export interface Pallgrow {
     valor: string[] | string;
 }
 
-export interface IntakeSingleResponse {
-    ok?: boolean;
-    msg: string;
-    intakeReport: Intake;
-}
-
-export interface PalletState {
-    id: string;
-    samples: number | string,
-    score: ScoreNum;
-    images: Image[];
-    labels: DetailObject[];
-    appareance: DetailObject[];
-    pallgrow: DetailObject[];
-}
 
 
 //Pre Reports----------------------------------------------------
+
+export interface NewGrower {
+    grower_variety: string,
+    boxes: string,
+}
+
+
+export interface PrereportsResponse {
+    ok: boolean;
+    page: number;
+    totalPages: number;
+    prereports: Prereport[];
+}
+
+export interface SinglePreReportResponse {
+    ok: boolean;
+    msg: string;
+    singlePreReport: Prereport;
+}
+
+
+export interface Prereport {
+    _id: string;
+    palletRef: string;
+    fruit: string;
+    pallets: PrereportPallet[];
+    formatGr: string;
+    mainData: MainInfo;
+    user: UserPop;
+    score: ScoreNum;
+    grade: GradeNum;
+    action: ActionNum;
+    startDate: string;
+    endDate: string;
+}
+
+export interface PrereportPallet {
+    pid: string;
+    details: Details;
+    score: ScoreNum;
+    grade: GradeNum;
+    action: ActionNum;
+    images: ImageType[];
+    addGrower: NewGrower | null;
+}
+
+export interface ImageType {
+    imgURL: string;
+    imgURL_low: string;
+    key: string;
+    key_low: string;
+}
+
+
+// DATA ----------------------------------------------
 
 export interface DataPrereport {
     id: string,
@@ -213,55 +282,29 @@ export interface DataPrereport {
     pallgrow: DetailObject[],
 }
 
-export interface NewGrower {
-    grower_variety: string,
-    boxes: string,
+export interface PalletState {
+    id: string;
+    samples: number | string,
+    score: ScoreNum;
+    images: ImageType[];
+    labels: DetailObject[];
+    appareance: DetailObject[];
+    pallgrow: DetailObject[];
+    prereport?: PrereportPallet | null
+    addGrower?: NewGrower | null
 }
 
-
-export interface PrereportsResponse {
-    ok:         boolean;
-    page:       number;
-    totalPages: number;
-    prereports: Prereport[];
-}
-
-export interface SinglePreReportResponse {
-    ok: boolean;
-    msg: string;
-    singlePreReport: Prereport;
-}
-
-
-export interface Prereport {
-    _id:       string;
-    palletRef: string;
-    fruit:     string;
-    pallets:   PrereportPallet[];
-    formatGr:  string;
-    mainData:  MainInfo;
-    user:      UserPop;
-    score:     ScoreNum;
-    grade:     GradeNum;
-    action:    ActionNum;
-    startDate: string;
-    endDate:   string;
-}
-
-export interface PrereportPallet {
-    pid:       string;
-    details:   Details;
-    score:     ScoreNum;
-    grade:     GradeNum;
-    action:    ActionNum;
-    images:    Image[];
-    addGrower: NewGrower | null;
-}
-
-
-export interface Image {
-    imgURL:     string;
-    imgURL_low: string;
-    key:        string;
-    key_low:    string;
+export interface DataReports {
+    id: string,
+    samples?: number | string,
+    score: ScoreNum,
+    grade?: string,
+    action?: string,
+    images: object[],
+    newGrower?: NewGrower | null,
+    prereport?: PrereportPallet | null
+    addGrower?: NewGrower | null
+    labels: DetailObject[],
+    appareance: DetailObject[],
+    pallgrow: DetailObject[],
 }

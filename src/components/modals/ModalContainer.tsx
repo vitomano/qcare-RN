@@ -5,7 +5,7 @@ import { Dimensions, Modal, ScrollView, StyleSheet, TouchableOpacity } from 'rea
 interface Props {
     modal: boolean
     openModal: (b: boolean) => void
-    children: JSX.Element | JSX.Element[]
+    children: JSX.Element | JSX.Element[] 
 }
 
 export const ModalContainer = ({ openModal, modal, children }: Props) => {
@@ -31,8 +31,8 @@ export const ModalContainer = ({ openModal, modal, children }: Props) => {
                         activeOpacity={1}
                         onPress={() => openModal(true)}
                         style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }} >
-                        <ScrollView>
-                            {children}
+                        <ScrollView style={{padding: 20}}>
+                            {children }
                         </ScrollView>
                     </TouchableOpacity>
 
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,.5)'
     },
     modal: {
-        padding: 20,
+        // padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10
     },

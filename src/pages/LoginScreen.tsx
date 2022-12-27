@@ -13,7 +13,7 @@ interface Props extends StackScreenProps<any, any> { }
 
 export const LoginScreen = ({ navigation }: Props) => {
 
-  const { login, errorMessage, removeError } = useContext(AuthContext);
+  const { login, errorMessage="", removeError } = useContext(AuthContext);
 
   useEffect(() => {
     if (errorMessage.length === 0) return;

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
-import { itemValor } from '../helpers/eliminarEs';
-import { DetailObject, PrereportPallet } from '../interfaces/intakes.reports'
+import { itemValor, valorPallgrow } from '../helpers/eliminarEs';
+import { DetailObject, Pallet, PrereportPallet } from '../interfaces/intakes.reports'
 import { DetailName } from '../interfaces/interfaces';
 import { TextApp } from './ui/TextApp';
 
@@ -11,48 +11,63 @@ import { greenMain, inputColor, lightGrey, text } from '../theme/variables';
 import { ModalContainer } from './modals/ModalContainer';
 import { inputStyles } from '../theme/inputStyles';
 import ButtonStyled from './ui/ButtonStyled';
-import qcareApi from '../api/qcareApi';
-import { PickerModal } from './modals/PickerModal';
 import { Slider } from '@miblanchard/react-native-slider';
+import { useEditPrereport } from '../api/usePrereport';
+import { alertMsg } from '../helpers/alertMsg';
+import { PickerModal } from './modals/PickerModal';
+import { PALLETTYPE } from '../data/selects';
+import { percentage } from '../helpers/percentage';
+import { useEditReport, useReport } from '../api/useReport';
 
 interface Props {
     repId: string
-    pallet: PrereportPallet
+    pallet: PrereportPallet | Pallet
     item: DetailObject
     detailName: DetailName
-    // refresh: boolean
-    // setRefresh: (b: boolean) => void
-    fetchData: () => void
+    prereport?: boolean
 }
 
-export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Props) => {
+export const InfoPrereport = ({ pallet, item, detailName, repId, prereport=false }: Props) => {
+
+    const { data } = useReport(repId)
+    const { mutate } = useEditPrereport()
+    const { mutate:mutateEditReport } = useEditReport()
+
+    const weight_format = Number((pallet.details?.pallgrow?.find(app => app.name === "weight_10"))?.valor) || 0
+    const format = data?.mainData?.format_gr || data?.formatGr || 0
+
 
     const [openEdit, setOpenEdit] = useState(false)
+    const [openSelect, setOpenSelect] = useState(false)
     const [val, setVal] = useState(item.valor)
     const [uploading, setUploading] = useState(false)
 
-    const slider = (e:number[]) => setVal(e[0])
+    useEffect(() => {
+        setVal(item.valor)
+    }, [item])
 
     const editItem = async () => {
 
-        console.log(item.valor, val)
-        console.log(item.valor == val)
         if (item.valor === val) return setOpenEdit(false)
 
+        const editItem = {
+            reportId: repId,
+            palletId: pallet.pid,
+            detailName,
+            itemName: item.name,
+            itemValue: val
+        }
         try {
             setUploading(true)
-            await qcareApi.put('/prereport/edit-item', {
-                reportId: repId,
-                palletId: pallet.pid,
-                detailName,
-                itemName: item.name,
-                itemValue: val
-            })
 
-            fetchData()
-
+            prereport
+            ?
+            mutate(editItem)
+            :
+            mutateEditReport(editItem)
         } catch (error) {
             console.log(error)
+            alertMsg('Error', "Something went wrong")
         } finally {
             setUploading(false)
             setOpenEdit(false)
@@ -64,10 +79,24 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Pr
         <View style={{ ...globalStyles.flexRow, ...styles.item }}>
             <TextApp style={{ width: "50%", marginRight: 10 }}>{item.label}</TextApp>
             <View style={{ ...globalStyles.flexBetween, flex: 1 }}>
-                <TextApp bold style={{ width: "50%" }}>{itemValor(item.valor)}</TextApp>
+                {
+                    detailName === "pallgrow"
+                        ?
+                        <View style={{ flex: 1, flexDirection: "row" }}>
+                            <TextApp bold style={{ width: "50%" }}>{valorPallgrow(item.valor)}{item.name === 'weight_10' && "g"}</TextApp>
+                            {
+                                (item.name !== "weight_10") &&
+                                <TextApp>{percentage(format, weight_format, item.valor)}</TextApp>
+                            }
+                        </View>
+
+                        : <TextApp bold style={{ flex: 1 }}>{itemValor(item.valor)}</TextApp>
+
+                }
                 <TouchableOpacity
                     activeOpacity={.8}
                     onPress={() => setOpenEdit(true)}
+                    style={{ marginLeft: 5 }}
                 >
                     <Icon name='create-outline' size={20} color={text} />
                 </TouchableOpacity>
@@ -123,18 +152,7 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Pr
                                     />
                                 </View>
                             }
-                            {/* {
-                                item.tipe === "select" && item.name === "pallet_type" &&
-                                <View style={{ width: "50%" }}>
-                                    <PickerModal
-                                        modal={palletType}
-                                        openModal={setPalletType}
-                                        LIST={PALLETTYPE}
-                                        setState={handlePalletType}
-                                        state={item.valor as string}
-                                    />
-                                </View>
-                            } */}
+
                             {
                                 item.tipe === "range" &&
                                 <View style={{ ...globalStyles.flexBetween }}>
@@ -148,7 +166,6 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Pr
                                             maximumValue={item.maxVal}
                                             value={val as number}
                                             onValueChange={(e) => setVal(e.toString())}
-                                            // onValueChange={(e) => slider(e as any)}
                                         />
 
                                     </View >
@@ -156,9 +173,26 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Pr
                                 </View>
                             }
 
+                            {
+                                item.tipe === "select" && item.name === "pallet_type" &&
+
+                                <View style={{ width: "100%" }}>
+                                    <PickerModal
+                                        modal={openSelect}
+                                        openModal={setOpenSelect}
+                                        LIST={PALLETTYPE}
+                                        setState={(val) => setVal(val)}
+                                        state={item.valor as string}
+                                    />
+                                </View>
+
+                            }
                             <View style={{ ...globalStyles.flexBetween, marginTop: 25 }}>
                                 <ButtonStyled
-                                    onPress={() => setOpenEdit(false)}
+                                    onPress={() => {
+                                        setOpenEdit(false)
+                                        setVal(item.valor)
+                                    }}
                                     text='Cancel'
                                     outline
                                     width={48}
@@ -169,6 +203,7 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, fetchData }: Pr
                                     width={48}
                                 />
                             </View>
+
                         </View>
                 }
 

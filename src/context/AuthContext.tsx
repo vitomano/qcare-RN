@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { createContext } from "react";
 import qcareApi from '../api/qcareApi';
 import { LoginResponse, User, LoginData, RegisterData } from '../interfaces/interfaces.auth';
@@ -7,14 +7,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { useEmail } from '../hooks/useEmail';
 
+
 type AuthContextProps = {
     user: User | null,
     status: 'checking' | 'loggedIn' | 'loggedOut',
     errorMessage: string,
+    loading: boolean,
     login: (loginData: LoginData) => void,
     register: (registerData: RegisterData) => void,
     logout: () => void,
     removeError: () => void,
+    refresh: () => void,
 }
 
 const INITITAL_STATE: AuthState = {
@@ -28,10 +31,17 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({ children }: any) => {
 
     const [state, dispatch] = useReducer(authReducer, INITITAL_STATE)
+    const [reload, setReload] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        setLoading(true)
         checkToken()
-    }, [])
+    }, [reload])
+
+    const refresh = () => {
+        setReload(!reload)
+    };
 
     const checkToken = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -40,30 +50,30 @@ export const AuthProvider = ({ children }: any) => {
         if (!token) return dispatch({ type: 'NOT_AUTH' })
 
         try {
-            //Hay token
+            // Hay token
             const { data } = await qcareApi.get<LoginResponse>('/auth/me')
             // if(resp.status !== 200) {
             //     return dispatch({ type: 'LOGOUT' })
             // }
-
-            await AsyncStorage.setItem('token', data.token);
             
+            await AsyncStorage.setItem('token', data?.token!);
+
             dispatch({
                 type: 'LOGIN', payload: {
-                    uid: data.uid,
-                    name: data.name,
-                    lastname: data.lastname,
-                    profile: data.profile,
-                    company: data.company,
-                    contacts: data.contacts,
-                    rol: data.rol
+                    uid: data?.uid!,
+                    name: data?.name!,
+                    lastname: data?.lastname!,
+                    profile: data?.profile!,
+                    company: data?.company!,
+                    contacts: data?.contacts!,
+                    rol: data?.rol!
                 }
             })
 
         } catch (error) {
             console.log(error)
             return dispatch({ type: 'NOT_AUTH' })
-        }
+        } finally { setLoading(false) }
 
     }
 
@@ -121,14 +131,16 @@ export const AuthProvider = ({ children }: any) => {
                 company,
                 rol: "USER_ROLE"
             })
-            dispatch({ type: 'LOGIN', payload: {
-                uid: data.uid,
-                name: data.name,
-                lastname: data.lastname,
-                profile: data.profile,
-                company: data.company,
-                contacts: data.contacts
-            } })
+            dispatch({
+                type: 'LOGIN', payload: {
+                    uid: data.uid,
+                    name: data.name,
+                    lastname: data.lastname,
+                    profile: data.profile,
+                    company: data.company,
+                    contacts: data.contacts
+                }
+            })
 
             await AsyncStorage.setItem('token', data.token)
 
@@ -144,10 +156,12 @@ export const AuthProvider = ({ children }: any) => {
     return (
         <AuthContext.Provider value={{
             ...state,
+            loading,
             register,
             login,
             logout,
-            removeError
+            removeError,
+            refresh
         }}>
             {children}
         </AuthContext.Provider>

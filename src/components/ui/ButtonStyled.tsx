@@ -1,30 +1,38 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
 import React from 'react'
-import { danger, greenMain, inputColor } from '../../theme/variables';
+import { blue, danger, greenMain, inputColor } from '../../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../../theme/globalStyles';
 
 interface Props {
     text: string,
+    loading?: boolean,
     width?: 40 | 48 | 50 | 60 | 70 | 80 | 90 | 100,
     outline?: boolean,
     secondary?: boolean,
     centered?: boolean,
     danger?: boolean,
     disabled?: boolean,
+    blue?: boolean,
     onPress?: () => void,
     icon?: string
+    style?: StyleProp<ViewStyle>
+    styleText?: StyleProp<TextStyle>
 }
 
 export default function ButtonStyled({
     text = "Click",
+    loading = false,
     outline,
     secondary,
     danger,
-    disabled,
+    disabled = false,
+    blue,
     width,
     onPress,
-    icon = undefined
+    icon = undefined,
+    style,
+    styleText
 }: Props) {
 
     const buttonStyle = [
@@ -36,6 +44,7 @@ export default function ButtonStyled({
         width === 70 && styles.buttonCont70,
         width === 80 && styles.buttonCont80,
         width === 90 && styles.buttonCont90,
+        style
     ]
 
     const button = [
@@ -46,7 +55,11 @@ export default function ButtonStyled({
         (outline && secondary) && styles.buttonOutlineSecondary,
         (!outline && danger) && styles.buttonFilledDanger,
         (outline && danger) && styles.buttonOutlineDanger,
+        (!outline && danger) && styles.buttonFilledDanger,
+        (outline && danger) && styles.buttonOutlineDanger,
         (disabled) && styles.buttonDisabled,
+        (!outline && blue) && styles.buttonBlue,
+        (outline && blue) && styles.buttonOutlineBlue,
     ]
 
     const textStyle = [
@@ -55,12 +68,13 @@ export default function ButtonStyled({
         (!outline || secondary) && styles.textWhite,
         (outline && secondary) && styles.textSecondary,
         (outline && danger) && styles.textDanger,
-
+        (outline && blue) && styles.textBlue,
+        styleText
     ]
 
     const iconStyle = [
         styles.marginIcon,
-        styles.imagePrimary ,
+        styles.imagePrimary,
         (!outline || secondary) && styles.imageWhite,
         (outline && secondary) && styles.imageSecondary,
     ]
@@ -74,13 +88,22 @@ export default function ButtonStyled({
                 onPress={onPress}
             >
                 {
-                    icon
-                        ?
-                        <View style={{ ...globalStyles.flexRow }}>
-                            <Icon name={icon} style={ iconStyle } size={25} />
-                            <Text style={textStyle} >{text}</Text>
-                        </View>
-                        : <Text style={textStyle} >{text}</Text>
+
+                    <View style={{ ...globalStyles.flexRow }}>
+                        {
+                            icon &&
+                            <Icon name={icon} style={iconStyle} size={25} />
+                        }
+                        <Text style={textStyle} >{text}</Text>
+                        {
+                            loading &&
+                            <ActivityIndicator
+                                style={{marginLeft: 10}}
+                                size={20}
+                                color="white"
+                            />
+                        }
+                    </View>
                 }
             </TouchableOpacity>
         </View>
@@ -104,19 +127,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    buttonDisabled:{
-        backgroundColor: inputColor,
-    },
-
-    buttonFilled: {
-        backgroundColor: greenMain,
-    },
-    buttonFilledSecondary: {
-        backgroundColor: "#a7c139",
-    },
-    buttonFilledDanger: {
-        backgroundColor: danger,
-    },
+    buttonDisabled: { backgroundColor: inputColor },
+    buttonBlue: { backgroundColor: blue },
+    buttonFilled: { backgroundColor: greenMain },
+    buttonFilledSecondary: { backgroundColor: "#a7c139" },
+    buttonFilledDanger: { backgroundColor: danger },
 
     buttonOutline: {
         borderWidth: 1,
@@ -130,6 +145,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: danger,
     },
+    buttonOutlineBlue: {
+        borderWidth: 1,
+        borderColor: blue,
+    },
 
     buttonText: {
         textAlign: 'center',
@@ -139,11 +158,12 @@ const styles = StyleSheet.create({
     textPrimary: { color: greenMain },
     textSecondary: { color: "#a7c139" },
     textDanger: { color: danger },
+    textBlue: { color: blue },
 
     imageWhite: { color: "#fff" },
     imagePrimary: { color: greenMain },
     imageSecondary: { color: "#a7c139" },
 
-    marginIcon: {marginRight: 5, alignSelf: 'center'}
-    
+    marginIcon: { marginRight: 5, alignSelf: 'center' }
+
 })

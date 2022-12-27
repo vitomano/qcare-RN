@@ -7,6 +7,7 @@ export const secondaryHover = "#042e38";
 export const primaryClear = "#557D33";
 
 export const text = "#343434";
+export const mute = "#bcbcbc";
 
 export const green = "#a7c139";
 export const lightGreen = "#dff8ea";

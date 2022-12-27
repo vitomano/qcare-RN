@@ -15,7 +15,7 @@ export const LoadingScreen = ({ text }: Props) => {
       />
       {
         text &&
-        <TextApp>{text}</TextApp>
+        <TextApp style={{ textAlign: "center" }}>{text}</TextApp>
       }
     </View>
   )

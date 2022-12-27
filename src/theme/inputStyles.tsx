@@ -11,13 +11,13 @@ export const inputStyles = StyleSheet.create({
     },
     input: {
         paddingHorizontal: 10,
-        paddingVertical: Platform.OS === 'android' ? 5 : 10,
+        paddingVertical: Platform.OS === 'android' ? 7 : 10,
         borderRadius: 10,
         backgroundColor: inputColor,
     },
     inputOutline: {
         paddingHorizontal: 10,
-        paddingVertical: Platform.OS === 'android' ? 5 : 10,
+        paddingVertical: Platform.OS === 'android' ? 7 : 10,
         borderRadius: 10,
         borderColor: greenMain,
         borderWidth: 1,

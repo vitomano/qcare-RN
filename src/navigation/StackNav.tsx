@@ -20,16 +20,12 @@ export const StackNav = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {
-          //backgroundColor: '#fff'
-        }
       }}
     >
       {
         status == 'loggedIn'
           ? <>
             <Stack.Screen name="MainStack" component={ DrawerNav } />
-            {/* <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} /> */}
           </>
 
           :

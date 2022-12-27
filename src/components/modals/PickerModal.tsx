@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Modal, TouchableOpacity, View } from 'react-native'
+import { Modal, TouchableOpacity, View } from 'react-native'
 import { inputStyles } from '../../theme/inputStyles'
 import { ActionColor } from '../ui/ActionColor'
 import { GradeColor } from '../ui/GradeColor'
@@ -39,6 +39,7 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
         else {
             return (
                 <TouchableOpacity
+                    activeOpacity={.8}
                     onPress={() => openModal(true)}
                     style={[inputStyles.select, inputStyles.selectShape]}
                 >
@@ -57,12 +58,14 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
                     color
                         ?
                         <TouchableOpacity
+                            activeOpacity={.8}
                             onPress={() => openModal(true)}
                         >
                             <Item />
                         </TouchableOpacity>
                         :
                         <TouchableOpacity
+                            activeOpacity={.8}
                             onPress={() => openModal(true)}
                             style={[inputStyles.select, inputStyles.selectShape]}
                         >

@@ -20,6 +20,9 @@ import { alertMsg } from '../helpers/alertMsg';
 import { average } from '../helpers/average';
 import qcareApi from '../api/qcareApi';
 import { PalletIntake } from '../components/PalletIntake';
+import { useIntakes } from '../api/useIntakes';
+import { usePrereports } from '../api/usePrereports';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface Props extends StackScreenProps<IntakesStackParams, "IntakeScreen"> { };
@@ -27,6 +30,8 @@ interface Props extends StackScreenProps<IntakesStackParams, "IntakeScreen"> { }
 export const IntakeScreen = ({ route, navigation }: Props) => {
 
   const { isLoading, mainData, pallets, fruit, getMainData, handleFruit, cleanAll, setNewPallets } = useContext(IntakeContext)
+  const { refetch } = useIntakes()
+  const { refetch: recargar } = usePrereports()
 
   const [modalFruit, setModalFruit] = useState(false)
   const [sending, setSending] = useState(false)
@@ -45,7 +50,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
   const sendPrereport = async () => {
 
-    const { error, ok } = validationPrereport(mainData!, pallets)
+    const { error, ok } = validationPrereport(mainData!, pallets as DataPrereport[])
 
     if (!ok) return alertMsg("Error to send", error)
 
@@ -54,7 +59,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
     try {
       let newPallets = []
 
-      for (let grower of pallets) {
+      for (let grower of pallets as DataPrereport[]) {
 
         const details = {
           labels: (grower.labels.filter(p => p.check === true)).map(lab => { const { check, ...rest } = lab; return rest }),
@@ -76,9 +81,9 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
         mainData,
         fruit,
         pid: route.params.id,
-        averageScore: average('score', pallets) || "0",
-        averageGrade: average('grade', pallets) || "0",
-        averageAction: average('action', pallets) || "0",
+        averageScore: average('score', pallets as DataPrereport[]) || "0",
+        averageGrade: average('grade', pallets as DataPrereport[]) || "0",
+        averageAction: average('action', pallets as DataPrereport[]) || "0",
         startDate: startDate,
         endDate: new Date(),
         pallets: newPallets
@@ -86,38 +91,58 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
         .then(async (res) => {
 
+          console.log("Enviando Imagenes")
+
           const preId = res.data.preId
 
           for (let i = 0; i < pallets.length; i++) {
 
             const formData = new FormData();
 
-            for (const img of pallets[i].images) {
-              formData.append('uploady', img)
-            }
+            // for (const img of pallets[i].images) {
+            //   console.log(img)
+            //   formData.append('uploady', img)
+            // }
 
+            pallets[i].images.map(image => {
+              formData.append("uploady", image);
+            });
+            
             formData.append('preId', preId)
             formData.append('palletId', pallets[i].id)
 
-            await qcareApi.post('/prereport/images-prereport', formData)
+            await qcareApi.post('/prereport/images-prereport', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }})
+            // const token = await AsyncStorage.getItem('token')
+
+
+            // await fetch("/prereport/images-prereport", {
+            //   method: 'POST',
+            //   headers: {
+            //     Accept: 'application/json',
+            //     'Content-Type': 'multipart/form-data',
+            //     ['x-token']: (token)?.toString() as string
+            //   },
+            //   body: formData,
+            // })
           }
         })
 
-      navigation.navigate('ReportsScreen' as never)
+      refetch()
+      recargar()
+      navigation.navigate('IntakesScreen' as never)
 
     } catch (error) {
       console.log(error)
-      console.log('Salió mal')
     } finally {
+      refetch()
+      recargar()
       setSending(false)
     }
-
-
-
   };
 
   if (sending) return (
-    <LoadingScreen text='Uploading Pre Report...' />
+    <LoadingScreen text='Creating Pre Report...' />
   )
 
   return (
@@ -127,13 +152,13 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
           ? <LoadingScreen />
           :
           <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{flex: 1}}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
           >
 
             <ScrollView style={{ ...globalStyles.containerFlex }}>
 
-              <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 50}}>
+              <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 50 }}>
                 {
                   mainData &&
                   <>

@@ -1,5 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
 import { PalletState } from '../interfaces/intakes.reports';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 
 

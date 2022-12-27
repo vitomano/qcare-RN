@@ -1,42 +1,43 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Text } from 'react-native';
-import { Icon } from 'react-native-vector-icons/Icon';
-import { ProfileScreen } from '../pages/ProfileScreen';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { TabStack } from './TabStack';
-import { IntakesScreen } from '../pages/IntakesScreen';
-import { greenMain } from '../theme/variables';
+import { UserStack } from './UserStack';
+import { CustomDrawer } from './CustomDrawer';
+import { greenMain, lightGreen, text } from '../theme/variables';
 
 const Drawer = createDrawerNavigator();
+
 
 export const DrawerNav = () => {
     return (
         <Drawer.Navigator
+        drawerContent={ props => <CustomDrawer {...props}/> }
         screenOptions={{
             headerShown: false,
+            drawerPosition: 'right',
+            drawerActiveBackgroundColor: lightGreen,
+            drawerActiveTintColor: greenMain,
+            drawerInactiveTintColor: text
         }}
         >
             <Drawer.Screen 
-             name="HomePageScreen"
+             name="ReportsPageScreen"
              component={TabStack}
              options={{
-                 title: 'Home',
+                 title: 'Reports',
+                 drawerIcon: ({color}) => <Icon name="reader-outline" size={25} style={{ color, marginRight: -15 }} />
+
              }}
             />
 
             <Drawer.Screen 
-             name="ProfileScreen"
-             component={ProfileScreen}
+             name="UserStack"
+             component={UserStack}
              options={{
                  title: 'Profile',
-                 headerShown: true,
-                 headerStyle: {
-                    backgroundColor: greenMain,
-                    elevation: 0,
-                    shadowColor: 'transparent',
-                    
-                  },
-                  headerTintColor: '#fff',
+                 drawerIcon: ({color}) => <Icon name="person-outline" size={25} style={{ color, marginRight: -15 }} />
              }}
             />
         </Drawer.Navigator>

@@ -2,10 +2,10 @@ import React from 'react'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { globalStyles } from '../../theme/globalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { darkGrey,grey } from '../../theme/variables';
+import { darkGrey, grey } from '../../theme/variables';
 
 
-interface ListType{
+interface ListType {
     label: string
     value: string
 }
@@ -13,7 +13,7 @@ interface ListType{
 interface Props<T> {
     LIST: T[],
     activeModal: (b: boolean) => void
-    setState: (val: string, opt?:any) => void
+    setState: (val: string, opt?: any) => void
     setCurrent: (val: T) => void
     state: string
     option?: any
@@ -23,32 +23,35 @@ interface Props<T> {
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option }:Props<T>) => {
+export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option }: Props<T>) => {
 
     const onPressItem = (val: T) => {
         activeModal(false)
-        setState( val.value, option )
+        setState(val.value, option)
         setCurrent(val)
     };
 
     return (
         <TouchableOpacity
+            activeOpacity={.8}
             onPress={() => activeModal(false)}
             style={styles.container}
         >
             <View
-                style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }}
+                style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 100 }}
             >
                 <ScrollView>
                     {
                         LIST.map((option, i) => (
                             <TouchableOpacity
+                                activeOpacity={.8}
+
                                 key={i}
                                 style={styles.option}
-                                onPress={() => onPressItem( option )}
+                                onPress={() => onPressItem(option)}
                             >
-                                <View style={ [globalStyles.flexRow, option.value === state && styles.selected] }>
-                                    <View style={{width: 30}}>
+                                <View style={[globalStyles.flexRow, option.value === state && styles.selected]}>
+                                    <View style={{ width: 30 }}>
                                         {
                                             option.value === state &&
                                             <Icon name="checkmark" size={20} style={{ color: darkGrey, alignSelf: 'center' }} />
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         // fontWeight: 'bold'
     },
-    selected:{
+    selected: {
         flex: 1,
         width: '100%',
         backgroundColor: grey,

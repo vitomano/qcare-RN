@@ -1,78 +1,96 @@
-import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
-import { View, FlatList } from 'react-native'
-import qcareApi from '../api/qcareApi'
+import React from 'react'
+import { View, ScrollView, RefreshControl } from 'react-native'
 import { CardPrereport } from '../components/cards/CardPrereport'
-import { TextTitle } from '../components/ui/TextTitle'
-import { Prereport, PrereportsResponse } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen'
+import { usePrereports } from '../api/usePrereports';
+import ButtonStyled from '../components/ui/ButtonStyled';
+import { CentredContent } from '../components/CenterContent'
+import { TextApp } from '../components/ui/TextApp'
 
 export const PreReportsScreen = () => {
 
-  const [preReports, setPreReports] = useState<Prereport[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [refresh, setRefresh] = useState(false)
+  // const navigation = useNavigation()
 
-  const [totalPages, setTotalPages] = useState(1)
-  const [page, setPage] = useState(1)
-
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    navigation.addListener('focus', async () => {
-
-      setIsLoading(true)
-      setPreReports([])
-
-      const { data } = await qcareApi.get<PrereportsResponse>(`/prereport?page=${page}`)
-
-      setPreReports(data.prereports)
-      setTotalPages(data.totalPages)
-      setIsLoading(false)
-    })
-
-    return () => {
-      setPreReports([])
-      setIsLoading(false)
-    }
-
-  }, [])
+  const { prereports, isLoading, hasNextPage, fetchNextPage, refetch } = usePrereports()
 
   if (isLoading) return <LoadingScreen />
 
   return (
 
-    <View
-      style={globalStyles.container}
-    >
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={refetch}
+        />
+      }
+      style={{ ...globalStyles.container, paddingTop: 10, paddingHorizontal: 10 }}>
       {
-        preReports.length > 0
-          ? <FlatList
-            contentInset={{ bottom: 50 }}
-            style={{ width: '100%', height: '100%', padding: 10 }}
-            nestedScrollEnabled={true}
-            data={preReports}
-            keyExtractor={(prereport) => prereport._id}
-            renderItem={({ item }) => <CardPrereport
-              refresh={refresh}
-              setRefresh={setRefresh}
-              prereport={item} />}
+        prereports.length > 0
+          ?
+          <View style={{marginBottom: 50}}>
+            {
 
-            showsVerticalScrollIndicator={false}
-          />
+              prereports.map(prereport => (
+                <CardPrereport
+                  key={prereport._id}
+                  prereport={prereport} />
+              ))
+            }
+            {
+              hasNextPage &&
+              <CentredContent style={{ marginTop: 30 }}>
+                <ButtonStyled
+                  text='Load more'
+                  blue
+                  width={50}
+                  onPress={fetchNextPage}
+                  style={{ marginBottom: 50 }}
+                />
+              </CentredContent>
+            }
+          </View>
+
           :
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          >
-            <TextTitle style={{ textAlign: "center" }}>No Intakes</TextTitle>
+          <View style={{ marginVertical: 50 }}>
+            <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
           </View>
       }
-    </View>
+      {/* {
+        data?.pages &&
+        <>
+          {
+            data?.pages.map((page, index) =>
+
+              <View key={index}>
+                {
+                  page.prereports.length > 0
+                    ?
+                    <>
+                      {page.prereports.map(prereport => (
+                        <CardPrereport
+                          key={prereport._id}
+                          prereport={prereport} />
+                      ))}
+
+                    </>
+                    :
+                    <View style={{ marginVertical: 50 }}>
+                      <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
+                    </View>
+                }
+              </View>
+            )
+          }
+        </>
+
+      } */}
+
+    </ScrollView>
 
 
   )
 }
+
+

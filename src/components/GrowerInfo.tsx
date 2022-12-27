@@ -1,24 +1,27 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { PrereportPallet } from '../interfaces/intakes.reports'
+import { Pallet, PrereportPallet } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
 import { darkGreen, greenMain, lightGreen, text } from '../theme/variables';
-import { IntakeContext } from '../context/IntakeContext';
 import { TextApp } from './ui/TextApp';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalContainer } from './modals/ModalContainer';
-import qcareApi from '../api/qcareApi';
 import ButtonStyled from './ui/ButtonStyled';
 import { inputStyles } from '../theme/inputStyles';
+import { useEditPreGrower } from '../api/usePrereport';
+import { useEditRepGrower } from '../api/useReport';
 
 interface Props {
-    pallet: PrereportPallet,
+    pallet: PrereportPallet | Pallet
     repId: string
-    fetchData: () => void
-
+    prereport?: boolean
 }
 
-export const GrowerInfo = ({ pallet, repId, fetchData }: Props) => {
+export const GrowerInfo = ({ pallet, repId, prereport=false }: Props) => {
+
+    const { mutate } = useEditPreGrower()
+    const { mutate:mutateReport } = useEditRepGrower()
+
 
     const [openEdit, setOpenEdit] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -29,18 +32,20 @@ export const GrowerInfo = ({ pallet, repId, fetchData }: Props) => {
     const editGrower = async () => {
         if (pallet.addGrower?.grower_variety === valGrower && pallet.addGrower?.boxes === valBoxes) return setOpenEdit(false)
 
+        const editItem = {
+            reportId: repId,
+            palletId: pallet.pid,
+            grower: valGrower,
+            boxes: valBoxes,
+        }
+
         try {
             setUploading(true)
-
-            const { data } = await qcareApi.put('/prereport/edit-grower', {
-                reportId: repId,
-                palletId: pallet.pid,
-                grower: valGrower,
-                boxes: valBoxes,
-            })
-            console.log(data)
-            fetchData()
-
+            prereport
+            ?
+            mutate(editItem)
+            :
+            mutateReport(editItem)
         } catch (error) {
             console.log(error)
         } finally {

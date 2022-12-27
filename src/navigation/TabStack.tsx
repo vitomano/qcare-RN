@@ -5,11 +5,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { ReportsStack } from './ReportsStack';
 import { greenMain } from '../theme/variables';
 import { CreateStack } from './CreateStack';
-import { PreReportsScreen } from '../pages/PreReportsScreen';
-import { LifeTest } from '../pages/LifeTest';
-import { ProfileScreen } from '../pages/ProfileScreen';
 import { IntakesStack } from './IntakesStack';
 import { PrereportsStack } from './PrereportsStack';
+import { LifeTestStack } from './LifeTestStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -104,8 +102,8 @@ export const TabStack = () => {
 
 
             <Tab.Screen
-                name="LifeTestScreen"
-                component={LifeTest}
+                name="LifeTestStack"
+                component={LifeTestStack}
                 options={{
                     title: 'Life Test',
                     tabBarIcon: ({ color }) => <Text style={{ color }}>
@@ -113,6 +111,7 @@ export const TabStack = () => {
                     </Text>
                 }}
             />
+
         </Tab.Navigator>
     );
 }

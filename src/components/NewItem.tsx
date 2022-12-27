@@ -25,7 +25,7 @@ interface Props {
 export const NewItem = ({ pallet, detailName, modal, openModal }: Props) => {
 
     const [correct, setCorrect] = useState(false)
-    const { addItem } = useContext( IntakeContext )
+    const { addItem, samples } = useContext(IntakeContext)
 
     const { name, value, onChange } = useForm({
         name: "",
@@ -33,12 +33,12 @@ export const NewItem = ({ pallet, detailName, modal, openModal }: Props) => {
     })
 
     useEffect(() => {
-        if (name.length >= 2 && value.length > 0 && /^[a-zA-Z_ ]*$/.test(name)) setCorrect(true)
+        if (name.length >= 2 && /^[a-zA-Z_ ]*$/.test(name)) setCorrect(true)
         else setCorrect(false)
     }, [name, value])
 
 
-    const addNewItem = () => {
+    const addNewItem = () => {        
 
         const labelExist = pallet[detailName].find(labl => labl.label === name.trim())
         const nameExist = pallet[detailName].find(labl => labl.name === inputJson(name.trim()))
@@ -51,9 +51,11 @@ export const NewItem = ({ pallet, detailName, modal, openModal }: Props) => {
             );
         }
 
-        const newItem:DetailObject = { check: true, tipe: "text", label: name, name: inputJson(name), valor: value }
+        const newItem: DetailObject = detailName === "pallgrow"
+            ? { check: true, tipe: "arrays", label: name, name: inputJson(name), valor: new Array(Number(samples)).fill("0") }
+            : { check: true, tipe: "text", label: name, name: inputJson(name), valor: value }
 
-        addItem( pallet.id, detailName, newItem )
+        addItem(pallet.id, detailName, newItem)
         openModal(false)
     };
 
@@ -83,14 +85,23 @@ export const NewItem = ({ pallet, detailName, modal, openModal }: Props) => {
                     }
                 </View>
 
-                <TextApp style={{ marginBottom: 5 }}>Value</TextApp>
-                <TextInput
-                    keyboardType='default'
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    style={{ ...inputStyles.inputOutline, paddingVertical: 15, fontSize: 18, }}
-                    onChangeText={(e) => onChange(e, "value")}
-                />
+                {
+                    detailName === "pallgrow"
+                    ?<View />
+
+                    :<View>
+                        <TextApp style={{ marginBottom: 5 }}>Value</TextApp>
+                        <TextInput
+                            keyboardType='default'
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            style={{ ...inputStyles.inputOutline, paddingVertical: 15, fontSize: 18, }}
+                            onChangeText={(e) => onChange(e, "value")}
+                        />
+                    </View>
+                }
+
+
                 <View style={{ ...globalStyles.flexBetween, marginTop: 30, marginBottom: 10 }}>
                     <ButtonStyled
                         onPress={() => openModal(false)}

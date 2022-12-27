@@ -1,9 +1,14 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, StyleProp, ViewStyle } from 'react-native';
 
-export const CentredContent = ({ children }:any) => {
+interface Props{
+    children: JSX.Element | JSX.Element[]
+    style?: StyleProp<ViewStyle>
+}
+
+export const CentredContent = ({ children, style }:Props) => {
     return (
-        <View style={{ flex: 1, alignItems: "center", marginTop: 20, marginBottom: 10 }}>
+        <View style={{alignItems: "center", ...style as any }}>
             {children}
         </View>
     )

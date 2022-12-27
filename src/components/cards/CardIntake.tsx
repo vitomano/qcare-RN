@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, View } from 'react-native';
 import { Intake } from '../../interfaces/intakes.reports'
@@ -7,24 +7,26 @@ import { TextApp } from '../ui/TextApp';
 import { inputColor } from '../../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
-import qcareApi from '../../api/qcareApi';
+import { useRemoveIntake } from '../../api/useIntakes';
+import { alertMsg } from '../../helpers/alertMsg';
 
 interface Props {
     intake: Intake,
-    refresh: boolean,
-    setRefresh: (val:boolean) => void
 }
 
-export const CardIntake = ({ intake, refresh, setRefresh}: Props) => {
+export const CardIntake = ({ intake }: Props) => {
 
     const navigation = useNavigation()
 
     const [confirmation, setConfirmation] = useState(false)
 
+    const { mutate, isLoading, reset } = useRemoveIntake()
+
     const handleRemove = async (id: string) => {
-        await qcareApi.delete(`/intakes/delete/${id}`);
+        mutate(id, {
+            onError: () => { alertMsg("Error", "Something went wrong", reset) }
+        })
         setConfirmation(false)
-        setRefresh(!refresh)
     }
 
     return (
@@ -72,6 +74,7 @@ export const CardIntake = ({ intake, refresh, setRefresh}: Props) => {
                     modal={confirmation}
                     action={() => handleRemove(intake._id)}
                     message='Are you sure you want to remove this intake?'
+                    loading={isLoading}
                 />
 
             </View>

@@ -10,7 +10,6 @@ import { globalStyles } from '../theme/globalStyles'
 import { lightGrey } from '../theme/variables'
 import { InputPallet } from './InputPallet'
 import { PickerModal } from './modals/PickerModal'
-import { TextH3 } from './ui/TextH3'
 import { Status } from '../interfaces/interfaces';
 import ButtonStyled from './ui/ButtonStyled'
 import { CentredContent } from './CenterContent';

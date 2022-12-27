@@ -1,26 +1,31 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
-import { danger, greenMain, text } from '../../theme/variables'
+import { blue, danger, greenMain, lightGrey, mediumGrey, mute, text } from '../../theme/variables'
 
 interface Props {
   style?: StyleProp<TextStyle>,
   children: JSX.Element | JSX.Element[] | string | number | Element
   bold?: boolean
+  center?: boolean
   size?: "xs" | "s" | "m" | "l" | "xl" | "xxl" | "normal"
-  color?: "text" | "danger" | "white" | "green"
+  color?: "text" | "danger" | "white" | "green" | "mute" | "blue"
 }
 
-export const TextApp = ({ children, style, bold=false, size="normal", color="text" }: Props) => {
+export const TextApp = ({ children, style, bold=false, size="normal", color="text", center=false }: Props) => {
 
   const textColor = [
     color === "text" && styles.colorNormal,
     color === "white" && styles.colorWhite,
     color === "danger" && styles.colorDanger,
     color === "green" && styles.colorGreen,
+    color === "mute" && styles.colorMute,
+    color === "blue" && styles.colorBlue,
     
   ]
 
   const textWeight = [ bold ? styles.bold : styles.normal ]
+
+  const textCenter = [ center ? styles.center : null ]
 
   const textSize = [
     size === "xs" && styles.textXS,
@@ -33,7 +38,7 @@ export const TextApp = ({ children, style, bold=false, size="normal", color="tex
   ]
 
   return (
-    <Text style={ [...textColor, ...textSize, ...textWeight, ...[style] as never]}>
+    <Text style={ [...textColor, ...textSize, ...textWeight, ...textCenter ,...[style] as never]}>
       {children}
     </Text>
   )
@@ -43,10 +48,14 @@ const styles = StyleSheet.create({
   normal: { fontWeight: '500' },
   bold: { fontWeight: 'bold' },
 
+  center: { textAlign: 'center' },
+
   colorNormal: { color: text },
   colorDanger: { color: danger },
   colorWhite: { color: "#fff" },
   colorGreen: { color: greenMain },
+  colorMute: { color: mute },
+  colorBlue: { color: blue },
 
   textXS: { fontSize: 12 },
   textS: { fontSize: 14 },

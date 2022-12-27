@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image'
 
 import { ACTION, GRADE, SCORE } from '../data/selects'
 import { PrereportPallet } from '../interfaces/intakes.reports'
@@ -11,19 +12,21 @@ import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
 import { InfoPrereport } from './InfoPrereport';
 import { GrowerInfo } from './GrowerInfo';
-import qcareApi from '../api/qcareApi';
 import { alertMsg } from '../helpers/alertMsg';
+import { useEditPreCondition, useEditPreGrower } from '../api/usePrereport';
+import { ImageGallery } from './ImageGallery';
 
 interface Props {
     pallet: PrereportPallet,
     i: number,
     repId: string,
-    fetchData: () => void
-    // refresh: boolean
-    // setRefresh: (b: boolean) => void
 }
 
-export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
+export const PalletPrereport = ({ pallet, i, repId }: Props) => {
+
+    const { mutate } = useEditPreCondition()
+
+    const { width } = Dimensions.get('screen')
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
@@ -31,7 +34,7 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
 
     // const [uploading, setUploading] = useState(false)
 
-    const [removeModal, setRemoveModal] = useState(false)
+    // const [removeModal, setRemoveModal] = useState(false)
 
     const editStatus = async (val: string, status: Status) => {
 
@@ -41,21 +44,20 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
             if (status === "grade") newValue = val
             if (status === "action") newValue = val
 
-            await qcareApi.put('prereport/edit-condition', {
+            const editItem = {
                 item: status,
                 value: newValue,
                 reportId: repId,
                 palletId: pallet.pid,
-            })
+            }
 
-            fetchData()
+            mutate(editItem)
 
         } catch (error) {
             console.log(error)
             alertMsg("Error", "Something went wrong")
         }
     }
-
 
     return (
         <View
@@ -66,18 +68,17 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
 
                     <PalletNum num={i + 1} />
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={() => setRemoveModal(true)}
                     >
                         <TextApp color="danger" size='s'>remove</TextApp>
                         <ModalConfirmation
                             modal={removeModal}
                             openModal={setRemoveModal}
-                            // action={() => removePallet(pallet.pid)}
-                            action={() => console.log(pallet.pid)}
+                            action={() => mutateRemove(pallet.pid)}
                             message="Are you sure you want to remove this pallet?"
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {
@@ -92,9 +93,7 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
                                     item={lab}
                                     detailName="labels"
                                     repId={repId}
-                                    // refresh={refresh}
-                                    // setRefresh={setRefresh}
-                                    fetchData={fetchData}
+                                    prereport={true}
                                 />
                             ))
                         }
@@ -115,13 +114,11 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
                                     item={app}
                                     detailName="appareance"
                                     repId={repId}
-                                    // refresh={refresh}
-                                    // setRefresh={setRefresh}
-                                    fetchData={fetchData}
+                                    prereport={true}
+
                                 />
                             ))
                         }
-
                     </View>
                 }
 
@@ -137,13 +134,18 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
                                     item={pall}
                                     detailName="pallgrow"
                                     repId={repId}
-                                    // refresh={refresh}
-                                    // setRefresh={setRefresh}
-                                    fetchData={fetchData}
+                                    prereport={true}
                                 />
                             ))
                         }
 
+                    </View>
+                }
+
+                {
+                    pallet.images.length > 0 &&
+                    <View style={{ marginBottom: 30 }}>
+                        <ImageGallery images={ pallet.images } />
                     </View>
                 }
 
@@ -190,15 +192,16 @@ export const PalletPrereport = ({ pallet, i, repId, fetchData }: Props) => {
                     </View>
                 </View>
 
-                <View style={{ marginBottom: 20 }}>
-
-                    <GrowerInfo
-                        pallet={pallet}
-                        repId={repId}
-                        fetchData={fetchData}
-                    />
-
-                </View>
+                {
+                    pallet.addGrower !== null &&
+                    <View style={{ marginBottom: 20 }}>
+                        <GrowerInfo
+                            pallet={pallet}
+                            repId={repId}
+                            prereport={true}
+                        />
+                    </View>
+                }
 
             </View>
         </View>

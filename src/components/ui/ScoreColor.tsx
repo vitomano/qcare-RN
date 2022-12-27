@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleProp, ViewStyle } from 'react-native';
-import { stringScore } from '../../helpers/stringScore';
+import { stringScore, stringScoreShort } from '../../helpers/stringScore';
 import { ScoreNum } from '../../interfaces/interfaces';
 import { score0, score1, score2, score3, score4, score5, score6, score7, score8, text } from '../../theme/variables';
 import { TextApp } from './TextApp';
@@ -8,9 +8,10 @@ import { TextApp } from './TextApp';
 interface Props {
     score: ScoreNum
     style?: StyleProp<ViewStyle>
+    short?: boolean
 }
 
-export const ScoreColor = ({ score = '0', style }: Props) => {
+export const ScoreColor = ({ score = '0', style, short=false }: Props) => {
 
     const bgColor = [
         score === "0" && {backgroundColor: score0},
@@ -32,7 +33,13 @@ export const ScoreColor = ({ score = '0', style }: Props) => {
 
     return (
     <View style={[...bgColor, {alignItems: "center", justifyContent: "center" ,borderRadius: 5, paddingHorizontal: 5, minHeight: 30, ...style as any}]}>
-        <TextApp size='xs' bold color='white' style={[...textStyle, { textAlign: "center"}]}>{ stringScore(score) }</TextApp>
+        {
+            short
+            ?
+            <TextApp size='xs' bold color='white' style={[...textStyle, { textAlign: "center"}]}>{ stringScoreShort(score) }</TextApp>
+            :
+            <TextApp size='xs' bold color='white' style={[...textStyle, { textAlign: "center"}]}>{ stringScore(score) }</TextApp>
+        }
     </View>
     )
 

@@ -1,39 +1,40 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { Prereport } from '../../interfaces/intakes.reports';
 import { globalStyles } from '../../theme/globalStyles';
 import { TextApp } from '../ui/TextApp';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { dateFormat } from '../../helpers/dateFormat';
-import { inputColor } from '../../theme/variables';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { CardPrereportItem } from './CardPrereportItem';
+import { CustomMenu } from '../ui/CustomMenu';
+import { useRemovePrereport } from '../../api/usePrereports';
+import { ModalLoading } from '../modals/ModalLoading';
 
 
 interface Props {
-    prereport: Prereport,
-    refresh: boolean,
-    setRefresh: (val: boolean) => void
+    prereport: Prereport
 }
 
-export const CardPrereport = ({ prereport, refresh, setRefresh }: Props) => {
+export const CardPrereport = ({ prereport }: Props) => {
 
     const navigation = useNavigation()
 
-    const [confirmation, setConfirmation] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
     const existGrower = prereport.pallets.some(pall => pall.addGrower !== null)
 
 
-    const handleRemove = async (id: string) => {
-        console.log(id)
+    const { mutateAsync, data } = useRemovePrereport()
 
-        // await qcareApi.delete(`/intakes/delete/${id}`);
-        // setConfirmation(false)
-        // setRefresh(!refresh)
-    }
+    const handleDelete = async () => {
+        setIsDeleting(true)
+        await mutateAsync(prereport._id)
+        setIsDeleting(false)
+    };
+
 
     return (
+
         <TouchableOpacity
             style={{
                 marginHorizontal: 5,
@@ -51,23 +52,24 @@ export const CardPrereport = ({ prereport, refresh, setRefresh }: Props) => {
             activeOpacity={0.95}
             onPress={() => navigation.navigate('PreReportScreen' as never, { id: prereport._id } as never)}
         >
-            <View style={{ ...globalStyles.card, padding: 15 }}>
+            <View style={{ ...globalStyles.card, padding: 15, position: "relative" }}>
                 <View style={{ ...globalStyles.flexBetween }}>
                     <TextApp bold>{prereport.palletRef || "--"}</TextApp>
                     <View style={{ ...globalStyles.flexBetween }}>
-                        <TextApp size='xs'>{dateFormat(prereport.endDate) || "--"}</TextApp>
-                        {/* <TextApp size='xs'>{prereport.fruit || "--"}</TextApp> */}
-                        <TouchableOpacity
-                            activeOpacity={.8}
-                            onPress={() => setConfirmation(true)}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Icon size={20} name="ellipsis-vertical" />
-                        </TouchableOpacity>
+                        <TextApp size='xs' style={{ marginRight: 10 }}>{dateFormat(prereport.endDate) || "--"}</TextApp>
+
+                        <TouchableWithoutFeedback>
+                            <CustomMenu handleDelete={handleDelete} id={prereport._id}/>
+                        </TouchableWithoutFeedback>
+
                     </View>
                 </View>
 
-                <View style={{marginTop: 10}}>
+                <ModalLoading
+                    modal={isDeleting}
+                    text='Deleting Pre Report...' />
+
+                <View style={{ marginTop: 10 }}>
                     {
                         existGrower
                             ?
@@ -89,15 +91,8 @@ export const CardPrereport = ({ prereport, refresh, setRefresh }: Props) => {
                     }
                 </View>
 
-
-                <ModalConfirmation
-                    openModal={setConfirmation}
-                    modal={confirmation}
-                    action={() => handleRemove(prereport._id)}
-                    message='Are you sure you want to remove this intake?'
-                />
-
             </View>
         </TouchableOpacity>
+
     )
 }

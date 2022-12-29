@@ -1,6 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SinglePreReportResponse } from "../interfaces/intakes.reports";
 import qcareApi from "./qcareApi";
+import Toast from 'react-native-toast-message'
+
+interface PropsDelete {
+    reportId: string,
+    palletId: string,
+    key: string,
+    key_low: string
+}
 
 
 const getSinglePrereports = async (id: string) => {
@@ -23,12 +31,12 @@ const editGrower = async (grower: any) => {
     return data
 };
 
-export const uploadPallet = async (pallet:any) => {
-    const {data} = await qcareApi.post(`/prereport/add-pallet`, pallet)
+export const uploadPallet = async (pallet: any) => {
+    const { data } = await qcareApi.post(`/prereport/add-pallet`, pallet)
     return data
 }
 
-export const uploadImages = async (allData:any) => {
+export const uploadImages = async (allData: any) => {
 
     const preId = allData.pid
 
@@ -41,18 +49,24 @@ export const uploadImages = async (allData:any) => {
     formData.append('preId', allData.repId)
     formData.append('palletId', preId)
 
-    const {data} =await qcareApi.post('/prereport/images-prereport', formData,{
-        headers: { 'Content-Type': 'multipart/form-data' }})
+    const { data } = await qcareApi.post('/prereport/images-prereport', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 
     return data
 }
 
-// export const removePrereport = async (id:string) => {
-//     console.log(id)
-//     const {data} = await qcareApi.get(`/prereport/delete/${id}`)
-//     console.log(data)
-//     return data
-// }
+//DELETE IMAGE
+export const deleteImage = async ({ reportId, palletId, key, key_low }: PropsDelete) => {
+
+    const { data } = await qcareApi.post(`/prereport/delete-image`, {
+        reportId,
+        palletId,
+        keyName: key,
+        keyLow: key_low
+    })
+    return data
+}
 
 
 // ------------------------- HOOKS -------------------------
@@ -96,9 +110,19 @@ export const useUploadImages = () => {
     })
 }
 
-// export const useRemovePrereport = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(removePrereport, {
-//         onSuccess: () => { queryClient.invalidateQueries(['prereport']) }
-//     })
-// }
+export const useDeletePrereportImage = () => {
+    const queryClient = useQueryClient()
+    return useMutation(deleteImage, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['prereport']),
+                Toast.show({
+                    type: 'success',
+                    text1: 'Image has been deleted'
+                })
+        },
+        onError: () => Toast.show({
+            type: 'error',
+            text1: 'Something went wrong'
+        })
+    })
+}

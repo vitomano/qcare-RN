@@ -37,24 +37,12 @@ export const usePrereports = ( ) => {
     return { ...result, prereports };
 
 }
-// export const usePrereports = ( ) => {
-//     return useInfiniteQuery(
-//         ['prereports'], ({pageParam = 1}) => getAllPrereports(pageParam),
-//         {
-//             getNextPageParam: (lastPage) => { 
-//                 if( lastPage.page === lastPage.totalPages ) return false
-//                 return lastPage.page + 1}
-//         }
-//         // { select: (data) => { return data.singlePreReport } }
-//     );
-// }
+
 
 
 export const useRemovePrereport = () => {
     const queryClient = useQueryClient()
     return useMutation(removePrereport, {
         onSuccess: () => { queryClient.fetchInfiniteQuery(['prereports']) }
-        // onSuccess: () => { queryClient.refetchQueries(['prereports']) }
-        // onSuccess: () => { queryClient.invalidateQueries(['prereports']) }
     })
 }

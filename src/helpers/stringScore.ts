@@ -13,7 +13,7 @@ export const stringScore = (score:ScoreNum="0"):string => {
         case "8": return "8 of 8"
                 
         default:
-            return "--"
+            return "none"
     }
 };
 
@@ -30,6 +30,6 @@ export const stringScoreShort = (score:ScoreNum="0"):string => {
         case "8": return "8 / 8"
                 
         default:
-            return "--"
+            return "none"
     }
 };

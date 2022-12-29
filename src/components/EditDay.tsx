@@ -14,6 +14,7 @@ import ButtonStyled from './ui/ButtonStyled'
 
 import { useEditDay } from '../api/useLifeTest';
 import { LoadingScreen } from '../pages/LoadingScreen';
+import { Tags } from './ui/Tags';
 
 
 interface Props {
@@ -98,23 +99,11 @@ export const EditDay = ({ day, lifeId, setModalEditDay }: Props) => {
             </View>
             {
                 conditions.length > 0 &&
-                <View style={{ ...globalStyles.flexRow, flexWrap: "wrap", marginBottom: 30 }}>
-                    {
-                        conditions.map(cond => (
-                            <View key={cond}
-                                style={{ ...globalStyles.flexRow, marginVertical: 3, marginRight: 5, backgroundColor: darkGrey, borderRadius: 50, paddingVertical: 3, paddingHorizontal: 10 }}
-                            >
-                                <TextApp size='s' color='white'>{cond}</TextApp>
-
-                                <TouchableOpacity
-                                    style={{ marginLeft: 5 }}
-                                    onPress={() => setConditions(conditions.filter(item => item !== cond))}
-                                >
-                                    <Icon name='close' size={20} color="#fff" />
-                                </TouchableOpacity>
-                            </View>
-                        ))
-                    }
+                <View style={{ marginBottom: 30 }}>
+                    <Tags
+                        tags={conditions}
+                        setTags={setConditions}
+                    />
                 </View>
             }
 

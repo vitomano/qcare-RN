@@ -10,7 +10,6 @@ import { MenuProvider } from 'react-native-popup-menu';
 
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { check, text } from './src/theme/variables';
-import { View } from 'react-native';
 
 
 export default function App() {

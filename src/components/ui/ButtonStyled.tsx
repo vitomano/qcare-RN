@@ -86,6 +86,7 @@ export default function ButtonStyled({
                 activeOpacity={0.8}
                 style={button}
                 onPress={onPress}
+                disabled={loading}
             >
                 {
 

@@ -17,25 +17,22 @@ import { alertMsg } from '../helpers/alertMsg';
 import { PickerModal } from './modals/PickerModal';
 import { PALLETTYPE } from '../data/selects';
 import { percentage } from '../helpers/percentage';
-import { useEditReport, useReport } from '../api/useReport';
+import { useEditReport } from '../api/useReport';
+import { ArraysEdit } from './ArraysEdit';
 
 interface Props {
     repId: string
     pallet: PrereportPallet | Pallet
     item: DetailObject
     detailName: DetailName
+    format?: number
     prereport?: boolean
 }
 
-export const InfoPrereport = ({ pallet, item, detailName, repId, prereport=false }: Props) => {
+export const InfoPrereport = ({ pallet, item, detailName, repId, format = 0, prereport = false }: Props) => {
 
-    const { data } = useReport(repId)
     const { mutate } = useEditPrereport()
-    const { mutate:mutateEditReport } = useEditReport()
-
-    const weight_format = Number((pallet.details?.pallgrow?.find(app => app.name === "weight_10"))?.valor) || 0
-    const format = data?.mainData?.format_gr || data?.formatGr || 0
-
+    const { mutate: mutateRep } = useEditReport()
 
     const [openEdit, setOpenEdit] = useState(false)
     const [openSelect, setOpenSelect] = useState(false)
@@ -59,12 +56,11 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, prereport=false
         }
         try {
             setUploading(true)
-
             prereport
-            ?
-            mutate(editItem)
-            :
-            mutateEditReport(editItem)
+                ?
+                mutate(editItem)
+                :
+                mutateRep(editItem)
         } catch (error) {
             console.log(error)
             alertMsg('Error', "Something went wrong")
@@ -86,11 +82,31 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, prereport=false
                             <TextApp bold style={{ width: "50%" }}>{valorPallgrow(item.valor)}{item.name === 'weight_10' && "g"}</TextApp>
                             {
                                 (item.name !== "weight_10") &&
-                                <TextApp>{percentage(format, weight_format, item.valor)}</TextApp>
+                                <TextApp>{percentage(format, Number((pallet.details?.pallgrow?.find(app => app.name === "weight_10"))?.valor) || 0, item.valor)}</TextApp>
                             }
                         </View>
 
-                        : <TextApp bold style={{ flex: 1 }}>{itemValor(item.valor)}</TextApp>
+                        :
+                        item.tipe === "arrays"
+                            ?
+                            <View style={{ flex: 1 }}>
+                                <View style={{ flexDirection: "row", flexWrap: "wrap" }} >
+                                    {
+                                        Array.isArray(item.valor) &&
+                                        item.valor.map((val, i) => (
+                                            <TextApp
+                                                style={{ minWidth: "50%" }}
+                                                key={i}
+                                                bold
+                                            >{itemValor(val)}</TextApp>
+                                        ))
+                                    }
+                                </View>
+
+                            </View>
+                            :
+                            <TextApp bold style={{ flex: 1 }}>{itemValor(item.valor)}</TextApp>
+
 
                 }
                 <TouchableOpacity
@@ -139,6 +155,12 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, prereport=false
                                     onChangeText={(e) => setVal(e)}
                                 />
                             }
+
+                            {
+                                item.tipe === "arrays" &&
+                                Array.isArray(val) && <ArraysEdit arrayItem={ val } setVal={setVal}/>
+                            }
+
                             {
                                 item.tipe === "checkbox" &&
                                 <View>

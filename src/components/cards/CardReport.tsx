@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image, TouchableWithoutFeedback } from 'react-native';
 import { colorScore } from '../../helpers/colorScore';
 import { SingleReport } from '../../interfaces/intakes.reports';
 import { globalStyles } from '../../theme/globalStyles';
+import { CustomMenuReport } from '../ui/CustomMenuReport';
 import { TextApp } from '../ui/TextApp';
 
 
@@ -16,9 +17,12 @@ export const CardReport = ({ report }: Props) => {
     const navigation = useNavigation()
     const coverImg = report.pallets.find(cover => cover.images.length > 0)
 
+
+    const handleDelete = () => {
+        console.log("Deleting")
+    };
+
     return (
-
-
         <TouchableOpacity
             style={{
                 marginHorizontal: 5,
@@ -45,7 +49,7 @@ export const CardReport = ({ report }: Props) => {
                     }
                     style={{ width: 100, minHeight: 80, height: "100%", resizeMode: 'cover' }}
                 />
-                <View style={{ padding: 10 }}>
+                <View style={{ padding: 10, flex: 1 }}>
                     <TextApp bold>{report.palletRef || "--"}</TextApp>
                     <TextApp size='xs'>{report.mainData.supplier || "--"}</TextApp>
                     <TextApp size='xs'>{report.mainData.total_pallets || "--"}</TextApp>
@@ -54,12 +58,23 @@ export const CardReport = ({ report }: Props) => {
 
                 <View style={{
                     position: "absolute",
+                    top: 10,
+                    right: 5,
+                }}>
+                    <TouchableWithoutFeedback>
+                        <CustomMenuReport handleDelete={handleDelete} id={report._id} data={report!}/>
+                    </TouchableWithoutFeedback>
+                </View>
+
+                <View style={{
+                    position: "absolute",
                     bottom: 10,
                     right: 10,
                     borderRadius: 5,
                 }}>
-                    {colorScore((report.score||0).toString())}
+                    {colorScore((report.score || 0).toString())}
                 </View>
+
             </View>
         </TouchableOpacity>
     )

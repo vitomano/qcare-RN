@@ -21,9 +21,10 @@ interface Props<T> {
     state: string
     option?: any
     color?: boolean
+    outline?: boolean
 }
 
-export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setState, state, option = undefined, color = false }: Props<T>) => {
+export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setState, state, option = undefined, color = false, outline=false }: Props<T>) => {
 
     const [current, setCurrent] = useState<T>(LIST[0] as T)
 
@@ -67,7 +68,11 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
                         <TouchableOpacity
                             activeOpacity={.8}
                             onPress={() => openModal(true)}
-                            style={[inputStyles.select, inputStyles.selectShape]}
+                            style={
+                                outline
+                                ?[inputStyles.selectGrey, inputStyles.selectShape]
+                                :[inputStyles.select, inputStyles.selectShape]
+                            }
                         >
                             <TextApp size='s'>{current.label}</TextApp>
                         </TouchableOpacity>

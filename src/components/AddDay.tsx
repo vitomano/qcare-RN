@@ -18,6 +18,7 @@ import { Asset } from 'react-native-image-picker';
 import { useAddDay } from '../api/useLifeTest';
 import { useQueryClient } from '@tanstack/react-query';
 import { LoadingScreen } from '../pages/LoadingScreen';
+import { ImageButton } from './ui/ImageButton'
 
 
 interface Props {
@@ -91,7 +92,7 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                         queryClient.invalidateQueries(['lifetest'])
                         queryClient.refetchQueries(['lifeTests'])
                     }
-                    
+
                     // onSuccess: (data) => {
                     //     console.log("este ok",data)
                     //     Toast.show({
@@ -110,13 +111,13 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                     // },
                 }
             )
-    
+
         } catch (error) {
             console.log(error)
         } finally {
             setModalAddDay(false)
         }
-        
+
 
 
 
@@ -202,28 +203,10 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                 </View>
             }
 
-            <View
-                style={{ alignItems: "center", justifyContent: "center", alignSelf: "center", marginVertical: 25 }}
-            >
-                <View
-                    style={{ alignItems: "center", justifyContent: "center", backgroundColor: blue, width: 50, height: 50, borderRadius: 50 }}
-                >
-                    <TouchableOpacity
-                        activeOpacity={.8}
-                        onPress={openLibrary}
-                    >
-                        <Icon name="camera" color="#fff" size={30} />
-                    </TouchableOpacity>
-                </View>
-                {
-                    images.length > 0
-                        ?
-                        <TextApp size='s' style={{ marginTop: 5 }}>{images.length} file/s selected</TextApp>
-                        :
-                        <TextApp size='s' style={{ marginTop: 5, color: blue }}>Max. 3 images</TextApp>
-
-                }
+            <View style={{ marginVertical: 25 }} >
+                <ImageButton openLibrary={openLibrary} imagesLength={images} max="3"/>
             </View>
+
 
 
             <View style={{ ...globalStyles.flexBetween }}>

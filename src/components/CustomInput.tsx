@@ -16,6 +16,7 @@ export const CustomInput = ({ label, value, item, editable = true, handleInput }
 
     return (
 
+
         <View style={{ ...inputStyles.inputContainer }}>
             <TextApp style={{ width: "50%" }}>{label}</TextApp>
 
@@ -29,7 +30,6 @@ export const CustomInput = ({ label, value, item, editable = true, handleInput }
                 onChangeText={text => handleInput(text, item)}
             />
         </View>
-
     )
 }
 

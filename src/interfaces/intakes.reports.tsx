@@ -154,15 +154,15 @@ export interface SingleReportResponse {
 }
 
 export interface Report {
+    _id: string;
     palletRef: string;
     comments: string;
     fruit: string;
     pallets: Pallet[];
     formatGr: number;
     score: ScoreNum;
-    _id: string;
     mainData: MainInfo;
-    user: User;
+    user?: User;
     date: string;
 }
 

@@ -28,6 +28,7 @@ export const mediumGrey = "#80868B";
 export const darkGrey = "#363636";
 
 export const blue = "#1A73E8";
+export const pdf = "#F40F02";
 
 
 

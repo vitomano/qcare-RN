@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Dimensions, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
 
 interface Props {
@@ -22,6 +22,10 @@ export const ModalContainer = ({ openModal, modal, children }: Props) => {
                 visible={modal}
                 onRequestClose={() => openModal(false)}
             >
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={{ flex: 1 }}
+                >
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => openModal(false)}
@@ -37,6 +41,8 @@ export const ModalContainer = ({ openModal, modal, children }: Props) => {
                     </TouchableOpacity>
 
                 </TouchableOpacity>
+                                </KeyboardAvoidingView>
+
             </Modal>
         </>
     )

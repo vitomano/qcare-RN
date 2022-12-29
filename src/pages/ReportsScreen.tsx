@@ -14,28 +14,6 @@ export const ReportsScreen = () => {
 
   if (isLoading) return <LoadingScreen />
 
-
-  //   return (
-
-  //     <View
-  //       style={globalStyles.container}
-  //     >
-  //       <FlatList
-  //         style={{ width: '100%', height: '100%', padding: 10 }}
-  //         nestedScrollEnabled={true}
-  //         data={allReports}
-  //         keyExtractor={(report) => report._id}
-  //         renderItem={({ item }) => <CardReport report={item}/> }
-
-  //         showsVerticalScrollIndicator={false}
-  //       />
-  //     </View>
-
-
-  //   )
-  // }
-
-
   return (
 
     <ScrollView

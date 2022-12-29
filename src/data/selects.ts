@@ -1,5 +1,5 @@
-
 import { Action, Fruit, Grade } from '../interfaces/interfaces';
+
 
 type PropsFruit = {
     value: Fruit,

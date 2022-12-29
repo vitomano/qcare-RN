@@ -10,8 +10,6 @@ import { TextApp } from '../components/ui/TextApp'
 
 export const PreReportsScreen = () => {
 
-  // const navigation = useNavigation()
-
   const { prereports, isLoading, hasNextPage, fetchNextPage, refetch } = usePrereports()
 
   if (isLoading) return <LoadingScreen />
@@ -57,35 +55,6 @@ export const PreReportsScreen = () => {
             <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
           </View>
       }
-      {/* {
-        data?.pages &&
-        <>
-          {
-            data?.pages.map((page, index) =>
-
-              <View key={index}>
-                {
-                  page.prereports.length > 0
-                    ?
-                    <>
-                      {page.prereports.map(prereport => (
-                        <CardPrereport
-                          key={prereport._id}
-                          prereport={prereport} />
-                      ))}
-
-                    </>
-                    :
-                    <View style={{ marginVertical: 50 }}>
-                      <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
-                    </View>
-                }
-              </View>
-            )
-          }
-        </>
-
-      } */}
 
     </ScrollView>
 

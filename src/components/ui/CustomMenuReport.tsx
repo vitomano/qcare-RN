@@ -5,16 +5,22 @@ import { useRemovePrereport } from '../../api/usePrereports';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { TextApp } from './TextApp';
 import { useNavigation } from '@react-navigation/native';
+import { ModalBlock } from '../modals/ModalBlock';
+import { Share } from '../Share';
+import { Report } from '../../interfaces/intakes.reports';
 
 
-interface Props{
-    id:string
+interface Props {
+    id: string
     handleDelete: () => void
+    data: Report
 }
 
-export const CustomMenu = ({handleDelete, id}:Props) => {
+export const CustomMenuReport = ({ handleDelete, data }: Props) => {
 
     const [confirmation, setConfirmation] = useState(false)
+    const [modalShare, setModalShare] = useState(false)
+
     const navigation = useNavigation()
 
     return (
@@ -32,7 +38,7 @@ export const CustomMenu = ({handleDelete, id}:Props) => {
                 }
             }}
             >
-                <MenuOption onSelect={() => navigation.navigate('PreReportFinishScreen' as never, { id: id } as never)}
+                <MenuOption onSelect={() => setModalShare(true)}
                     customStyles={{
                         optionWrapper: {
                             flexDirection: "row",
@@ -40,11 +46,11 @@ export const CustomMenu = ({handleDelete, id}:Props) => {
                             paddingVertical: 6
                         },
                     }}>
-                    <Icon size={20} name="document-text-outline"/>
-                    <TextApp style={{ marginLeft: 10 }}>Finish Report</TextApp>
+                    <Icon size={20} name="mail-outline" />
+                    <TextApp style={{ marginLeft: 10 }}>Share report</TextApp>
                 </MenuOption>
 
-                <MenuOption onSelect={ () => setConfirmation(true) }
+                <MenuOption onSelect={() => setConfirmation(true)}
                     customStyles={{
                         optionWrapper: {
                             flexDirection: "row",
@@ -52,17 +58,27 @@ export const CustomMenu = ({handleDelete, id}:Props) => {
                             paddingVertical: 6
                         },
                     }}>
-                    <Icon size={20} name="trash-outline"/>
-                    <TextApp style={{ marginLeft: 10 }}>Delete Pre report</TextApp>
+                    <Icon size={20} name="trash-outline" />
+                    <TextApp style={{ marginLeft: 10 }}>Delete Report</TextApp>
                 </MenuOption>
             </MenuOptions>
-            
+
             <ModalConfirmation
-                modal={ confirmation }
-                openModal={ setConfirmation }
-                message="Are you sure you want to remove this Pre Report"
-                action={ handleDelete }
+                modal={confirmation}
+                openModal={setConfirmation}
+                message="Are you sure you want to remove this Report"
+                action={handleDelete}
             />
+
+            <ModalBlock
+                modal={modalShare}
+                openModal={setModalShare}
+            >
+                <Share
+                    closeModal={setModalShare}
+                    data={data!}
+                />
+            </ModalBlock>
 
         </Menu>
     )

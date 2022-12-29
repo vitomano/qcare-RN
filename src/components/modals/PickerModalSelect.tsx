@@ -26,6 +26,8 @@ const HEIGHT = Dimensions.get('window').height
 export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option }: Props<T>) => {
 
     const onPressItem = (val: T) => {
+        if(val.value === "0") return activeModal(false)
+
         activeModal(false)
         setState(val.value, option)
         setCurrent(val)

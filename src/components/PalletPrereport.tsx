@@ -13,7 +13,7 @@ import { PalletNum } from './ui/PalletNum';
 import { InfoPrereport } from './InfoPrereport';
 import { GrowerInfo } from './GrowerInfo';
 import { alertMsg } from '../helpers/alertMsg';
-import { useEditPreCondition, useEditPreGrower } from '../api/usePrereport';
+import { useDeletePrereportImage, useEditPreCondition, useEditPreGrower } from '../api/usePrereport';
 import { ImageGallery } from './ImageGallery';
 
 interface Props {
@@ -24,40 +24,50 @@ interface Props {
 
 export const PalletPrereport = ({ pallet, i, repId }: Props) => {
 
-    const { mutate } = useEditPreCondition()
+    const { mutateAsync } = useEditPreCondition()
+    const { mutate:mutateDeleteImage } = useDeletePrereportImage()
 
-    const { width } = Dimensions.get('screen')
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
     const [modalScore, setModalScore] = useState(false)
 
-    // const [uploading, setUploading] = useState(false)
-
-    // const [removeModal, setRemoveModal] = useState(false)
-
     const editStatus = async (val: string, status: Status) => {
 
+        if (val === "0") return
+
+        let newValue = null
+        if (status === "score") newValue = val
+        if (status === "grade") newValue = val
+        if (status === "action") newValue = val
+
+        const editItem = {
+            item: status,
+            value: newValue,
+            reportId: repId,
+            palletId: pallet.pid,
+        }
+
         try {
-            let newValue = null
-            if (status === "score") newValue = val
-            if (status === "grade") newValue = val
-            if (status === "action") newValue = val
-
-            const editItem = {
-                item: status,
-                value: newValue,
-                reportId: repId,
-                palletId: pallet.pid,
-            }
-
-            mutate(editItem)
-
+            await mutateAsync(editItem)
         } catch (error) {
             console.log(error)
             alertMsg("Error", "Something went wrong")
         }
     }
+
+
+
+    const removeReportImage = (key:string, key_low:string) => {
+        mutateDeleteImage({
+            reportId: repId,
+            palletId: pallet.pid,
+            key,
+            key_low
+        })
+    };
+
+
 
     return (
         <View
@@ -65,20 +75,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
         >
             <View style={{ ...globalStyles.card, padding: 15 }}>
                 <View style={{ ...globalStyles.flexBetween, marginBottom: 20 }}>
-
                     <PalletNum num={i + 1} />
-
-                    {/* <TouchableOpacity
-                        onPress={() => setRemoveModal(true)}
-                    >
-                        <TextApp color="danger" size='s'>remove</TextApp>
-                        <ModalConfirmation
-                            modal={removeModal}
-                            openModal={setRemoveModal}
-                            action={() => mutateRemove(pallet.pid)}
-                            message="Are you sure you want to remove this pallet?"
-                        />
-                    </TouchableOpacity> */}
                 </View>
 
                 {
@@ -145,7 +142,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
                 {
                     pallet.images.length > 0 &&
                     <View style={{ marginBottom: 30 }}>
-                        <ImageGallery images={ pallet.images } />
+                        <ImageGallery images={ pallet.images } deleteAction={removeReportImage}/>
                     </View>
                 }
 

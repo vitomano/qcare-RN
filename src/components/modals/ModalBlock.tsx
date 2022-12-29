@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Modal, ScrollView, StyleSheet, View, StyleProp, ViewStyle } from 'react-native';
+import { Dimensions, Modal, ScrollView, StyleSheet, View, StyleProp, ViewStyle, KeyboardAvoidingView, Platform } from 'react-native';
 
 
 interface Props {
@@ -23,11 +23,16 @@ export const ModalBlock = ({ openModal, modal, children, style }: Props) => {
                 visible={modal}
                 onRequestClose={() => openModal(false)}
             >
-                <View style={styles.container} >
-                    <ScrollView style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80, ...style as any }} >
-                        {children}
-                    </ScrollView>
-                </View>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={{ flex: 1 }}
+                >
+                    <View style={styles.container} >
+                        <ScrollView style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80, ...style as any }} >
+                            {children}
+                        </ScrollView>
+                    </View>
+                </KeyboardAvoidingView>
             </Modal>
         </>
     )

@@ -99,20 +99,16 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
             const formData = new FormData();
 
-            // for (const img of pallets[i].images) {
-            //   console.log(img)
-            //   formData.append('uploady', img)
-            // }
-
             pallets[i].images.map(image => {
               formData.append("uploady", image);
             });
-            
+
             formData.append('preId', preId)
             formData.append('palletId', pallets[i].id)
 
             await qcareApi.post('/prereport/images-prereport', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }})
+              headers: { 'Content-Type': 'multipart/form-data' }
+            })
             // const token = await AsyncStorage.getItem('token')
 
 
@@ -152,10 +148,9 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
           ? <LoadingScreen />
           :
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            behavior={Platform.OS === "ios" ? "height" : "height"}
             style={{ flex: 1 }}
           >
-
             <ScrollView style={{ ...globalStyles.containerFlex }}>
 
               <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 50 }}>

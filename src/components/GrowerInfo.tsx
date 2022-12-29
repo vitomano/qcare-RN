@@ -20,8 +20,7 @@ interface Props {
 export const GrowerInfo = ({ pallet, repId, prereport=false }: Props) => {
 
     const { mutate } = useEditPreGrower()
-    const { mutate:mutateReport } = useEditRepGrower()
-
+    const { mutate:mutateRep } = useEditRepGrower()
 
     const [openEdit, setOpenEdit] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -45,7 +44,7 @@ export const GrowerInfo = ({ pallet, repId, prereport=false }: Props) => {
             ?
             mutate(editItem)
             :
-            mutateReport(editItem)
+            mutateRep(editItem)
         } catch (error) {
             console.log(error)
         } finally {

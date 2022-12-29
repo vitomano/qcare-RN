@@ -1,8 +1,7 @@
-import React, { Dispatch, SetStateAction, useContext, useRef } from 'react'
-import { View, StyleSheet } from 'react-native';
+import React, { useContext } from 'react'
+import { View } from 'react-native';
 import { IntakeContext } from '../context/IntakeContext';
 import { MainInfo } from '../interfaces/intakes.reports'
-import { inputColor } from '../theme/variables';
 import { CustomInput } from './CustomInput';
 
 type Props = { mainData: MainInfo }
@@ -38,6 +37,8 @@ export const MainForm = ({mainData}:Props) => {
     // const kilosRef = useRef()
 
     return (
+
+
         <View>
 
             <CustomInput

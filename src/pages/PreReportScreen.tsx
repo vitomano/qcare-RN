@@ -22,8 +22,8 @@ interface Props extends StackScreenProps<PreReportsStackParams, "PreReportScreen
 
 export const PreReportScreen = ({ route, navigation }: Props) => {
 
-  const { data, isLoading, refetch } = usePrereport(route.params.id)
-  
+  const { isLoading, data, refetch } = usePrereport(route.params.id)
+
   const [modalAddPallet, setModalAddPallet] = useState(false)
 
   //-----------------------------------------------------------------------
@@ -37,72 +37,77 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
       style={{ flex: 1 }}
     >
 
-      <ScrollView
-              refreshControl={
-                <RefreshControl
-                  refreshing={isLoading}
-                  onRefresh={refetch}
-                />
-              }
-      style={{ ...globalStyles.containerFlex }}>
-
-        <View style={{ backgroundColor: blue, paddingHorizontal: 20, alignItems: 'center' }}>
-          <TextApp color='white' bold size='l' style={{ marginTop: 10 }}>{data?.mainData?.pallet_ref || "--"}</TextApp>
-
-          <View style={{ backgroundColor: '#fff', borderRadius: 120, marginTop: 10, paddingHorizontal: 10, paddingVertical: 2 }}>
-            <TextApp bold size='s' style={{ marginVertical: 4 }}>{new Date(data?.endDate as any).toLocaleDateString() || "--"}  |  {new Date(data?.endDate as any).getHours() + ":" + new Date(data?.endDate as any).getMinutes() || "--"}</TextApp>
-          </View>
-          <TextApp bold color='white' size='s' style={{ marginVertical: 4, marginBottom: 20 }}>duration: {duration(data?.startDate, data?.endDate)} min</TextApp>
-
-        </View>
-
-        <View style={{ paddingHorizontal: 20, paddingVertical: 20, paddingBottom: 50 }}>
-          {
-            data?.mainData &&
-            <ReportMain mainData={data.mainData} />
-          }
-          {
-            data?.pallets && data.pallets.length > 0
-
-              ? data.pallets.map((pallet, i) => (
-                <PalletPrereport
-                  key={pallet.pid}
-                  pallet={pallet as PrereportPallet}
-                  i={i}
-                  repId={route.params.id}
-                />
-              ))
-              : <TextApp bold style={{ textAlign: "center", marginBottom: 10, marginTop: 20, fontSize: 18 }}>No Pallets</TextApp>
-          }
-
-          <AddPalletButton
-            title='Add Pallet'
-            handlePress={() => setModalAddPallet(true)}
-          />
-
-          <ModalBlock
-            modal={modalAddPallet}
-            openModal={setModalAddPallet}
-          >
-            <NewPallet
-              grower={(data?.pallets!).some(pall => pall.addGrower !== null)}
-              openModal={setModalAddPallet}
-              repId={route.params.id}
+      {
+        data &&
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={refetch}
+              style={{ backgroundColor: blue }}
             />
-          </ModalBlock>
+          }
+          style={{ ...globalStyles.containerFlex }}>
 
 
-          <ButtonStyled
-            style={{ marginVertical: 20 }}
-            text='Finish Report'
-            blue
-            onPress={() => navigation.navigate('PreReportFinishScreen' as never, { id: route.params.id } as never)}
+          <View style={{ backgroundColor: blue, paddingHorizontal: 20, alignItems: 'center' }}>
+            <TextApp color='white' bold size='l' style={{ marginTop: 10 }}>{data?.mainData?.pallet_ref || "--"}</TextApp>
 
-          />
+            <View style={{ backgroundColor: '#fff', borderRadius: 120, marginTop: 10, paddingHorizontal: 10, paddingVertical: 2 }}>
+              <TextApp bold size='s' style={{ marginVertical: 4 }}>{new Date(data?.endDate as any).toLocaleDateString() || "--"}  |  {new Date(data?.endDate as any).getHours() + ":" + new Date(data?.endDate as any).getMinutes() || "--"}</TextApp>
+            </View>
+            <TextApp bold color='white' size='s' style={{ marginVertical: 4, marginBottom: 20 }}>duration: {duration(data?.startDate, data?.endDate)} min</TextApp>
 
-        </View>
+          </View>
 
-      </ScrollView>
+          <View style={{ paddingHorizontal: 20, paddingVertical: 20, paddingBottom: 50 }}>
+            {
+              data?.mainData &&
+              <ReportMain mainData={data.mainData} />
+            }
+            {
+              data?.pallets && data.pallets.length > 0
+
+                ? data.pallets.map((pallet, i) => (
+                  <PalletPrereport
+                    key={pallet.pid}
+                    pallet={pallet as PrereportPallet}
+                    i={i}
+                    repId={route.params.id}
+                  />
+                ))
+                : <TextApp bold style={{ textAlign: "center", marginBottom: 10, marginTop: 20, fontSize: 18 }}>No Pallets</TextApp>
+            }
+
+            <AddPalletButton
+              title='Add Pallet'
+              handlePress={() => setModalAddPallet(true)}
+            />
+
+            <ModalBlock
+              modal={modalAddPallet}
+              openModal={setModalAddPallet}
+            >
+              <NewPallet
+                grower={(data?.pallets!).some(pall => pall.addGrower !== null)}
+                openModal={setModalAddPallet}
+                repId={route.params.id}
+              />
+            </ModalBlock>
+
+
+            <ButtonStyled
+              style={{ marginVertical: 20 }}
+              text='Finish Report'
+              blue
+              onPress={() => navigation.navigate('PreReportFinishScreen' as never, { id: route.params.id } as never)}
+
+            />
+
+          </View>
+
+        </ScrollView>
+      }
     </KeyboardAvoidingView>
 
   )

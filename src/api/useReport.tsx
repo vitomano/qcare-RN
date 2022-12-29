@@ -1,6 +1,42 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SingleReportResponse } from "../interfaces/intakes.reports";
 import qcareApi from "./qcareApi";
+import Toast from 'react-native-toast-message'
+import { Asset } from "react-native-image-picker";
+import { PropsPdf } from "../components/Share";
+
+
+interface PropsDelete {
+    reportId: string,
+    palletId: string,
+    key: string,
+    key_low: string
+}
+
+interface PropsUploadImages {
+    reportId: string,
+    palletId: string,
+    images: Asset[]
+}
+
+interface PdfResponse {
+    ok: boolean,
+    mgs: string,
+    pdfId: string
+}
+
+interface PropsCreate {
+    reportId: string,
+    pdfImages: PropsPdf[],
+}
+
+interface PropsEmail {
+    mailTo: string[],
+    cc: string[],
+    subject: string,
+    message: string,
+    link: string,
+}
 
 
 const getSingleReport = async (id: string) => {
@@ -18,43 +54,57 @@ const editItem = async (item: any) => {
     return data
 };
 
+const createLink = async ({ reportId, pdfImages }: PropsCreate) => {
+    const { data } = await qcareApi.post<PdfResponse>('/pdf/create-pdf', {
+        reportId,
+        pdfImages
+    })
+    return data
+};
 
-// const editCondition = async (status: any) => {
-//     const { data } = await qcareApi.put('/prereport/edit-condition', status)
-//     return data
-// };
+//SEND EMAIL
+const sendEmail = async ({ mailTo, cc, subject, message, link }: PropsEmail) => {
+    const { data } = await qcareApi.post('/pdf/send-mail', {
+        mailTo: mailTo.length > 0 ? mailTo.join(", ") : "",
+        cc: cc.length > 0 ? cc.join(", ") : "",
+        subject,
+        message,
+        link
+    })
+    return data
+};
+
+//DELETE IMAGE
+export const deleteImage = async ({ reportId, palletId, key, key_low }: PropsDelete) => {
+
+    const { data } = await qcareApi.post(`/report/delete-image`, {
+        reportId,
+        palletId,
+        keyName: key,
+        keyLow: key_low
+    })
+    return data
+}
 
 
-// export const uploadPallet = async (pallet:any) => {
-//     const {data} = await qcareApi.post(`/prereport/add-pallet`, pallet)
-//     return data
-// }
+//ADDITIONAL IMAGES
+export const uploadImages = async ({ reportId, palletId, images }: PropsUploadImages) => {
 
-// export const uploadImages = async (allData:any) => {
+    const formData = new FormData();
 
-//     const preId = allData.pid
+    for (const img of images) {
+        formData.append('uploady', img)
+    }
 
-//     const formData = new FormData();
+    formData.append('rid', reportId)
+    formData.append('palletId', palletId)
 
-//     for (const img of allData.pallets[0].images) {
-//         formData.append('uploady', img)
-//     }
+    const { data } = await qcareApi.post('/report/add-files', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 
-//     formData.append('preId', allData.repId)
-//     formData.append('palletId', preId)
-
-//     const {data} =await qcareApi.post('/prereport/images-prereport', formData,{
-//         headers: { 'Content-Type': 'multipart/form-data' }})
-
-//     return data
-// }
-
-// export const removePrereport = async (id:string) => {
-//     console.log(id)
-//     const {data} = await qcareApi.get(`/prereport/delete/${id}`)
-//     console.log(data)
-//     return data
-// }
+    return data
+}
 
 
 // ------------------------- HOOKS -------------------------
@@ -82,3 +132,37 @@ export const useEditRepGrower = () => {
         onSuccess: () => { queryClient.invalidateQueries(['report']) }
     })
 }
+
+export const useDeleteReportImage = () => {
+    const queryClient = useQueryClient()
+    return useMutation(deleteImage, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['report']),
+                Toast.show({
+                    type: 'success',
+                    text1: 'Image has been deleted'
+                })
+        },
+        onError: () => Toast.show({
+            type: 'error',
+            text1: 'Something went wrong'
+        })
+    })
+}
+
+
+export const useUploadImages = () => {
+    const queryClient = useQueryClient()
+    return useMutation(uploadImages, {
+        onSuccess: () => { queryClient.invalidateQueries(['report']) }
+    })
+}
+
+export const useCreateLink = () => {
+    return useMutation(createLink)
+}
+
+export const useSendEmail = () => {
+    return useMutation(sendEmail)
+}
+

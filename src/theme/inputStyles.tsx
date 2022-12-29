@@ -42,6 +42,9 @@ export const inputStyles = StyleSheet.create({
 
         elevation: 2,
     },
+    selectGrey: {
+        backgroundColor: inputColor,
+    },
     inputFontSize: {
         fontSize: 18
     }

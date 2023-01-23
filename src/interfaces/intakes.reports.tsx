@@ -1,4 +1,4 @@
-import { ActionNum, Fruit, GradeNum, ScoreNum } from "./interfaces";
+import { ActionNum, Fruit, GradeNum, ScoreNum } from './interfaces';
 import { User } from "./interfaces.auth";
 
 export interface CVSResponse {
@@ -118,10 +118,10 @@ export interface Pallet {
     images: ImageType[];
     prereport: PrereportPallet | null;
     addGrower: NewGrower | null;
-    
+
 }
 
-export interface PrereportDone{
+export interface PrereportDone {
     score: ScoreNum;
     grade: GradeNum;
     action: ActionNum;
@@ -146,6 +146,17 @@ export interface AllReportsResponse {
     page: number;
     totalPages: number;
     reports: SingleReport[];
+}
+
+export interface FilterResponse {
+    ok: boolean;
+    page: number;
+    totalPages: number;
+    result: SingleReport[];
+    fruit: Fruit,
+    score: ScoreNum,
+    total: number
+    pageSize: number
 }
 
 export interface SingleReportResponse {
@@ -286,12 +297,18 @@ export interface PalletState {
     id: string;
     samples: number | string,
     score: ScoreNum;
-    images: ImageType[];
+    images: {
+        uri: string | undefined;
+        type: string | undefined;
+        name: string | undefined;
+    }[];
     labels: DetailObject[];
     appareance: DetailObject[];
     pallgrow: DetailObject[];
     prereport?: PrereportPallet | null
     addGrower?: NewGrower | null
+
+    newGrower?: NewGrower | null
 }
 
 export interface DataReports {

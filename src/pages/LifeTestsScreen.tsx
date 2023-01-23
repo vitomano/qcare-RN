@@ -12,7 +12,7 @@ import { LoadingScreen } from './LoadingScreen'
 
 export const LifeTestsScreen = () => {
 
-  const { lifeTests, isLoading, hasNextPage, fetchNextPage, refetch } = useLifeTests()
+  const { lifeTests, isLoading, hasNextPage, isFetchingNextPage ,fetchNextPage, refetch } = useLifeTests()
 
 if (isLoading) return <LoadingScreen />
 
@@ -58,11 +58,12 @@ if (isLoading) return <LoadingScreen />
               hasNextPage &&
               <CentredContent style={{ marginTop: 30 }}>
                 <ButtonStyled
-                  text='Load more'
+                  text={isFetchingNextPage ? "Loading..." :'Load more'}
                   blue
                   width={50}
                   onPress={fetchNextPage}
                   style={{ marginBottom: 50 }}
+                  loading={isFetchingNextPage}
                 />
               </CentredContent>
             }
@@ -70,7 +71,7 @@ if (isLoading) return <LoadingScreen />
 
           :
           <View style={{ marginVertical: 50 }}>
-            <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
+            <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Shelf life test</TextApp>
           </View>
       }
 

@@ -3,21 +3,21 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { greenMain } from '../theme/variables';
 import { NewReportScreen } from '../pages/NewReportScreen';
-import { SelectReport } from '../pages/SelectReport';
 import { Fruit } from '../interfaces/interfaces';
 
-export type ProductStackParams = {
-  SelectReport: undefined,
+export type CreateStackParams = {
+  NewReportSelectScreen: undefined,
   NewReportScreen: { fruit: Fruit }
 }
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { TouchableOpacity } from 'react-native';
+import { NewReportSelectScreen } from '../pages/NewReportSelectScreen';
 
 interface Props extends DrawerScreenProps<any,any>{}
 
 
-const Stack = createStackNavigator<ProductStackParams>();
+const Stack = createStackNavigator<CreateStackParams>();
 
 export const CreateStack = ({navigation}:Props) => {
 
@@ -45,8 +45,8 @@ export const CreateStack = ({navigation}:Props) => {
     >
       <Stack.Screen
         options={{ title: "Create New" }}
-        name="SelectReport"
-        component={SelectReport}
+        name="NewReportSelectScreen"
+        component={NewReportSelectScreen}
       />
       <Stack.Screen
         options={{ title: "Create New" }}

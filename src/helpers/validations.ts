@@ -1,4 +1,4 @@
-import { DataPrereport, MainInfo } from "../interfaces/intakes.reports";
+import { DataPrereport, MainInfo } from '../interfaces/intakes.reports';
 
 type Response = {
  error: string,
@@ -6,7 +6,7 @@ type Response = {
 }
 
 
-export const validationPrereport = (mainData:MainInfo, pallets:DataPrereport[]):Response => {
+export const validationPrereport = (mainData:MainInfo, pallets?:DataPrereport[]):Response => {
 
     if (mainData?.pallet_ref.trim().length === 0) return {
         error:`"Pallet Reference" is missing`,
@@ -25,7 +25,7 @@ export const validationPrereport = (mainData:MainInfo, pallets:DataPrereport[]):
 
     //-----------------------------------------------------
 
-    if(pallets.some( pall => pall.newGrower !== null )) {
+    if(pallets?.some( pall => pall.newGrower !== null )) {
 
         if(pallets.some( pall => pall.newGrower?.grower_variety.length === 0
             || pall.newGrower?.boxes.length === 0 )) {
@@ -40,19 +40,19 @@ export const validationPrereport = (mainData:MainInfo, pallets:DataPrereport[]):
     //-----------------------------------------------------
     
 
-    if(pallets.some( pall => pall.grade === "0" )) return {
+    if( pallets?.some( pall => pall?.grade === "0" )) return {
         error:"QC Appreciation is pending",
         ok: false
     }
 
 
-    if(pallets.some( pall => pall.action === "0" )) return {
+    if( pallets?.some( pall => pall?.action === "0" )) return {
         error:"Suggested commercial action is pending",
         ok: false
     }
 
 
-    if(pallets.some( pall => pall.score === "0" )) return {
+    if(pallets?.some( pall => pall.score === "0" )) return {
         error:"Score is pending",
         ok: false
     }

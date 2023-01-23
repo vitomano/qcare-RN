@@ -34,6 +34,14 @@ export type Status =
 | "action"
 | "score"
 
+export type QueryType =
+| "fruit"
+| "score"
+| "supplier"
+| "palletRef"
+| "deliveryNote"
+| "startDate"
+| "endDate"
 
 
 export type DetailName = "labels" | "appareance" | "pallgrow"

@@ -10,7 +10,7 @@ import { TextApp } from '../components/ui/TextApp'
 
 export const PreReportsScreen = () => {
 
-  const { prereports, isLoading, hasNextPage, fetchNextPage, refetch } = usePrereports()
+  const { prereports, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = usePrereports()
 
   if (isLoading) return <LoadingScreen />
 
@@ -40,11 +40,12 @@ export const PreReportsScreen = () => {
               hasNextPage &&
               <CentredContent style={{ marginTop: 30 }}>
                 <ButtonStyled
-                  text='Load more'
+                  text={isFetchingNextPage ? "Loading..." :'Load more'}
                   blue
                   width={50}
                   onPress={fetchNextPage}
                   style={{ marginBottom: 50 }}
+                  loading={isFetchingNextPage}
                 />
               </CentredContent>
             }

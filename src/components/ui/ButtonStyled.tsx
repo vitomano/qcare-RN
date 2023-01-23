@@ -16,6 +16,7 @@ interface Props {
     blue?: boolean,
     onPress?: () => void,
     icon?: string
+    iconSize?: number
     style?: StyleProp<ViewStyle>
     styleText?: StyleProp<TextStyle>
 }
@@ -26,6 +27,7 @@ export default function ButtonStyled({
     outline,
     secondary,
     danger,
+    iconSize=25,
     disabled = false,
     blue,
     width,
@@ -77,6 +79,8 @@ export default function ButtonStyled({
         styles.imagePrimary,
         (!outline || secondary) && styles.imageWhite,
         (outline && secondary) && styles.imageSecondary,
+        (outline && danger) && styles.textDanger,
+        (outline && blue) && styles.textBlue,
     ]
 
     return (
@@ -93,7 +97,7 @@ export default function ButtonStyled({
                     <View style={{ ...globalStyles.flexRow }}>
                         {
                             icon &&
-                            <Icon name={icon} style={iconStyle} size={25} />
+                            <Icon name={icon} style={iconStyle} size={iconSize} />
                         }
                         <Text style={textStyle} >{text}</Text>
                         {
@@ -164,6 +168,8 @@ const styles = StyleSheet.create({
     imageWhite: { color: "#fff" },
     imagePrimary: { color: greenMain },
     imageSecondary: { color: "#a7c139" },
+    imageDanger: { color: danger },
+    imageBlue: { color: blue },
 
     marginIcon: { marginRight: 5, alignSelf: 'center' }
 

@@ -2,8 +2,6 @@ import React from 'react'
 import { View } from 'react-native'
 import { tituloEs } from '../helpers/eliminarEs'
 import objToArray from '../helpers/objToArray'
-// import { tituloEs } from '../../../helpers/eliminarEs'
-// import objToArray from '../../../helpers/objToArray'
 import { MainInfo } from '../interfaces/intakes.reports'
 import { TextApp } from './ui/TextApp'
 

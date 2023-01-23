@@ -2,6 +2,8 @@ import React, { createContext, useState } from 'react'
 import { Platform } from 'react-native';
 import { Asset } from 'react-native-image-picker';
 import qcareApi from '../api/qcareApi';
+import { newMainData } from '../data/mainData';
+import { palletNewData } from '../data/newreport';
 import { palletData } from '../data/pallet';
 import { palletPrereport } from '../data/prereport';
 import { formatSplit, totalKilos, totalSamples } from '../helpers/formatSplit';
@@ -21,6 +23,7 @@ interface IntakeContextProps {
     samples: number,
     getMainData: (id: string) => void;
     getMainDataReport: (id: string) => void;
+    getMainDataNew: (fruit: Fruit) => void;
     handleMain: (val: string, item: keyof MainInfo) => void;
     // setDataPrereport: (totalPallet: number) => void;
     setNewPallets: () => void;
@@ -53,6 +56,32 @@ export const IntakeProvider = ({ children }: Props) => {
     const [isLoading, setIsLoading] = useState(true)
 
     //Prereport --------------------------------------------------------------------------------------
+
+    const getMainDataNew = async (fruit: Fruit) => {
+
+        setIsLoading(true)
+
+        try {
+            setMainData(null)
+
+            setMainData(newMainData)
+
+            setTotalPallets(Number(newMainData.total_pallets) | 0)
+            setFruit(fruitType(fruit) || "other")
+            setAllSamples(Number(newMainData.samples) || 1)
+
+            for (let i = 0; i < (Number(newMainData.total_pallets) || 0); i++) {
+
+                setPallets(c => [...c as unknown as PalletState[], {
+                    ...palletNewData(fruit, Number(newMainData.samples)) as any}])
+
+            }
+
+        } catch (error) {
+            console.log(error)
+        } finally { setIsLoading(false) }
+
+    };
 
     const getMainData = async (id: string) => {
 
@@ -370,6 +399,7 @@ export const IntakeProvider = ({ children }: Props) => {
             totalPallets,
             getMainData,
             getMainDataReport,
+            getMainDataNew,
             handleMain,
             // setDataPrereport,
             setNewPallets,

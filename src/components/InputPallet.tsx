@@ -13,7 +13,6 @@ import { DetailName } from '../interfaces/interfaces';
 import { PickerModal } from './modals/PickerModal';
 import { PALLETTYPE } from '../data/selects';
 import { TextApp } from './ui/TextApp';
-import { ModalContainer } from './modals/ModalContainer';
 import ButtonStyled from './ui/ButtonStyled';
 import { CentredContent } from './CenterContent';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -38,7 +37,9 @@ export const InputPallet = ({ pallet, item, detailName }: Props) => {
     return (
 
         <View style={{ ...globalStyles.flexBetween, marginBottom: 10 }}>
-            <View style={[globalStyles.flexRow, labelAlign, { width: "50%", maxWidth: "40%" }]}>
+            {
+                pallet && item &&
+                <View style={[globalStyles.flexRow, labelAlign, { width: "50%", maxWidth: "40%" }]}>
                 <BouncyCheckbox
                     isChecked={item.check}
                     size={20}
@@ -49,6 +50,7 @@ export const InputPallet = ({ pallet, item, detailName }: Props) => {
                 />
                 <TextApp>{item.label}</TextApp>
             </View>
+            }
 
             {
                 item.tipe === "text" &&

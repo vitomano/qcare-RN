@@ -56,20 +56,6 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
 
   const handleSend = async () => {
 
-    // const awaite = new Promise(resolve => {
-    //   setTimeout(() => {
-    //     resolve(console.log("SE ESTA", enviando ? "true" : "false"))
-    //   }, 5000);
-    // })
-
-    // try {
-
-    //   await awaite
-
-    // } catch (error) {
-    //   console.log(error)
-    // } finally { setEnviando(false) }
-
     if (pallets.some(pallet => (pallet.pallgrow[0].valor as string).trim() === "")) {
       return alertMsg("Error to send", `"Weight 10 Fruits" value is missing`)
     }
@@ -147,7 +133,6 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
           await Promise.all([savePalletInfo(), saveLifeTest()])
 
         })
-      // toast.success('Report sent successfully')
       navigation.navigate("ReportsScreen" as any)
 
 

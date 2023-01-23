@@ -20,12 +20,12 @@ export const Tags = ({tags, setTags, style}:Props) => {
                     {
                         tags.map(cond => (
                             <View key={cond}
-                                style={{ ...globalStyles.flexRow, marginVertical: 3, marginRight: 5, backgroundColor: darkGrey, borderRadius: 50, paddingVertical: 3, paddingHorizontal: 10 }}
+                                style={{ ...globalStyles.flexRow, flexWrap: "wrap", marginVertical: 3, marginRight: 5, backgroundColor: darkGrey, borderRadius: 50, paddingVertical: 3, paddingHorizontal: 10 }}
                             >
                                 <TextApp size='s' color='white'>{cond}</TextApp>
 
                                 <TouchableOpacity
-                                    style={{ marginLeft: 5 }}
+                                    style={{ marginLeft: 5, width: 20, backgroundColor: darkGrey }}
                                     onPress={() => setTags(tags.filter(item => item !== cond))}
                                 >
                                     <Icon name='close' size={20} color="#fff" />

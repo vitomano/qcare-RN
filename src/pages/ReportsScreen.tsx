@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ScrollView, RefreshControl } from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useReports } from '../api/useReports';
 import { CardReport } from '../components/cards/CardReport';
 import { CentredContent } from '../components/CenterContent';
@@ -8,9 +9,14 @@ import { TextApp } from '../components/ui/TextApp';
 import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen';
 
+
+import { FilterCollapse } from '../components/ui/FilterCollapse';
+
+
+
 export const ReportsScreen = () => {
 
-  const { isLoading, hasNextPage, fetchNextPage, refetch, reports } = useReports()
+  const { isLoading, hasNextPage, fetchNextPage, refetch, reports, isFetchingNextPage } = useReports()
 
   if (isLoading) return <LoadingScreen />
 
@@ -27,7 +33,10 @@ export const ReportsScreen = () => {
       {
         reports.length > 0
           ?
-          <View style={{marginBottom: 60}}>
+          <View style={{ marginBottom: 60 }}>
+
+            <FilterCollapse />
+
             {
 
               reports.map(report => (
@@ -40,10 +49,11 @@ export const ReportsScreen = () => {
               hasNextPage &&
               <CentredContent style={{ marginTop: 30 }}>
                 <ButtonStyled
-                  text='Load more'
+                  text={isFetchingNextPage ? "Loading..." : 'Load more'}
                   blue
                   width={50}
                   onPress={fetchNextPage}
+                  loading={isFetchingNextPage}
                 />
               </CentredContent>
             }
@@ -54,9 +64,8 @@ export const ReportsScreen = () => {
             <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Reports</TextApp>
           </View>
       }
-     
-    </ScrollView>
 
+    </ScrollView>
 
   )
 }

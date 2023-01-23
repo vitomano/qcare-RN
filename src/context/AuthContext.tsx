@@ -62,9 +62,11 @@ export const AuthProvider = ({ children }: any) => {
                 type: 'LOGIN', payload: {
                     uid: data?.uid!,
                     name: data?.name!,
+                    email: data?.email!,
                     lastname: data?.lastname!,
                     profile: data?.profile!,
                     company: data?.company!,
+                    phone: data?.phone,
                     contacts: data?.contacts!,
                     rol: data?.rol!
                 }
@@ -87,8 +89,10 @@ export const AuthProvider = ({ children }: any) => {
                 type: 'LOGIN', payload: {
                     uid: data.uid,
                     name: data.name,
+                    email: data.email,
                     lastname: data.lastname,
                     profile: data.profile,
+                    phone: data?.phone,
                     company: data.company,
                     contacts: data.contacts,
                     rol: data.rol
@@ -135,7 +139,9 @@ export const AuthProvider = ({ children }: any) => {
                 type: 'LOGIN', payload: {
                     uid: data.uid,
                     name: data.name,
+                    email: data.email,
                     lastname: data.lastname,
+                    phone: data?.phone,
                     profile: data.profile,
                     company: data.company,
                     contacts: data.contacts

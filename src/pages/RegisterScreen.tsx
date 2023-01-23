@@ -21,17 +21,18 @@ export const RegisterScreen = ({navigation}:Props) => {
         }])
   }, [errorMessage])
 
-  const { email, lastname, password, name, company, onChange } = useForm({
+  const { email, phone,  lastname, password, name, company, onChange } = useForm({
     name: '',
     lastname: '',
     email: '',
-    company: '',
-    password: ''
+    password: '',
+    phone: '',
+    company: ''
   })
 
   const onRegister = () => {
     Keyboard.dismiss()
-    register({name, lastname, email, password, company})
+    register({name, lastname, email, password, company, phone})
   };
 
 
@@ -67,6 +68,19 @@ export const RegisterScreen = ({navigation}:Props) => {
             value={name}
             onSubmitEditing={onRegister}
             onChangeText={text => onChange(text, 'name')}
+          />
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "flex-end", marginBottom: 25 }}>
+          <Icon name="earth-outline" size={22} color="#014454" style={{ marginRight: 10 }} />
+          <TextInput
+            style={styles.textInput}
+            placeholder='phone'
+            placeholderTextColor="#014454"
+            autoCorrect={false}
+            value={phone}
+            onSubmitEditing={onRegister}
+            onChangeText={text => onChange(text, 'phone')}
           />
         </View>
 

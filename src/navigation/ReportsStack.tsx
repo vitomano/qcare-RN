@@ -7,17 +7,30 @@ import { ReportScreen } from '../pages/ReportScreen';
 import { bgColor, greenMain } from '../theme/variables';
 import { TouchableOpacity } from 'react-native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { Fruit, ScoreNum } from '../interfaces/interfaces';
+import { FilterScreen } from '../pages/FilterScreen';
+
+export interface FilterProps {
+  page?: number
+  fruit?: Fruit[]
+  score?: ScoreNum[]
+  supplier?: string
+  palletRef?: string
+  deliveryNote?: string
+}
 
 export type ReportsStackParams = {
   ReportsScreen: undefined,
   ReportScreen: { id: string }
+  FilterScreen: { query:string, page:number }
+  // FilterScreen: { filter: FilterProps }
 }
 
-interface Props extends DrawerScreenProps<any,any>{}
+interface Props extends DrawerScreenProps<any, any> { }
 
 const Stack = createStackNavigator<ReportsStackParams>();
 
-export const ReportsStack = ({ navigation }:Props) => {
+export const ReportsStack = ({ navigation }: Props) => {
 
   return (
     <Stack.Navigator
@@ -35,8 +48,8 @@ export const ReportsStack = ({ navigation }:Props) => {
         },
         headerRight: ({ }) =>
           <TouchableOpacity
-            style={{marginRight: 15}}
-            onPress={()=> navigation.toggleDrawer() }
+            style={{ marginRight: 15 }}
+            onPress={() => navigation.toggleDrawer()}
           >
             <Icon name="menu-outline" size={25} style={{ color: "#fff" }} />
           </TouchableOpacity>
@@ -47,6 +60,13 @@ export const ReportsStack = ({ navigation }:Props) => {
         name="ReportsScreen"
         component={ReportsScreen}
       />
+
+      <Stack.Screen
+        options={{ title: "Reports" }}
+        name="FilterScreen"
+        component={FilterScreen}
+      />
+
       <Stack.Screen
         options={{ title: "Report" }}
         name="ReportScreen"

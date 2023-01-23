@@ -4,7 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { LoginScreen } from '../pages/LoginScreen';
-import { RegisterScreen } from '../pages/RegisterScreen';
 import { LoadingScreen } from '../pages/LoadingScreen';
 import { DrawerNav } from './DrawerNav';
 
@@ -31,7 +30,7 @@ export const StackNav = () => {
           :
           <>
             <Stack.Screen name="LoginScreen" component={ LoginScreen } options={{headerShown:false}}/>
-            <Stack.Screen name="RegisterScreen" component={ RegisterScreen } options={{headerShown:false}}/>
+            {/* <Stack.Screen name="RegisterScreen" component={ RegisterScreen } options={{headerShown:false}}/> */}
           </>
 
       }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SingleLifeTestResponse } from "../interfaces/interface.lifeTest";
 import qcareApi from "./qcareApi";
-import { Asset } from 'react-native-image-picker';
+import { Asset } from 'react-native-image-picker'
 
 
 interface Props {
@@ -27,56 +27,18 @@ interface PropsDelete {
     key_low: string
 }
 
+interface PropsAddImg {
+    lifeId: string,
+    dayId: string,
+    images: Asset[],
+}
+
 
 const getSingleLifeTest = async (id: string) => {
     const { data } = await qcareApi.get<SingleLifeTestResponse>(`/life-test/${id}`)
     return data
 };
 
-// const editItem = async (item: any) => {
-//     const { data } = await qcareApi.put('/prereport/edit-item', item)
-//     return data
-// };
-
-// const editCondition = async (status: any) => {
-//     const { data } = await qcareApi.put('/prereport/edit-condition', status)
-//     return data
-// };
-
-// const editGrower = async (grower: any) => {
-//     const { data } = await qcareApi.put('/prereport/edit-grower', grower)
-//     return data
-// };
-
-// export const uploadPallet = async (pallet:any) => {
-//     const {data} = await qcareApi.post(`/prereport/add-pallet`, pallet)
-//     return data
-// }
-
-// export const uploadImages = async (allData:any) => {
-
-//     const preId = allData.pid
-
-//     const formData = new FormData();
-
-//     for (const img of allData.pallets[0].images) {
-//         formData.append('uploady', img)
-//     }
-
-//     formData.append('preId', allData.repId)
-//     formData.append('palletId', preId)
-
-//     const {data} =await qcareApi.post('/prereport/images-prereport', formData)
-
-//     return data
-// }
-
-// export const removePrereport = async (id:string) => {
-//     console.log(id)
-//     const {data} = await qcareApi.get(`/prereport/delete/${id}`)
-//     console.log(data)
-//     return data
-// }
 
 export const updateStatus = async (lifeId: string) => {
     const { data } = await qcareApi.put(`/life-test/status/${lifeId}`)
@@ -87,25 +49,33 @@ export const updateStatus = async (lifeId: string) => {
 //ADD DAY
 export const addDay = async ({ images, conditions, lifeTestId, temperature, date, dayNum }: Props) => {
 
-    const formData = new FormData();
+    try {
+        const formData = new FormData();
+    
+        for (const img of images) {
+            formData.append('multerLife', JSON.parse(JSON.stringify(img)))
+        }
+    
+        for (const con of conditions) {
+            formData.append('conditions', con)
+        }
+    
+        formData.append('lifeTestId', lifeTestId)
+        formData.append('temperature', temperature)
+        formData.append('day_date', date)
+        formData.append('day', dayNum)
+    
+        const { data } = await qcareApi.put('/life-test/add-day', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        console.log("FETCH enviado")
 
-    for (const img of images) {
-        formData.append('multerLife', JSON.parse(JSON.stringify(img)))
+
+        return data
+    } catch (error) {
+        console.log("FETCH NO")
+        return error
     }
-
-    for (const con of conditions) {
-        formData.append('conditions', con)
-    }
-
-    formData.append('lifeTestId', lifeTestId)
-    formData.append('temperature', temperature)
-    formData.append('day_date', date)
-    formData.append('day', dayNum)
-
-    const { data } = await qcareApi.put('/life-test/add-day', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    })
-    return data
 }
 
 //ADD DAY
@@ -131,6 +101,34 @@ export const deleteImage = async ({ lifeId, testId, key, key_low }: PropsDelete)
     })
     return data
 }
+
+//DELETE LAST DAY
+export const deleteLastDay = async ( id:string ) => {
+    const { data } = await qcareApi.put(`/life-test/delete-day/${id}`)
+    return data
+}
+
+
+
+//ADD DAY
+export const addLifeImage = async ({lifeId, dayId, images}:PropsAddImg) => {
+
+    const formData = new FormData();
+
+    for (const img of images) {
+        formData.append('multerLife', JSON.parse(JSON.stringify(img)))
+    }
+
+    formData.append('lifeId', lifeId)
+    formData.append('dayId', dayId)
+    
+    const { data } = await qcareApi.put('/life-test/add-life-images', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return data
+}
+
+
 
 
 // ------------------------- HOOKS -------------------------
@@ -159,6 +157,7 @@ export const useEditDay = () => {
     )
 }
 
+
 export const useUpdateStatus = () => {
     const queryClient = useQueryClient()
     return useMutation(updateStatus,
@@ -178,37 +177,33 @@ export const useDeleteImage = () => {
     })
 }
 
-// export const useEditPrereport = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(editItem, {
-//         onSuccess: () => { queryClient.invalidateQueries(['lifetest']) }
-//     })
-// }
 
-// export const useEditPreCondition = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(editCondition, {
-//         onSuccess: () => { queryClient.invalidateQueries(['lifetest']) }
-//     })
-// }
+export const useAddLifeImage = () => {
+    const queryClient = useQueryClient()
 
-// export const useEditPreGrower = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(editGrower, {
-//         onSuccess: () => { queryClient.invalidateQueries(['lifetest']) }
-//     })
-// }
+    return useMutation(addLifeImage,
+        {
+            // onSuccess: () => {
+            //     queryClient.invalidateQueries(['lifetest'])
+            // },
+            // onError(error) {
+            //     queryClient.invalidateQueries(['lifetest'])
+            // },
+            onSettled: () => {
+                // queryClient.invalidateQueries(['lifetest'])
+                queryClient.refetchQueries(['lifetest'])
+            }
+        }
+        )
+}
 
-// export const useUploadImages = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(uploadImages, {
-//         onSuccess: () => { queryClient.invalidateQueries(['lifetest']) }
-//     })
-// }
+export const useDeleteLastDay = () => {
+    const queryClient = useQueryClient()
 
-// export const useRemovePrereport = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(removePrereport, {
-//         onSuccess: () => { queryClient.invalidateQueries(['prereport']) }
-//     })
-// }
+    return useMutation(deleteLastDay,
+        { onSuccess: () => {
+                queryClient.invalidateQueries(['lifetest'])
+                queryClient.invalidateQueries(['lifeTests'])
+            }
+        })
+}

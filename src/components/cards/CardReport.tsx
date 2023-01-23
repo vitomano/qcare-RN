@@ -18,10 +18,6 @@ export const CardReport = ({ report }: Props) => {
     const coverImg = report.pallets.find(cover => cover.images.length > 0)
 
 
-    const handleDelete = () => {
-        console.log("Deleting")
-    };
-
     return (
         <TouchableOpacity
             style={{
@@ -62,7 +58,7 @@ export const CardReport = ({ report }: Props) => {
                     right: 5,
                 }}>
                     <TouchableWithoutFeedback>
-                        <CustomMenuReport handleDelete={handleDelete} id={report._id} data={report!}/>
+                        <CustomMenuReport id={report._id} data={report!}/>
                     </TouchableWithoutFeedback>
                 </View>
 

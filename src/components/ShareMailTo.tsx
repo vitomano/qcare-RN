@@ -1,15 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Dimensions, TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { AuthContext } from '../context/AuthContext'
-import { SCORE } from '../data/selects'
+import { View } from 'react-native'
 
-import { ImageType, Report } from '../interfaces/intakes.reports'
-import { globalStyles } from '../theme/globalStyles'
-import { bgColor, check, darkGrey, lightGrey, mediumGrey } from '../theme/variables'
+import { AuthContext } from '../context/AuthContext'
+
 import { PickerModal } from './modals/PickerModal'
-import { PropsPdf } from './Share'
 import { Tags } from './ui/Tags'
 import { TextApp } from './ui/TextApp'
 

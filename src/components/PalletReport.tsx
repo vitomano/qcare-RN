@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalContainer } from './modals/ModalContainer';
 import ButtonStyled from './ui/ButtonStyled';
 import { ChartPie } from './ui/ChartPie';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 interface Props {
@@ -34,6 +35,9 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
     const { mutate } = useEditReport()
     const { mutate: mutateDeleteImage } = useDeleteReportImage()
     const { mutateAsync, isLoading } = useUploadImages()
+
+    const queryClient = useQueryClient()
+
 
     const [modalScore, setModalScore] = useState(false)
     const [modalImage, setModalImage] = useState(false)
@@ -65,6 +69,10 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
             palletId: pallet.pid,
             key,
             key_low
+        }, {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['reports'])
+            }
         })
     };
 

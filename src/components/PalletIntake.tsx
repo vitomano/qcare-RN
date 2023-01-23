@@ -147,30 +147,37 @@ export const PalletIntake = ({ pallet, i }: Props) => {
 
                 <View style={styles.detailSection}>
 
-                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
-                        <TextApp style={{ width: "50%" }}>QC Appreciation</TextApp>
+                    {
+                        !!pallet.grade &&
+                        <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
+                            <TextApp style={{ width: "50%" }}>QC Appreciation</TextApp>
 
-                        <PickerModal
-                            modal={modalGrade}
-                            openModal={setModalGrade}
-                            LIST={GRADE}
-                            setState={handleSelect}
-                            state={pallet.grade}
-                            option="grade"
-                        />
-                    </View>
-                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
-                        <TextApp style={{ width: "50%" }}>Suggested commercial action</TextApp>
+                            <PickerModal
+                                modal={modalGrade}
+                                openModal={setModalGrade}
+                                LIST={GRADE}
+                                setState={handleSelect}
+                                state={pallet.grade}
+                                option="grade"
+                            />
+                        </View>
+                    }
 
-                        <PickerModal
-                            modal={modalAction}
-                            openModal={setModalAction}
-                            LIST={ACTION}
-                            setState={handleSelect}
-                            state={pallet.action}
-                            option="action"
-                        />
-                    </View>
+                    {
+                        !!pallet.action &&
+                        <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
+                            <TextApp style={{ width: "50%" }}>Suggested commercial action</TextApp>
+
+                            <PickerModal
+                                modal={modalAction}
+                                openModal={setModalAction}
+                                LIST={ACTION}
+                                setState={handleSelect}
+                                state={pallet.action}
+                                option="action"
+                            />
+                        </View>
+                    }
                     <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
                         <TextApp style={{ width: "50%" }}>Score</TextApp>
 

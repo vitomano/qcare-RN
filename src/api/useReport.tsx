@@ -34,8 +34,9 @@ interface PropsEmail {
     mailTo: string[],
     cc: string[],
     subject: string,
-    message: string,
+    message: HTMLElement | undefined,
     link: string,
+    signature: boolean
 }
 
 
@@ -63,13 +64,14 @@ const createLink = async ({ reportId, pdfImages }: PropsCreate) => {
 };
 
 //SEND EMAIL
-const sendEmail = async ({ mailTo, cc, subject, message, link }: PropsEmail) => {
+const sendEmail = async ({ mailTo, cc, subject, message, link, signature }: PropsEmail) => {
     const { data } = await qcareApi.post('/pdf/send-mail', {
         mailTo: mailTo.length > 0 ? mailTo.join(", ") : "",
         cc: cc.length > 0 ? cc.join(", ") : "",
         subject,
         message,
-        link
+        link,
+        signature
     })
     return data
 };
@@ -163,6 +165,9 @@ export const useCreateLink = () => {
 }
 
 export const useSendEmail = () => {
-    return useMutation(sendEmail)
+    const queryClient = useQueryClient()
+    return useMutation(sendEmail, {
+        onSuccess: () => { queryClient.invalidateQueries(['report']) }
+    })
 }
 

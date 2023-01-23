@@ -9,7 +9,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 interface Props extends StackScreenProps<any, any> { }
 
-export const SelectReport = ({ navigation }: Props) => {
+export const NewReportSelectScreen = ({ navigation }: Props) => {
 
   const screenWidth = Dimensions.get('window').width
 

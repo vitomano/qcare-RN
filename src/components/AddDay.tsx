@@ -11,7 +11,7 @@ import { inputStyles } from '../theme/inputStyles';
 import { PickerModal } from './modals/PickerModal'
 import { CONDITIONS } from '../data/conditions'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { blue, darkGrey } from '../theme/variables';
+import { darkGrey } from '../theme/variables';
 import ButtonStyled from './ui/ButtonStyled'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { Asset } from 'react-native-image-picker';

@@ -30,6 +30,17 @@ export const globalStyles = StyleSheet.create({
     
         elevation: 5,
     },
+    shadowCard: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+
+        elevation: 5
+    },
 
     inputContainer:{
         flexDirection:'row',

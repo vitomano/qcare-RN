@@ -28,7 +28,8 @@ export const ModalBlock = ({ openModal, modal, children, style }: Props) => {
                     style={{ flex: 1 }}
                 >
                     <View style={styles.container} >
-                        <ScrollView style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80, ...style as any }} >
+                        <ScrollView
+                        style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80, ...style as any }} >
                             {children}
                         </ScrollView>
                     </View>

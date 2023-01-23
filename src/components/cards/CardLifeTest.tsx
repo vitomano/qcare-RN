@@ -41,7 +41,7 @@ export const CardLifeTest = ({ lifeTest, id }: Props) => {
                         <View style={{ paddingHorizontal: 5, paddingVertical: 2, borderRadius: 5, marginRight: 5, backgroundColor: inputColor }}>
                             <TextApp size='xs'>{dateFormat(lifeTest.date) || "--"}</TextApp>
                         </View>
-                        <TextApp size='xs'>{lifeTest.grower || lifeTest.reportId?.mainData?.grower || '--'}</TextApp>
+                        <TextApp size='xs' style={{ flex: 1 }}>{lifeTest.grower || lifeTest.reportId?.mainData?.grower || '--'}</TextApp>
                     </View>
                 </View>
 

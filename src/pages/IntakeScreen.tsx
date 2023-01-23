@@ -22,7 +22,6 @@ import qcareApi from '../api/qcareApi';
 import { PalletIntake } from '../components/PalletIntake';
 import { useIntakes } from '../api/useIntakes';
 import { usePrereports } from '../api/usePrereports';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface Props extends StackScreenProps<IntakesStackParams, "IntakeScreen"> { };

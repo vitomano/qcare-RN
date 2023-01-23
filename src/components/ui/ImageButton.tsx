@@ -8,7 +8,7 @@ import { TextApp } from './TextApp'
 interface Props{
     openLibrary:()=>void
     imagesLength:Asset[]
-    max?:string
+    max?:string | number
 }
 
 

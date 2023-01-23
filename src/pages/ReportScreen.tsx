@@ -9,11 +9,9 @@ import { globalStyles } from '../theme/globalStyles';
 import { LoadingScreen } from './LoadingScreen';
 import { TextApp } from '../components/ui/TextApp';
 import { useReport } from '../api/useReport';
-import ButtonStyled from '../components/ui/ButtonStyled';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalBlock } from '../components/modals/ModalBlock';
 import { Share } from '../components/Share';
-import { ModalContainer } from '../components/modals/ModalContainer';
 
 
 interface Props extends StackScreenProps<ReportsStackParams, "ReportScreen"> { };
@@ -67,24 +65,14 @@ export const ReportScreen = ({ route }: Props) => {
               : <TextApp bold style={{ textAlign: "center", marginBottom: 10, marginTop: 20, fontSize: 18 }}>No Pallets</TextApp>
           }
 
-
-
           <View style={{ paddingHorizontal: 20, paddingVertical: 10, marginTop: 10, marginBottom: 20 }}>
             <TextApp bold style={{ marginBottom: 10 }}>Comments</TextApp>
             <TextApp size='s'>{data?.comments || "no comments"}</TextApp>
           </View>
 
-          {/* <Link to={`/view-pdf/${id}`} target="_blank" className="btn-exports red-pdf ml-1">
-                                        <div className="flex" >
-                                            <img src="/assets/img/pdf-icon.svg" alt="pdf-data" />
-                                            <p>View PDF</p>
-                                        </div>
-                                    </Link> */}
-
           <View style={{ flexDirection: "row", alignSelf: "center", marginBottom: 20 }}>
             <TouchableOpacity
-              onPress={() => Linking.openURL("https://q-care.info/view-pdf/63ac19bd920f058e7eed9134")}
-              // onPress={() => Linking.openURL(`http://localhost:3000/view-pdf/${route.params.id}`)}
+              onPress={() => Linking.openURL(`https://q-care.info/view-pdf/${route.params.id}`)}
 
               activeOpacity={.8}
               style={{ ...styles.mainIcon, backgroundColor: pdf }}>

@@ -15,6 +15,13 @@ export function inputJson(txt:string) {
 }
 
 
+// Convierte Texto a formato supplier (ej: Hola-Mundo => "hola mundo")
+export function supplierVal(txt:string):string {
+    return txt.trim().toLowerCase().split("-").join(" ")
+}
+
+
+
 // Convierte cualquier valor (string, number, boolean) a String y reemplaza vacio por "--"
 export function itemValor(valor:any) {
 

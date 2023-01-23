@@ -8,20 +8,31 @@ import { useNavigation } from '@react-navigation/native';
 import { ModalBlock } from '../modals/ModalBlock';
 import { Share } from '../Share';
 import { Report } from '../../interfaces/intakes.reports';
+import { useRemoveReport } from '../../api/useReports';
+import { alertMsg } from '../../helpers/alertMsg';
 
 
 interface Props {
     id: string
-    handleDelete: () => void
+    loading?: boolean
     data: Report
 }
 
-export const CustomMenuReport = ({ handleDelete, data }: Props) => {
+export const CustomMenuReport = ({  data, loading }: Props) => {
 
     const [confirmation, setConfirmation] = useState(false)
     const [modalShare, setModalShare] = useState(false)
 
-    const navigation = useNavigation()
+    const { mutateAsync, isLoading } = useRemoveReport()
+
+    const handleDelete = async() => {
+        await mutateAsync( data._id, {
+            onError:() => {
+                alertMsg("Error", "Something went wrong")
+            },
+        } )
+        setConfirmation(false)
+    };
 
     return (
         <Menu>
@@ -68,6 +79,7 @@ export const CustomMenuReport = ({ handleDelete, data }: Props) => {
                 openModal={setConfirmation}
                 message="Are you sure you want to remove this Report"
                 action={handleDelete}
+                loading={isLoading}
             />
 
             <ModalBlock

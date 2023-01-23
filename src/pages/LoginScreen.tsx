@@ -102,13 +102,13 @@ export const LoginScreen = ({ navigation }: Props) => {
         />
 
 
-        <View style={marginStyles.mt4}>
+        {/* <View style={marginStyles.mt4}>
           <TouchableOpacity
             onPress={() => navigation.replace('RegisterScreen')}
           >
             <Text style={{ color: '#fff' }}>Register</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
 
       </View>

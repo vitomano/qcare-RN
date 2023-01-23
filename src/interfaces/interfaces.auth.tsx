@@ -16,6 +16,7 @@ export interface RegisterData {
     lastname: string,
     email: string,
     password: string,
+    phone: string,
     company?: string
 }
 
@@ -25,9 +26,11 @@ export interface LoginResponse {
 
     uid: string,
     name: string,
+    email: string,
     lastname: string,
     profile: string,
     company: string,
+    phone?: string,
     contacts: Contact[],
     rol: Rol
 }
@@ -37,10 +40,11 @@ export interface User {
     name: string;
     lastname?: string;
     email?: string;
+    phone?: string;
     rol?: string;
     profile: string;
     company?: string;
-    contacts?: Contact[] | [];
+    contacts: Contact[] | [];
 }
 
 export interface Contact {

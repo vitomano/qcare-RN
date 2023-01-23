@@ -22,6 +22,7 @@ export const UserEditScreen = () => {
   const [name, setName] = useState(user?.name || "")
   const [lastname, setLastname] = useState(user?.lastname || "")
   const [company, setCompany] = useState(user?.company || "")
+  const [phone, setPhone] = useState(user?.phone || "")
 
   const [saving, setSaving] = useState(false)
 
@@ -53,7 +54,7 @@ export const UserEditScreen = () => {
     try {
       const formData = new FormData();
 
-      (selectedImg) && formData.append('profile', {
+      (selectedImg) && formData.append('userUpload', {
         uri: selectedImg.uri,
         type: selectedImg.type,
         name: selectedImg.fileName
@@ -63,6 +64,8 @@ export const UserEditScreen = () => {
       formData.append('name', name)
       formData.append('lastname', lastname)
       formData.append('company', company)
+      formData.append('phone', phone)
+
 
 
       await qcareApi.put(`/auth/profile/${user?.uid!}`, formData)
@@ -137,6 +140,19 @@ export const UserEditScreen = () => {
                 autoCorrect={false}
                 style={{ ...inputStyles.input, flex: 1 }}
                 onChangeText={(e) => setLastname(e as string)}
+              />
+            </View>
+
+            <View style={{ marginBottom: 20 }}>
+              <TextApp bold style={{ marginBottom: 5 }}>Phone</TextApp>
+
+              <TextInput
+                keyboardType='default'
+                autoCapitalize="none"
+                value={phone}
+                autoCorrect={false}
+                style={{ ...inputStyles.input, flex: 1 }}
+                onChangeText={(e) => setPhone(e as string)}
               />
             </View>
 

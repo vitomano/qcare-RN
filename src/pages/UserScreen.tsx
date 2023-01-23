@@ -46,6 +46,7 @@ export const UserScreen = () => {
               user?.company &&
               <TextApp center>{user.company}</TextApp>
             }
+            <TextApp center>{user?.email! || "--"}</TextApp>
           </View>
 
           <TouchableOpacity

@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AllReportsResponse, PrereportsResponse, SingleReport } from '../interfaces/intakes.reports';
+import { AllReportsResponse, SingleReport } from '../interfaces/intakes.reports';
 import qcareApi from "./qcareApi";
 
 
@@ -10,7 +10,7 @@ const getAllReports = async (page: number = 1) => {
 
 
 export const removeReport = async (id: string) => {
-    const { data } = await qcareApi.get(`/prereport/delete/${id}`);
+    const { data } = await qcareApi.get(`/report/delete/${id}`);
     return data
 }
 

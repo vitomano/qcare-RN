@@ -10,6 +10,8 @@ import { MenuProvider } from 'react-native-popup-menu';
 
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { check, text } from './src/theme/variables';
+import { FilterProvider } from './src/context/FilterContext';
+import { CreateProvider } from './src/context/CreateContext';
 
 
 export default function App() {
@@ -44,7 +46,7 @@ export default function App() {
         <MenuProvider>
           <AppState>
             <StackNav />
-              <Toast config={toastConfig} />
+            <Toast config={toastConfig} />
           </AppState>
         </MenuProvider>
 
@@ -58,7 +60,11 @@ const AppState = ({ children }: any) => {
     <AuthProvider>
       <ReportProvider>
         <IntakeProvider>
-          {children}
+          <FilterProvider>
+          <CreateProvider>
+            {children}
+          </CreateProvider>
+          </FilterProvider>
         </IntakeProvider>
       </ReportProvider>
     </AuthProvider>

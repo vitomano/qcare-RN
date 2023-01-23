@@ -16,7 +16,7 @@ interface Props {
     loading?: boolean
 }
 
-export const ModalConfirmation = ({ openModal, modal,title="Confirmation", message, action, loading = false }: Props) => {
+export const ModalConfirmation = ({  openModal, modal,title="Confirmation", message, action, loading = false }: Props) => {
 
     const WIDTH = Dimensions.get('window').width
     const HEIGHT = Dimensions.get('window').height
@@ -50,13 +50,14 @@ export const ModalConfirmation = ({ openModal, modal,title="Confirmation", messa
                                             onPress={() => openModal(false)}
                                             text='Cancel'
                                             outline
+                                            blue
                                             width={48}
                                         />
                                         <ButtonStyled
                                             onPress={action}
                                             text='Confirm'
                                             danger
-                                            outline
+                                            // outline
                                             width={48}
                                         />
                                     </View>

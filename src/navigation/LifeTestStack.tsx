@@ -7,17 +7,20 @@ import { LifeTestScreen } from '../pages/LifeTestScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { TouchableOpacity } from 'react-native';
+import { FilterLifeScreen } from '../pages/FilterLifeScreen';
 
-interface Props extends DrawerScreenProps<any,any>{}
+interface Props extends DrawerScreenProps<any, any> { }
 
 export type LifeTestStackParams = {
   LifeTestsScreen: undefined,
   LifeTestScreen: { id: string }
+  FilterLifeScreen: { query: string, page: number }
+
 }
 
 const Stack = createStackNavigator<LifeTestStackParams>();
 
-export const LifeTestStack = ({navigation}:Props) => {
+export const LifeTestStack = ({ navigation }: Props) => {
 
   return (
     <Stack.Navigator
@@ -26,7 +29,7 @@ export const LifeTestStack = ({navigation}:Props) => {
           backgroundColor: blue,
           elevation: 0,
           shadowColor: 'transparent',
-          
+
         },
         headerTintColor: '#fff',
         headerBackTitleVisible: false,
@@ -34,12 +37,12 @@ export const LifeTestStack = ({navigation}:Props) => {
           backgroundColor: bgColor
         },
         headerRight: ({ }) =>
-        <TouchableOpacity
-          style={{marginRight: 15}}
-          onPress={()=> navigation.toggleDrawer() }
-        >
-          <Icon name="menu-outline" size={25} style={{ color: "#fff" }} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginRight: 15 }}
+            onPress={() => navigation.toggleDrawer()}
+          >
+            <Icon name="menu-outline" size={25} style={{ color: "#fff" }} />
+          </TouchableOpacity>
       }}
     >
       <Stack.Screen
@@ -47,6 +50,14 @@ export const LifeTestStack = ({navigation}:Props) => {
         name="LifeTestsScreen"
         component={LifeTestsScreen}
       />
+
+      <Stack.Screen
+        options={{ title: "Filter" }}
+        name="FilterLifeScreen"
+        component={FilterLifeScreen}
+      />
+
+
       <Stack.Screen
         options={{ title: "Life Test" }}
         name="LifeTestScreen"

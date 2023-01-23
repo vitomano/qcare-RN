@@ -4,12 +4,11 @@ import { IntakeContext } from '../context/IntakeContext';
 import { MainInfo } from '../interfaces/intakes.reports'
 import { CustomInput } from './CustomInput';
 
-type Props = { mainData: MainInfo }
+type Props = { mainData: MainInfo}
 
 export const MainForm = ({mainData}:Props) => {
 
     const { totalPallets, handleMain } = useContext( IntakeContext )
-
 
     const {
         pallet_ref,

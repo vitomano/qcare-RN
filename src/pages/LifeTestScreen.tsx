@@ -9,7 +9,7 @@ import { LifeTestStackParams } from '../navigation/LifeTestStack'
 import { globalStyles } from '../theme/globalStyles';
 import { mediumGrey } from '../theme/variables';
 import { LoadingScreen } from './LoadingScreen'
-import { useLifeTest } from '../api/useLifeTest';
+import { useLifeTest, useDeleteLastDay } from '../api/useLifeTest';
 import { ScoreColor } from '../components/ui/ScoreColor'
 import { CentredContent } from '../components/CenterContent'
 import { DayCard } from '../components/ui/DayCard'
@@ -17,6 +17,7 @@ import { AddDay } from '../components/AddDay';
 import { ModalBlock } from '../components/modals/ModalBlock';
 
 import { CustomStatus } from '../components/ui/CustomStatus';
+import { ModalConfirmation } from '../components/modals/ModalConfirmation';
 
 
 interface Props extends StackScreenProps<LifeTestStackParams, "LifeTestScreen"> { };
@@ -25,12 +26,17 @@ interface Props extends StackScreenProps<LifeTestStackParams, "LifeTestScreen"> 
 export const LifeTestScreen = ({ route, navigation }: Props) => {
 
   const { data: lifeTest, isLoading, isError, refetch } = useLifeTest(route.params.id)
+  const { mutateAsync } = useDeleteLastDay()
 
   const [modalAddDay, setModalAddDay] = useState(false)
-  // const queryClient = useQueryClient()
+  const [modalDeleteDay, setModalDeleteDay] = useState(false)
 
   //-----------------------------------------------------------------------
 
+  const deleteLastDay = async () => {
+    await mutateAsync(route.params.id)
+    setModalDeleteDay(false)
+  };
 
   if (isError) { navigation.navigate('LifeTestsScreen') }
   if (isLoading) return <LoadingScreen />
@@ -57,7 +63,7 @@ export const LifeTestScreen = ({ route, navigation }: Props) => {
             <TextApp bold size='m'>Shelf Life Test</TextApp>
             <View style={{ width: 80 }}>
               <TouchableWithoutFeedback>
-                <CustomStatus lifetest={lifeTest!} id={route.params.id}/>
+                <CustomStatus lifetest={lifeTest!} id={route.params.id} />
               </TouchableWithoutFeedback>
             </View>
           </View>
@@ -70,28 +76,28 @@ export const LifeTestScreen = ({ route, navigation }: Props) => {
             </View>
 
             <View style={{ ...globalStyles.flexRow, marginBottom: 3 }}>
-              <TextApp bold style={{ width: "50%" }}>Grower</TextApp>
-              <TextApp>{lifeTest?.grower || lifeTest?.reportId?.mainData?.grower || '--'}</TextApp>
+              <TextApp bold style={{ width: 100 }}>Grower</TextApp>
+              <TextApp style={{ flex: 1 }}>{lifeTest?.grower || lifeTest?.reportId?.mainData?.grower || '--'}</TextApp>
             </View>
 
             <View style={{ ...globalStyles.flexRow, marginBottom: 3 }}>
-              <TextApp bold style={{ width: "50%" }}>GGN</TextApp>
-              <TextApp>{lifeTest?.reportId?.mainData?.gln_ggn || '--'}</TextApp>
+              <TextApp bold style={{ width: 100 }}>GGN</TextApp>
+              <TextApp style={{ flex: 1 }}>{lifeTest?.reportId?.mainData?.gln_ggn || '--'}</TextApp>
             </View>
 
             <View style={{ ...globalStyles.flexRow, marginBottom: 3 }}>
-              <TextApp bold style={{ width: "50%" }}>Product</TextApp>
-              <TextApp>{lifeTest?.reportId?.mainData?.product || '--'}</TextApp>
+              <TextApp bold style={{ width: 100 }}>Product</TextApp>
+              <TextApp style={{ flex: 1 }}>{lifeTest?.reportId?.mainData?.product || '--'}</TextApp>
             </View>
 
             <View style={{ ...globalStyles.flexRow, marginBottom: 3 }}>
-              <TextApp bold style={{ width: "50%" }}>Date</TextApp>
-              <TextApp>{dateFormat(lifeTest?.date) || '--'}</TextApp>
+              <TextApp bold style={{ width: 100 }}>Date</TextApp>
+              <TextApp style={{ flex: 1 }}>{dateFormat(lifeTest?.date) || '--'}</TextApp>
             </View>
 
             <View style={{ ...globalStyles.flexRow, marginBottom: 3 }}>
-              <TextApp bold style={{ width: "50%" }}>Variety</TextApp>
-              <TextApp>{lifeTest?.reportId?.mainData?.variety || '--'}</TextApp>
+              <TextApp bold style={{ width: 100 }}>Variety</TextApp>
+              <TextApp style={{ flex: 1 }}>{lifeTest?.reportId?.mainData?.variety || '--'}</TextApp>
             </View>
 
           </View>
@@ -99,23 +105,44 @@ export const LifeTestScreen = ({ route, navigation }: Props) => {
           <View>
             {
               lifeTest?.test.map((day, index) => (
-                <DayCard key={day._id} index={index} day={day} lifeId={route.params.id}/>
+                <DayCard key={day._id} index={index} day={day} lifeId={route.params.id} />
 
               ))
             }
           </View>
 
-          {
-            lifeTest?.test.length! < 7 &&
-            <CentredContent style={{ marginTop: 25 }}>
+          <CentredContent style={{ marginTop: 25, flexDirection: "row", justifyContent: "center" }}>
+            {
+              lifeTest?.test.length! > 0 &&
+              <ButtonStyled
+                onPress={() => setModalDeleteDay(true)}
+                text={`Day ${lifeTest?.test.length}`}
+                danger
+                width={40} icon="trash" iconSize={22}
+                styleText={{ fontWeight: "bold" }} />
+            }
+            {
+              lifeTest?.test.length! > 0 && lifeTest?.test.length! < 7 &&
+              <View style={{ width: 10 }} />
+            }
+
+            {
+              lifeTest?.test.length! < 7 &&
               <ButtonStyled
                 onPress={() => setModalAddDay(true)}
                 text={`Day ${lifeTest?.test.length! + 1}`}
                 blue
                 width={40} icon="add-circle"
                 styleText={{ fontWeight: "bold" }} />
-            </CentredContent>
-          }
+            }
+          </CentredContent>
+
+          <ModalConfirmation
+            message={`Do you want to delete Day ${lifeTest?.test.length}?`}
+            action={deleteLastDay}
+            modal={modalDeleteDay}
+            openModal={setModalDeleteDay}
+          />
 
           <ModalBlock
             modal={modalAddDay}
@@ -128,19 +155,6 @@ export const LifeTestScreen = ({ route, navigation }: Props) => {
               setModalAddDay={setModalAddDay}
             />
           </ModalBlock>
-
-
-          {/* <Button title='toast' onPress={() => Toast.show({
-            type: 'success',
-            text1: 'Done!',
-            text2: 'Day has been added'
-          })} />
-
-          <Button title='toast error' onPress={() => Toast.show({
-            type: 'error',
-            text1: 'Done!',
-            text2: 'Day has been added'
-          })} /> */}
 
         </View>
 

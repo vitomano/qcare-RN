@@ -1,25 +1,24 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext } from 'react'
 import { View, ScrollView, RefreshControl, TouchableOpacity, StyleSheet } from 'react-native'
-import { useFilterReports } from '../api/useFilterReports';
 import { CardReport } from '../components/cards/CardReport';
 import { CentredContent } from '../components/CenterContent';
 import ButtonStyled from '../components/ui/ButtonStyled';
 import { TextApp } from '../components/ui/TextApp';
-import { FilterContext } from '../context/FilterContext';
-import { ReportsStackParams } from '../navigation/ReportsStack';
 import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen';
-import { filterRed } from '../theme/variables';
+import { filterRed, inputColor } from '../theme/variables';
 import { LifeTestStackParams } from '../navigation/LifeTestStack';
-
+import { useFilterLife } from '../api/useFilterLifeTest';
+import { CardLifeTest } from '../components/cards/CardLifeTest';
+import { FilterLifeContext } from '../context/FilterLifeContext';
 
 interface Props extends StackScreenProps<LifeTestStackParams, "FilterLifeScreen"> { };
 
 export const FilterLifeScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch, reports } = useFilterReports(route.params.query)
-  const { cleanAll } = useContext(FilterContext)
+  const { isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch, lifeTests } = useFilterLife(route.params.query)
+  const { cleanAll } = useContext(FilterLifeContext)
 
   if (isLoading) return <LoadingScreen />
 
@@ -34,7 +33,7 @@ export const FilterLifeScreen = ({ route, navigation }: Props) => {
       }
       style={{ ...globalStyles.container, paddingTop: 10, paddingHorizontal: 10 }}>
       {
-        reports.length > 0
+        lifeTests.length > 0
           ?
           <View style={{ marginBottom: 60 }}>
 
@@ -43,22 +42,37 @@ export const FilterLifeScreen = ({ route, navigation }: Props) => {
                 activeOpacity={.9}
                 onPress={() => {
                   cleanAll()
-                  navigation.navigate("LifeTestsScreen")
+                  navigation.navigate('LifeTestsScreen' as never)
+
                 }}
               >
                 <View style={ styles.closeBtn }>
                   <TextApp size='s' color='white'>Clean filter</TextApp>
-                  {/* <Icon name="close" size={20} color="white" /> */}
                 </View>
               </TouchableOpacity>
             </View>
 
-            {
+            <View style={{ ...globalStyles.flexRow, backgroundColor: inputColor, marginTop: 5, paddingVertical: 4, borderRadius: 50, marginBottom: 10 }}>
+              <View style={{ width: 80 }}>
+                <TextApp size='xs' bold style={{ paddingLeft: 8 }}>Status</TextApp>
+              </View>
 
-              reports.map(report => (
-                <CardReport
-                  key={report._id}
-                  report={report} />
+              <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <TextApp size='xs' bold>Report Info</TextApp>
+              </View>
+
+              <View style={{ width: 84 }}>
+                <TextApp size='xs' bold>Days</TextApp>
+              </View>
+            </View>
+
+            {
+              lifeTests.map(lifeTest => (
+                <CardLifeTest
+                  key={lifeTest._id}
+                  lifeTest={lifeTest}
+                  id={lifeTest._id}
+                />
               ))
             }
             {
@@ -69,6 +83,7 @@ export const FilterLifeScreen = ({ route, navigation }: Props) => {
                   blue
                   width={50}
                   onPress={fetchNextPage}
+                  style={{ marginBottom: 50 }}
                   loading={isFetchingNextPage}
                 />
               </CentredContent>
@@ -77,7 +92,7 @@ export const FilterLifeScreen = ({ route, navigation }: Props) => {
 
           :
           <View style={{ marginVertical: 50 }}>
-            <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Reports</TextApp>
+            <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Shelf life test</TextApp>
           </View>
       }
 

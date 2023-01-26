@@ -77,3 +77,9 @@ export const PALLETTYPE = [
     { value: "Other", label:                "Other" },
 ]
 
+
+export const STATUS = [
+    { value: 'pending', label: "PENDING", selected: false, color: "#80868B", fill: "#e3e4e5" },
+    { value: 'in-process', label: "IN PROCESS", selected: false, color: "#dd8100", fill: "#ffe4b3" },
+    { value: 'done', label: "DONE", selected: false, color: "#1a9141", fill: "#cdeece" },
+]

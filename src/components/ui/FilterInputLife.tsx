@@ -1,23 +1,17 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Platform, StyleSheet, TextInput, View } from 'react-native'
 import { globalStyles } from '../../theme/globalStyles'
 import { darkGrey } from '../../theme/variables'
 import { TextApp } from './TextApp'
-import { QueryType } from '../../interfaces/interfaces';
-import { FilterContext } from '../../context/FilterContext'
-import { FilterLifeContext } from '../../context/FilterLifeContext';
+
 
 interface Props {
     label: string,
     value: string,
-    query: QueryType,
-    lifetest: boolean
+    onChange: (txt:string) => void
 }
 
-export const FilterInput = ({ label, value, query, lifetest }: Props) => {
-
-    const { handleString } = useContext( FilterContext )
-    const { handleString:handleLifeString } = useContext( FilterLifeContext )
+export const FilterInputLife = ({ label, value, onChange }: Props) => {
 
     return (
         <View style={[globalStyles.flexRow, styles.container]}>
@@ -27,11 +21,7 @@ export const FilterInput = ({ label, value, query, lifetest }: Props) => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 value={ value as string}
-                onChangeText={(e) => {
-                    lifetest
-                    ? handleLifeString(query, e)
-                    : handleString(query, e)
-                }}
+                onChangeText={onChange}
                 style={styles.textInput}
             />
         </View>
@@ -41,7 +31,7 @@ export const FilterInput = ({ label, value, query, lifetest }: Props) => {
 const styles = StyleSheet.create({
     container: {
         paddingBottom: Platform.OS === "android" ? 2 : 6,
-        marginBottom: 15,
+        marginBottom: 20,
         borderBottomColor: darkGrey,
         borderBottomWidth: .5,
     },

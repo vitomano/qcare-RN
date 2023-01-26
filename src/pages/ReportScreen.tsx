@@ -12,6 +12,7 @@ import { useReport } from '../api/useReport';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalBlock } from '../components/modals/ModalBlock';
 import { Share } from '../components/Share';
+import { dateFormat } from '../helpers/dateFormat';
 
 
 interface Props extends StackScreenProps<ReportsStackParams, "ReportScreen"> { };
@@ -45,7 +46,7 @@ export const ReportScreen = ({ route }: Props) => {
           <TextApp color='white' bold size='l' style={{ marginTop: 10 }}>{data?.mainData.pallet_ref || "--"}</TextApp>
 
           <View style={{ backgroundColor: '#fff', borderRadius: 120, marginBottom: 20, marginTop: 10, paddingHorizontal: 10, paddingVertical: 2 }}>
-            <TextApp bold size='s' style={{ marginVertical: 4 }}>{new Date(data?.date as any).toLocaleDateString() || "--"}</TextApp>
+            <TextApp bold size='s' style={{ marginVertical: 4 }}>{dateFormat(data?.date) || "--"}</TextApp>
           </View>
 
         </View>

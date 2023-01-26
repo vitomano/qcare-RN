@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { TouchableOpacity, View, Image, TouchableWithoutFeedback } from 'react-native';
 import { colorScore } from '../../helpers/colorScore';
+import { dateFormat } from '../../helpers/dateFormat';
 import { SingleReport } from '../../interfaces/intakes.reports';
 import { globalStyles } from '../../theme/globalStyles';
 import { CustomMenuReport } from '../ui/CustomMenuReport';
@@ -16,7 +17,6 @@ export const CardReport = ({ report }: Props) => {
 
     const navigation = useNavigation()
     const coverImg = report.pallets.find(cover => cover.images.length > 0)
-
 
     return (
         <TouchableOpacity
@@ -49,7 +49,7 @@ export const CardReport = ({ report }: Props) => {
                     <TextApp bold>{report.palletRef || "--"}</TextApp>
                     <TextApp size='xs'>{report.mainData.supplier || "--"}</TextApp>
                     <TextApp size='xs'>{report.mainData.total_pallets || "--"}</TextApp>
-                    <TextApp size='xs'>{new Date(report.date).toLocaleDateString() || "--"}</TextApp>
+                    <TextApp size='xs'>{dateFormat(report.date) || "--"}</TextApp>
                 </View>
 
                 <View style={{

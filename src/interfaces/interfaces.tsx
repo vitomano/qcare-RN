@@ -37,6 +37,8 @@ export type Status =
 export type QueryType =
 | "fruit"
 | "score"
+| "grower"
+| "status"
 | "supplier"
 | "palletRef"
 | "deliveryNote"

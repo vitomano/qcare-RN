@@ -12,10 +12,10 @@ import { FilterLifeScreen } from '../pages/FilterLifeScreen';
 interface Props extends DrawerScreenProps<any, any> { }
 
 export type LifeTestStackParams = {
+  // LifeTestsScreen: {query?: string | null},
   LifeTestsScreen: undefined,
   LifeTestScreen: { id: string }
   FilterLifeScreen: { query: string, page: number }
-
 }
 
 const Stack = createStackNavigator<LifeTestStackParams>();

@@ -9,23 +9,21 @@ import { TextApp } from './TextApp'
 import { dateFormat } from '../../helpers/dateFormat'
 import { FilterContext } from '../../context/FilterContext'
 import { QueryType } from '../../interfaces/interfaces';
-import { FilterLifeContext } from '../../context/FilterLifeContext';
 
 
 interface Props {
     label: string,
     query: QueryType
-    value: string | null
-    lifetest: boolean
+    value: Date | null
+    setCurrentDate: (date:Date) => void
+
 }
 
-export const FilterDate = ({ label, value, query, lifetest }: Props) => {
+export const FilterDateLife = ({ label, value, query, setCurrentDate }: Props) => {
 
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState<Date>(new Date())
 
-    const { handleDate } = useContext( FilterContext )
-    const { handleDate: handleLifeDate } = useContext( FilterLifeContext )
 
     return (
         <View style={styles.container}>
@@ -47,9 +45,7 @@ export const FilterDate = ({ label, value, query, lifetest }: Props) => {
                 onConfirm={(date) => {
                     setOpen(false)
                     setDate(date)
-                    lifetest
-                    ? handleLifeDate(query, date)
-                    : handleDate(query, date)
+                    setCurrentDate(date)
                 }}
                 onCancel={() => {
                     setOpen(false)

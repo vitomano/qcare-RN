@@ -10,6 +10,13 @@ export interface AllLifeTestResponse {
     allLifeTest: LifeTest[];
 }
 
+export interface FilterLifeTest {
+    ok:          boolean;
+    page:        number;
+    totalPages:  number;
+    result: LifeTest[];
+}
+
 export interface SingleLifeTestResponse {
     ok:         boolean;
     msg:        string;

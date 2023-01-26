@@ -3,9 +3,7 @@ import { FilterResponse, SingleReport } from '../interfaces/intakes.reports';
 import qcareApi from "./qcareApi";
 
 
-
 const getFilterReports = async (query: string) => {
-    // console.log("queri", "/report/filter/search?page=1&fruit=blueberries")
     const { data } = await qcareApi.get<FilterResponse>(query)
     return data
 };
@@ -44,8 +42,6 @@ export const useRemoveReport = () => {
     const queryClient = useQueryClient()
     return useMutation(removeReport, {
         onSuccess: () => { queryClient.fetchInfiniteQuery(['filter']) }
-        // onSuccess: () => { queryClient.refetchQueries(['prereports']) }
-        // onSuccess: () => { queryClient.invalidateQueries(['prereports']) }
     })
 }
 

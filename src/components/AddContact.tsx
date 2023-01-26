@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
 import Toast from 'react-native-toast-message';
-import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import 'react-native-get-random-values';
 
 import { globalStyles } from '../theme/globalStyles'
 import { TextApp } from './ui/TextApp'

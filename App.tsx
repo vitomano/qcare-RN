@@ -12,6 +12,7 @@ import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { check, text } from './src/theme/variables';
 import { FilterProvider } from './src/context/FilterContext';
 import { CreateProvider } from './src/context/CreateContext';
+import { FilterLifeProvider } from './src/context/FilterLifeContext';
 
 
 export default function App() {
@@ -61,9 +62,11 @@ const AppState = ({ children }: any) => {
       <ReportProvider>
         <IntakeProvider>
           <FilterProvider>
-          <CreateProvider>
-            {children}
-          </CreateProvider>
+            <FilterLifeProvider>
+              <CreateProvider>
+                {children}
+              </CreateProvider>
+            </FilterLifeProvider>
           </FilterProvider>
         </IntakeProvider>
       </ReportProvider>

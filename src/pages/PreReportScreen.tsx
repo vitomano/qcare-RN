@@ -9,7 +9,7 @@ import { PalletPrereport } from '../components/PalletPrereport'
 import { ReportMain } from '../components/ReportMain'
 import ButtonStyled from '../components/ui/ButtonStyled'
 import { TextApp } from '../components/ui/TextApp'
-import { duration } from '../helpers/dateFormat'
+import { dateFormat, duration } from '../helpers/dateFormat'
 
 import { PrereportPallet } from '../interfaces/intakes.reports';
 import { PreReportsStackParams } from '../navigation/PrereportsStack'
@@ -54,7 +54,7 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
             <TextApp color='white' bold size='l' style={{ marginTop: 10 }}>{data?.mainData?.pallet_ref || "--"}</TextApp>
 
             <View style={{ backgroundColor: '#fff', borderRadius: 120, marginTop: 10, paddingHorizontal: 10, paddingVertical: 2 }}>
-              <TextApp bold size='s' style={{ marginVertical: 4 }}>{new Date(data?.endDate as any).toLocaleDateString() || "--"}  |  {new Date(data?.endDate as any).getHours() + ":" + new Date(data?.endDate as any).getMinutes() || "--"}</TextApp>
+              <TextApp bold size='s' style={{ marginVertical: 4 }}>{dateFormat(data?.endDate) || "--"}  |  {new Date(data?.endDate as any).getHours() + ":" + new Date(data?.endDate as any).getMinutes() || "--"}</TextApp>
             </View>
             <TextApp bold color='white' size='s' style={{ marginVertical: 4, marginBottom: 20 }}>duration: {duration(data?.startDate, data?.endDate)} min</TextApp>
 

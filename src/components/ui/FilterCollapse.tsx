@@ -5,9 +5,14 @@ import  Icon  from 'react-native-vector-icons/Ionicons'
 import { globalStyles } from '../../theme/globalStyles'
 import { blue } from '../../theme/variables'
 import { FilterForm } from '../FilterForm'
+import { FilterFormLifeTest } from '../FilterFormLifeTest'
 import { TextApp } from './TextApp'
 
-export const FilterCollapse = () => {
+interface Props{
+    lifeTestFilter?: boolean
+}
+
+export const FilterCollapse = ({lifeTestFilter=false}:Props) => {
 
     const [openFilter, setopenFilter] = useState(true)
 
@@ -28,7 +33,13 @@ export const FilterCollapse = () => {
 
 
             <Collapsible collapsed={openFilter} >
-                <FilterForm setopenFilter={setopenFilter}/>
+                {
+                    lifeTestFilter
+                    ?
+                    <FilterFormLifeTest setopenFilter={setopenFilter}/>
+                    :
+                    <FilterForm setopenFilter={setopenFilter}/>
+                }
             </Collapsible>
         </>
     )

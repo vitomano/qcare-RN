@@ -92,23 +92,6 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                         queryClient.invalidateQueries(['lifetest'])
                         queryClient.refetchQueries(['lifeTests'])
                     }
-
-                    // onSuccess: (data) => {
-                    //     console.log("este ok",data)
-                    //     Toast.show({
-                    //         type: 'success',
-                    //         text1: 'Done!',
-                    //         text2: `Day ${days.length + 1} has been added`
-                    //     });
-                    // },
-                    // onError: (err) => {
-                    //     console.log("este error", err)
-                    //     Toast.show({
-                    //         type: 'error',
-                    //         text1: 'Ups!',
-                    //         text2: "Something went wrong"
-                    //     });
-                    // },
                 }
             )
 

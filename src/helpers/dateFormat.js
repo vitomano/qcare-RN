@@ -1,6 +1,7 @@
 
 export function dateFormat(date) {
-    const newDate = new Date(date).toLocaleDateString()
+    const newDate = new Date(date).toLocaleDateString('en-NL')
+    // const newDate = new Date(date).toLocaleDateString('nl')
     return newDate
 }
 

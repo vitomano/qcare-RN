@@ -45,24 +45,7 @@ export const EditDay = ({ day, lifeId, setModalEditDay }: Props) => {
                 dayId: day._id,
                 conditions,
                 temperature
-            },
-            {
-                onSuccess: () => {
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Done!',
-                        text2: `Day ${day.day} has been edited`
-                    });
-                },
-                onError: () => {
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Ups!',
-                        text2: "Something went wrong"
-                    });
-                },
-                onSettled: () => setModalEditDay(false)
-            })
+            }).then(() => setModalEditDay(false))    
     };
 
     if (isLoading) return <LoadingScreen text='Adding day...' />

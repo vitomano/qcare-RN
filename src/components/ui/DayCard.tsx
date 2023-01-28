@@ -16,7 +16,6 @@ import { ModalContainer } from '../modals/ModalContainer';
 import { ImageButton } from './ImageButton'
 import ButtonStyled from './ButtonStyled'
 import { Asset, launchImageLibrary } from 'react-native-image-picker'
-import { useQueryClient } from '@tanstack/react-query'
 
 
 interface Props {
@@ -59,13 +58,12 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
 
 
     const addImage = async() => {
+
         await mutateAddImg({
             lifeId,
             dayId: day._id,
             images
-        })
-
-        setModalAddImg(false)
+        }).then(()=>setModalAddImg(false))
     };
 
 

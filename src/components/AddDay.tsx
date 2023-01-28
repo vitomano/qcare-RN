@@ -16,7 +16,6 @@ import ButtonStyled from './ui/ButtonStyled'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { Asset } from 'react-native-image-picker';
 import { useAddDay } from '../api/useLifeTest';
-import { useQueryClient } from '@tanstack/react-query';
 import { LoadingScreen } from '../pages/LoadingScreen';
 import { ImageButton } from './ui/ImageButton'
 
@@ -29,7 +28,7 @@ interface Props {
 
 export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
 
-    const { mutateAsync, isLoading } = useAddDay()
+    const { mutate, isLoading } = useAddDay()
 
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
@@ -74,36 +73,22 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
     };
 
 
-    const queryClient = useQueryClient()
-
     const sendEditItem = async () => {
 
-        try {
-            await mutateAsync({
-                images,
-                conditions,
-                lifeTestId,
-                temperature,
-                date,
-                dayNum: days.length + 1
-            },
-                {
-                    onSettled: () => {
-                        queryClient.invalidateQueries(['lifetest'])
-                        queryClient.refetchQueries(['lifeTests'])
-                    }
-                }
-            )
-
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setModalAddDay(false)
-        }
-
-
-
-
+            try {
+                mutate({
+                    images,
+                    conditions,
+                    lifeTestId,
+                    temperature,
+                    date,
+                    dayNum: days.length + 1
+                })
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setModalAddDay(false)
+            }
     };
 
     if (isLoading) return <LoadingScreen text='Adding day...' />

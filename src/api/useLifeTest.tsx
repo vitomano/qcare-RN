@@ -49,7 +49,6 @@ export const updateStatus = async (lifeId: string) => {
 //ADD DAY
 export const addDay = async ({ images, conditions, lifeTestId, temperature, date, dayNum }: Props) => {
 
-    try {
         const formData = new FormData();
     
         for (const img of images) {
@@ -68,17 +67,30 @@ export const addDay = async ({ images, conditions, lifeTestId, temperature, date
         const { data } = await qcareApi.put('/life-test/add-day', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-        console.log("FETCH enviado")
-
 
         return data
-    } catch (error) {
-        console.log("FETCH NO")
-        return error
-    }
 }
 
-//ADD DAY
+//ADD ADITIONAL IMAGE
+export const addLifeImage = async ({lifeId, dayId, images}:PropsAddImg) => {
+
+    const formData = new FormData();
+
+    for (const img of images) {
+        formData.append('multerLife', JSON.parse(JSON.stringify(img)))
+    }
+
+    formData.append('lifeId', lifeId)
+    formData.append('dayId', dayId)
+    
+    const { data } = await qcareApi.put('/life-test/add-life-images', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return data
+}
+
+
+//EDIT DAY
 export const editDay = async ({ lifeId, dayId, conditions, temperature }: PropsEdit) => {
 
     const { data } = await qcareApi.put(`/life-test/edit-day`, {
@@ -110,40 +122,37 @@ export const deleteLastDay = async ( id:string ) => {
 
 
 
-//ADD DAY
-export const addLifeImage = async ({lifeId, dayId, images}:PropsAddImg) => {
-
-    const formData = new FormData();
-
-    for (const img of images) {
-        formData.append('multerLife', JSON.parse(JSON.stringify(img)))
-    }
-
-    formData.append('lifeId', lifeId)
-    formData.append('dayId', dayId)
-    
-    const { data } = await qcareApi.put('/life-test/add-life-images', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    })
-    return data
-}
-
-
-
-
 // ------------------------- HOOKS -------------------------
 
 
 export const useLifeTest = (id: string) => {
     return useQuery(
-        ['lifetest', id],
+        ['lifetest'],
+        // ['lifetest', id],
         () => getSingleLifeTest(id),
         { select: (data) => { return data?.singleLife } }
     );
 }
 
 export const useAddDay = () => {
-    return useMutation(addDay)
+    const queryClient = useQueryClient()
+    return useMutation(addDay,
+        {
+            onSettled: () => {
+                queryClient.refetchQueries(['lifetest'])
+            }
+        })
+}
+
+export const useAddLifeImage = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation(addLifeImage,
+        {
+            onSettled: () => {
+                queryClient.refetchQueries(['lifetest'])
+            }
+        })
 }
 
 export const useEditDay = () => {
@@ -164,7 +173,7 @@ export const useUpdateStatus = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['lifetest']),
-                    queryClient.refetchQueries(["lifeTests"])
+                queryClient.refetchQueries(["lifeTests"])
             }
         }
     )
@@ -177,25 +186,6 @@ export const useDeleteImage = () => {
     })
 }
 
-
-export const useAddLifeImage = () => {
-    const queryClient = useQueryClient()
-
-    return useMutation(addLifeImage,
-        {
-            // onSuccess: () => {
-            //     queryClient.invalidateQueries(['lifetest'])
-            // },
-            // onError(error) {
-            //     queryClient.invalidateQueries(['lifetest'])
-            // },
-            onSettled: () => {
-                // queryClient.invalidateQueries(['lifetest'])
-                queryClient.refetchQueries(['lifetest'])
-            }
-        }
-        )
-}
 
 export const useDeleteLastDay = () => {
     const queryClient = useQueryClient()

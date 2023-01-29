@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native'
 import DatePicker from 'react-native-date-picker'
-// import Toast from 'react-native-toast-message';
 
 import { globalStyles } from '../theme/globalStyles'
 import { TextApp } from './ui/TextApp'
@@ -28,7 +27,7 @@ interface Props {
 
 export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
 
-    const { mutate, isLoading } = useAddDay()
+    const { mutateAsync, isLoading } = useAddDay()
 
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
@@ -74,21 +73,19 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
 
 
     const sendEditItem = async () => {
+        try {
+            await mutateAsync({
+                images,
+                conditions,
+                lifeTestId,
+                temperature,
+                date,
+                dayNum: days.length + 1
+            })
+        } catch (error) {
+            console.log(error)
+        } finally { setModalAddDay(false) }
 
-            try {
-                mutate({
-                    images,
-                    conditions,
-                    lifeTestId,
-                    temperature,
-                    date,
-                    dayNum: days.length + 1
-                })
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setModalAddDay(false)
-            }
     };
 
     if (isLoading) return <LoadingScreen text='Adding day...' />
@@ -172,7 +169,7 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
             }
 
             <View style={{ marginVertical: 25 }} >
-                <ImageButton openLibrary={openLibrary} imagesLength={images} max="3"/>
+                <ImageButton openLibrary={openLibrary} imagesLength={images} max="3" />
             </View>
 
 

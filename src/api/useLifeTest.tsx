@@ -49,30 +49,30 @@ export const updateStatus = async (lifeId: string) => {
 //ADD DAY
 export const addDay = async ({ images, conditions, lifeTestId, temperature, date, dayNum }: Props) => {
 
-        const formData = new FormData();
-    
-        for (const img of images) {
-            formData.append('multerLife', JSON.parse(JSON.stringify(img)))
-        }
-    
-        for (const con of conditions) {
-            formData.append('conditions', con)
-        }
-    
-        formData.append('lifeTestId', lifeTestId)
-        formData.append('temperature', temperature)
-        formData.append('day_date', date)
-        formData.append('day', dayNum)
-    
-        const { data } = await qcareApi.put('/life-test/add-day', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
+    const formData = new FormData();
 
-        return data
+    for (const img of images) {
+        formData.append('multerLife', JSON.parse(JSON.stringify(img)))
+    }
+
+    for (const con of conditions) {
+        formData.append('conditions', con)
+    }
+
+    formData.append('lifeTestId', lifeTestId)
+    formData.append('temperature', temperature)
+    formData.append('day_date', date)
+    formData.append('day', dayNum)
+
+    const { data } = await qcareApi.put('/life-test/add-day', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
+
+    return data
 }
 
 //ADD ADITIONAL IMAGE
-export const addLifeImage = async ({lifeId, dayId, images}:PropsAddImg) => {
+export const addLifeImage = async ({ lifeId, dayId, images }: PropsAddImg) => {
 
     const formData = new FormData();
 
@@ -82,7 +82,7 @@ export const addLifeImage = async ({lifeId, dayId, images}:PropsAddImg) => {
 
     formData.append('lifeId', lifeId)
     formData.append('dayId', dayId)
-    
+
     const { data } = await qcareApi.put('/life-test/add-life-images', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     })
@@ -115,7 +115,7 @@ export const deleteImage = async ({ lifeId, testId, key, key_low }: PropsDelete)
 }
 
 //DELETE LAST DAY
-export const deleteLastDay = async ( id:string ) => {
+export const deleteLastDay = async (id: string) => {
     const { data } = await qcareApi.put(`/life-test/delete-day/${id}`)
     return data
 }
@@ -173,7 +173,7 @@ export const useUpdateStatus = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['lifetest']),
-                queryClient.refetchQueries(["lifeTests"])
+                    queryClient.refetchQueries(["lifeTests"])
             }
         }
     )
@@ -191,7 +191,8 @@ export const useDeleteLastDay = () => {
     const queryClient = useQueryClient()
 
     return useMutation(deleteLastDay,
-        { onSuccess: () => {
+        {
+            onSuccess: () => {
                 queryClient.invalidateQueries(['lifetest'])
                 queryClient.invalidateQueries(['lifeTests'])
             }

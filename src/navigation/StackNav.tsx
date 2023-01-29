@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../context/AuthContext';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -6,10 +6,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../pages/LoginScreen';
 import { LoadingScreen } from '../pages/LoadingScreen';
 import { DrawerNav } from './DrawerNav';
+import SplashScreen from 'react-native-splash-screen'
+
 
 const Stack = createStackNavigator();
 
 export const StackNav = () => {
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
 
   const { status } = useContext(AuthContext)
 

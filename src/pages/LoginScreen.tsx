@@ -8,7 +8,7 @@ import ButtonStyled from '../components/ui/ButtonStyled';
 import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../hooks/useForm';
 
-import SplashScreen from 'react-native-splash-screen'
+// import SplashScreen from 'react-native-splash-screen'
 
 interface Props extends StackScreenProps<any, any> { }
 
@@ -17,9 +17,9 @@ export const LoginScreen = ({ navigation }: Props) => {
   const { login, errorMessage = "", removeError } = useContext(AuthContext);
   const [hidden, setHidden] = useState(true)
 
-  useEffect(() => {
-    SplashScreen.hide();
-  }, [])
+  // useEffect(() => {
+  //   SplashScreen.hide();
+  // }, [])
 
 
   useEffect(() => {

@@ -49,6 +49,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
   const sendPrereport = async () => {
 
+
     const { error, ok } = validationPrereport(mainData!, pallets as DataPrereport[])
 
     if (!ok) return alertMsg("Error to send", error)
@@ -76,6 +77,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
         })
       }
 
+
       await qcareApi.post(`/prereport/main-prereport`, {
         mainData,
         fruit,
@@ -89,8 +91,6 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
       })
 
         .then(async (res) => {
-
-          console.log("Enviando Imagenes")
 
           const preId = res.data.preId
 
@@ -108,18 +108,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
             await qcareApi.post('/prereport/images-prereport', formData, {
               headers: { 'Content-Type': 'multipart/form-data' }
             })
-            // const token = await AsyncStorage.getItem('token')
 
-
-            // await fetch("/prereport/images-prereport", {
-            //   method: 'POST',
-            //   headers: {
-            //     Accept: 'application/json',
-            //     'Content-Type': 'multipart/form-data',
-            //     ['x-token']: (token)?.toString() as string
-            //   },
-            //   body: formData,
-            // })
           }
         })
 

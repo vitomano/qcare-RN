@@ -42,8 +42,9 @@ export const useReports = () => {
 export const useRemoveReport = () => {
     const queryClient = useQueryClient()
     return useMutation(removeReport, {
-        onSuccess: () => { queryClient.fetchInfiniteQuery(['reports']) }
-        // onSuccess: () => { queryClient.refetchQueries(['prereports']) }
-        // onSuccess: () => { queryClient.invalidateQueries(['prereports']) }
+        onSuccess: () => {
+            queryClient.fetchInfiniteQuery(['reports'])
+            queryClient.resetQueries((['lifeTests']))
+        }
     })
 }

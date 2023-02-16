@@ -38,7 +38,7 @@ export const ModalConfirmation = ({  openModal, modal,title="Confirmation", mess
                         loading
                             ?
                             <View style={{ ...styles.modal, height: "auto", position: "absolute" }} >
-                                <LoadingScreen text='Removing Intake' />
+                                <LoadingScreen text='Removing' />
                             </View>
                             :
                             <View style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }} >

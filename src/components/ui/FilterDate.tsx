@@ -16,10 +16,10 @@ interface Props {
     label: string,
     query: QueryType
     value: string | null
-    lifetest: boolean
+    lifetest?: boolean
 }
 
-export const FilterDate = ({ label, value, query, lifetest }: Props) => {
+export const FilterDate = ({ label, value, query, lifetest=false }: Props) => {
 
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState<Date>(new Date())

@@ -1,4 +1,4 @@
-package com.qcarern.newarchitecture.components;
+package com.multimediastars.qcare.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

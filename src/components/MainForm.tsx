@@ -3,12 +3,17 @@ import { View } from 'react-native';
 import { IntakeContext } from '../context/IntakeContext';
 import { MainInfo } from '../interfaces/intakes.reports'
 import { CustomInput } from './CustomInput';
+import { CreateContext } from '../context/CreateContext';
 
-type Props = { mainData: MainInfo}
+type Props = {
+    mainData: MainInfo
+    createNew?:boolean
+}
 
-export const MainForm = ({mainData}:Props) => {
+export const MainForm = ({mainData, createNew=false}:Props) => {
 
     const { totalPallets, handleMain } = useContext( IntakeContext )
+    const { totalPallets:totalPalletsNew, handleMain:handleMainNew } = useContext( CreateContext )
 
     const {
         pallet_ref,
@@ -35,129 +40,129 @@ export const MainForm = ({mainData}:Props) => {
     // const formatRef = useRef()
     // const kilosRef = useRef()
 
+    const handleMainData = createNew ? handleMainNew : handleMain
+
     return (
-
-
         <View>
 
             <CustomInput
                 label="Pallet Ref"
                 value={pallet_ref}
                 item="pallet_ref"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Product"
                 value={product}
                 item="product"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Format"
                 value={format}
                 item="format"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Supplier"
                 value={supplier}
                 item="supplier"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Grower"
                 value={grower}
                 item="grower"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Origin"
                 value={origin}
                 item="origin"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="GLN/GGN"
                 value={gln_ggn}
                 item="gln_ggn"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Variety(ies)"
                 value={variety}
                 item="variety"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Unit Label"
                 value={unit_label}
                 item="unit_label"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Total Boxes"
                 value={total_boxes}
                 item="total_boxes"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
 
             <CustomInput
                 label="Total Pallets"
-                value={ totalPallets.toString() }
+                value={ createNew ? totalPalletsNew.toString() : totalPallets.toString() }
                 item="total_pallets"
                 editable={false}
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
 
             <CustomInput
                 label="Quality"
                 value={quality}
                 item="quality"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Transport"
                 value={transport}
                 item="transport"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
 
             <CustomInput
                 label="Purchase Order"
                 value={purchase_order}
                 item="purchase_order"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Delivery Note / AWB Number"
                 value={delivery_note}
                 item="delivery_note"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Warehouse"
                 value={warehouse}
                 item="warehouse"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
 
             <CustomInput
                 label="Samples"
                 value={samples}
                 item="samples"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Kilos"
                 value={kilos}
                 item="kilos"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
             <CustomInput
                 label="Format Gr"
                 value={format_gr}
                 item="format_gr"
-                handleInput={handleMain}
+                handleInput={handleMainData}
             />
            
         </View>

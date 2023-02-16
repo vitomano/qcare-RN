@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { TextInput, TouchableOpacity, View } from 'react-native'
-import Toast from 'react-native-toast-message';
+import { TextInput, View } from 'react-native'
 
 import { globalStyles } from '../theme/globalStyles'
 import { TextApp } from './ui/TextApp'
@@ -8,8 +7,6 @@ import { Test } from '../interfaces/interface.lifeTest';
 import { inputStyles } from '../theme/inputStyles';
 import { PickerModal } from './modals/PickerModal'
 import { CONDITIONS } from '../data/conditions'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { darkGrey } from '../theme/variables';
 import ButtonStyled from './ui/ButtonStyled'
 
 import { useEditDay } from '../api/useLifeTest';
@@ -89,34 +86,6 @@ export const EditDay = ({ day, lifeId, setModalEditDay }: Props) => {
                     />
                 </View>
             }
-
-            {/* {
-                day.images.length < 3 &&
-                <View
-                    style={{ alignItems: "center", justifyContent: "center", alignSelf: "center", marginVertical: 25 }}
-                >
-                    <View
-                        style={{ alignItems: "center", justifyContent: "center", backgroundColor: blue, width: 50, height: 50, borderRadius: 50 }}
-                    >
-                        <TouchableOpacity
-                            activeOpacity={.8}
-                            onPress={openLibrary}
-                        >
-                            <Icon name="camera" color="#fff" size={30} />
-                        </TouchableOpacity>
-                    </View>
-                    {
-                        images.length > 0
-                            ?
-                            <TextApp size='s' style={{ marginTop: 5 }}>{images.length} file/s selected</TextApp>
-                            :
-                            <TextApp size='s' style={{ marginTop: 5, color: blue }}>Max. {3 - day.images.length} images</TextApp>
-
-                    }
-                </View>
-            } */}
-
-
 
             <View style={{ ...globalStyles.flexBetween }}>
                 <ButtonStyled

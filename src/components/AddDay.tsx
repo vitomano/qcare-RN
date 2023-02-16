@@ -17,6 +17,8 @@ import { Asset } from 'react-native-image-picker';
 import { useAddDay } from '../api/useLifeTest';
 import { LoadingScreen } from '../pages/LoadingScreen';
 import { ImageButton } from './ui/ImageButton'
+import { useQueryClient } from '@tanstack/react-query'
+import Toast from 'react-native-toast-message'
 
 
 interface Props {
@@ -26,6 +28,8 @@ interface Props {
 }
 
 export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
+
+    const queryClient = useQueryClient()
 
     const { mutateAsync, isLoading } = useAddDay()
 
@@ -46,10 +50,9 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
     };
 
     const openLibrary = () => {
-
         launchImageLibrary({
             mediaType: 'photo',
-            selectionLimit: 0,
+            selectionLimit: 3,
         }, (res) => {
             setImages([])
             if (res.didCancel) return
@@ -71,8 +74,8 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
         })
     };
 
+    const sendAddDay = async () => {
 
-    const sendEditItem = async () => {
         try {
             await mutateAsync({
                 images,
@@ -82,8 +85,19 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                 date,
                 dayNum: days.length + 1
             })
+
+            queryClient.resetQueries((['lifeTests']))
+
+            Toast.show({
+                type: 'success',
+                text1: 'Day added successfully'
+            })
         } catch (error) {
             console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: 'Something went wrong'
+            })
         } finally { setModalAddDay(false) }
 
     };
@@ -183,7 +197,7 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                     width={48}
                 />
                 <ButtonStyled
-                    onPress={sendEditItem}
+                    onPress={sendAddDay}
                     text='Add day'
                     blue
                     width={48}

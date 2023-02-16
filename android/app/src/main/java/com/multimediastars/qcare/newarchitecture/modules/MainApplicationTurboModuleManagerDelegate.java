@@ -1,4 +1,4 @@
-package com.qcarern.newarchitecture.modules;
+package com.multimediastars.qcare.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

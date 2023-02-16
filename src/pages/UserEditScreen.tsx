@@ -48,7 +48,7 @@ export const UserEditScreen = () => {
 
   const saveChanges = async () => {
 
-    if(name.length === 0 || lastname.length === 0 || company.length === 0) return alertMsg("Error", "All fields are requiredHermo")
+    if (name.length === 0 || lastname.length === 0 || company.length === 0) return alertMsg("Error", "All fields are requiredHermo")
 
     setSaving(true)
     try {
@@ -66,9 +66,10 @@ export const UserEditScreen = () => {
       formData.append('company', company)
       formData.append('phone', phone)
 
+      await qcareApi.put(`/auth/profile/${user?.uid!}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
 
-
-      await qcareApi.put(`/auth/profile/${user?.uid!}`, formData)
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -78,7 +79,8 @@ export const UserEditScreen = () => {
       console.log(error)
     } finally {
       setSaving(false)
-      refresh() }
+      refresh()
+    }
   };
 
 

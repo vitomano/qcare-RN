@@ -11,10 +11,10 @@ interface Props {
     label: string,
     value: string,
     query: QueryType,
-    lifetest: boolean
+    lifetest?: boolean
 }
 
-export const FilterInput = ({ label, value, query, lifetest }: Props) => {
+export const FilterInput = ({ label, value, query, lifetest=false }: Props) => {
 
     const { handleString } = useContext( FilterContext )
     const { handleString:handleLifeString } = useContext( FilterLifeContext )

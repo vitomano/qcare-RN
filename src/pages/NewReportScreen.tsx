@@ -16,13 +16,13 @@ import { TextApp } from '../components/ui/TextApp';
 import { CreateStackParams } from '../navigation/CreateStack';
 import { CreateContext } from '../context/CreateContext';
 import { PalletNewReport } from '../components/PalletNewReport';
-import { MainFormCreate } from '../components/MainFormCreate';
 import { validationPrereport } from '../helpers/validations';
 import { alertMsg } from '../helpers/alertMsg';
 import qcareApi from '../api/qcareApi';
 import { average } from '../helpers/average';
 import { greenMain } from '../theme/variables';
 import { useQueryClient } from '@tanstack/react-query';
+import { MainForm } from '../components/MainForm';
 
 
 interface Props extends StackScreenProps<CreateStackParams, "NewReportScreen"> { };
@@ -79,7 +79,6 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
         })
       }
 
-
       await qcareApi.post(`/report/report`, {
         mainData,
         fruit,
@@ -113,7 +112,7 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
           };
 
           const saveLifeTest = async () => {
-            const allGrowers = (pallets as PalletState[]).filter(p => p.addGrower).map(p => { return { grower: p?.addGrower?.grower_variety, score: p.score } })
+            const allGrowers = (pallets as PalletState[]).filter(p => p.newGrower).map(p => { return { grower: p?.newGrower?.grower_variety, score: p.score } })
             const growers = allGrowers.length > 0 ? allGrowers : [{ grower: (mainData?.grower || "--"), score: average("score", pallets) }]
 
             for (const gro of growers) {
@@ -129,7 +128,12 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
           await Promise.all([savePalletInfo(), saveLifeTest()])
 
         })
-      queryClient.invalidateQueries(['reports'])
+        
+      // queryClient.invalidateQueries(['reports'])
+      // queryClient.fetchInfiniteQuery(['lifeTests'])
+      queryClient.resetQueries((['reports']))
+      queryClient.resetQueries((['lifeTests']))
+
       cleanAll()
       navigation.navigate("NewReportSelectScreen" as any)
 
@@ -161,8 +165,9 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
                 {
                   mainData &&
                   <>
-                    <MainFormCreate
+                    <MainForm
                       mainData={mainData}
+                      createNew
                     />
 
                     {/* ------------------------------------ */}
@@ -212,7 +217,6 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
                       <ButtonStyled
                         text='Send'
                         width={50}
-                        // onPress={() => console.log('sending')}
                         onPress={sendPrereport}
                       />
                     </CentredContent>

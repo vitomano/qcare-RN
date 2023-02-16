@@ -5,14 +5,17 @@ import { globalStyles } from '../theme/globalStyles'
 import { inputStyles } from '../theme/inputStyles';
 import { darkGreen, greenMain, lightGreen } from '../theme/variables';
 import { IntakeContext } from '../context/IntakeContext';
+import { CreateContext } from '../context/CreateContext';
 
 interface Props{
     pallet: DataPrereport | PalletState,
+    createNew?:boolean
 }
 
-export const GrowerInputs = ({ pallet }:Props) => {
+export const GrowerInputs = ({ pallet, createNew=false }:Props) => {
 
     const { handleGrower } = useContext(IntakeContext)
+    const { handleGrower: handleGrowerCreate } = useContext(CreateContext)
 
   return (
     <View style={{ flex: 1, marginBottom: 10 }}>
@@ -23,11 +26,19 @@ export const GrowerInputs = ({ pallet }:Props) => {
         <View style={{...globalStyles.flexBetween}}>
             <TextInput 
             style={{...inputStyles.inputOutline, width: "48%"}}
-            onChangeText={ (e) => handleGrower(pallet.id, "grower_variety", e) }
+            onChangeText={ (e) =>
+                createNew
+                ? handleGrowerCreate(pallet.id, "grower_variety", e)
+                : handleGrower(pallet.id, "grower_variety", e)
+            }
             />
             <TextInput 
             style={{...inputStyles.inputOutline, width: "48%"}}
-            onChangeText={ (e) => handleGrower(pallet.id, "boxes", e) }
+            onChangeText={ (e) =>
+                createNew
+                ? handleGrowerCreate(pallet.id, "boxes", e)
+                : handleGrower(pallet.id, "boxes", e)
+        }
             />
         </View>
     </View>

@@ -1,4 +1,4 @@
-package com.qcarern;
+package com.multimediastars.qcare;
 
 import android.os.Bundle;
 

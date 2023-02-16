@@ -19,6 +19,7 @@ import { ModalConfirmation } from './modals/ModalConfirmation';
 import { NewItem } from './NewItem';
 import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
+import { photosLimit } from '../helpers/imagesLength';
 
 interface Props {
     pallet: DataPrereport,
@@ -27,7 +28,7 @@ interface Props {
 
 export const PalletIntake = ({ pallet, i }: Props) => {
 
-    const { handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(IntakeContext)
+    const { pallets, handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(IntakeContext)
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
@@ -45,12 +46,12 @@ export const PalletIntake = ({ pallet, i }: Props) => {
 
         launchImageLibrary({
             mediaType: 'photo',
-            selectionLimit: 0,
+            selectionLimit: photosLimit(pallets) || 1
         }, (res) => {
             if (res.didCancel) return
             if (!res.assets) return
             addFiles(pallet.id, res.assets)
-        })
+        })        
     };
 
     return (
@@ -212,8 +213,9 @@ export const PalletIntake = ({ pallet, i }: Props) => {
                             icon="camera-outline"
                         />
                         {
-                            pallet.images.length > 0 &&
-                            <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                            pallet.images.length > 0 
+                            ? <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                            : <TextApp size='s' color='mute' style={{ marginTop: 15 }}>Max. {photosLimit(pallets) || 0} images</TextApp>
                         }
                     </>
                 </CentredContent>

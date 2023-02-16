@@ -3,7 +3,6 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { launchImageLibrary } from 'react-native-image-picker';
 
-import { IntakeContext } from '../context/IntakeContext'
 import { SCORE } from '../data/selects'
 import { PalletState } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
@@ -20,6 +19,7 @@ import { NewItemCreate } from './NewItemCreate';
 import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
 import { CreateContext } from '../context/CreateContext';
+import { photosLimit } from '../helpers/imagesLength';
 
 interface Props {
     pallet: PalletState,
@@ -28,7 +28,7 @@ interface Props {
 
 export const PalletNewReport = ({ pallet, i }: Props) => {
 
-    const { handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(CreateContext)
+    const { pallets, handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(CreateContext)
 
     const [modalScore, setModalScore] = useState(false)
 
@@ -44,7 +44,9 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
 
         launchImageLibrary({
             mediaType: 'photo',
-            selectionLimit: 0,
+            // selectionLimit: 0,
+            selectionLimit: photosLimit(pallets) || 1
+
         }, (res) => {
             if (res.didCancel) return
             if (!res.assets) return
@@ -163,7 +165,7 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
                 {
                     pallet.newGrower !== null
                         ? <>
-                            <GrowerInputs pallet={pallet} />
+                            <GrowerInputs pallet={pallet} createNew />
                             <AddItemButton title="Back to single Grower / Variety" icon="arrow-back-circle-outline" handlePress={backGrower} />
                         </>
                         : <AddItemButton title="Add Grower / Variety" handlePress={addGrower} />
@@ -180,8 +182,9 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
                             icon="camera-outline"
                         />
                         {
-                            pallet.images.length > 0 &&
-                            <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                            pallet.images.length > 0
+                                ? <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                                : <TextApp size='s' color='mute' style={{ marginTop: 15 }}>Max. {photosLimit(pallets) || 0} images</TextApp>
                         }
                     </>
                 </CentredContent>

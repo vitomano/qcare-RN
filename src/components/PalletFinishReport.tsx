@@ -19,6 +19,7 @@ import { PalletNum } from './ui/PalletNum';
 import { GrowerShow } from './GrowerShow';
 import { ModalContainer } from './modals/ModalContainer';
 import { PrereportModal } from './modals/PrereportModal';
+import { photosLimit } from '../helpers/imagesLength';
 
 interface Props {
     pallet: PalletState,
@@ -27,7 +28,7 @@ interface Props {
 
 export const PalletFinishReport = ({ pallet, i }: Props) => {
 
-    const { handleStatus, addFiles } = useContext(IntakeContext)
+    const { pallets, handleStatus, addFiles } = useContext(IntakeContext)
 
     const [modalScore, setModalScore] = useState(false)
 
@@ -43,7 +44,8 @@ export const PalletFinishReport = ({ pallet, i }: Props) => {
 
         launchImageLibrary({
             mediaType: 'photo',
-            selectionLimit: 0,
+            // selectionLimit: 0,
+            selectionLimit: photosLimit(pallets) || 1
         }, (res) => {
             if (res.didCancel) return
             if (!res.assets) return
@@ -188,8 +190,9 @@ export const PalletFinishReport = ({ pallet, i }: Props) => {
                             icon="camera-outline"
                         />
                         {
-                            pallet.images.length > 0 &&
-                            <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                            pallet.images.length > 0 
+                            ? <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
+                            : <TextApp size='s' color='mute' style={{ marginTop: 15 }}>Max. {photosLimit(pallets) || 0} images</TextApp>
                         }
                     </>
                 </CentredContent>

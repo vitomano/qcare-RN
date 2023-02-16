@@ -6,8 +6,10 @@ import { newMainData } from '../data/mainData';
 import { palletNewData } from '../data/newreport';
 import { palletData } from '../data/pallet';
 import { palletPrereport } from '../data/prereport';
+import { alertMsg } from '../helpers/alertMsg';
 import { formatSplit, totalKilos, totalSamples } from '../helpers/formatSplit';
 import { fruitType } from '../helpers/fruitType';
+import { imagesLength } from '../helpers/imagesLength';
 import { DataPrereport, DetailObject, IntakeSingleResponse, MainInfo, NewGrower, PalletState, SingleIntake } from '../interfaces/intakes.reports';
 import { DetailName, Fruit, Status } from '../interfaces/interfaces';
 
@@ -303,9 +305,13 @@ export const IntakeProvider = ({ children }: Props) => {
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
+
+                if( pall.images.length === 0 && imagesLength(pallets) >= 30 ) return pall
+
                 return {
                     ...pall, images: files.map(file => {
                         return {
+                            // uri: file.uri || undefined,
                             uri: Platform.OS === 'ios' ? file?.uri?.replace('file://', '') : file.uri || undefined,
                             type: file.type,
                             name: file.fileName
@@ -316,6 +322,7 @@ export const IntakeProvider = ({ children }: Props) => {
             return pall;
         });
         setPallets(newPallet)
+        if(imagesLength(newPallet) >= 30 ) alertMsg("Max. Images","You completed the limit of 30 images per pre report")
     };
 
     const cleanAll = () => {

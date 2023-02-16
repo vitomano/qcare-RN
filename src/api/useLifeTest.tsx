@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SingleLifeTestResponse } from "../interfaces/interface.lifeTest";
 import qcareApi from "./qcareApi";
 import { Asset } from 'react-native-image-picker'
+import Toast from 'react-native-toast-message'
 
 
 interface Props {
@@ -61,8 +62,8 @@ export const addDay = async ({ images, conditions, lifeTestId, temperature, date
 
     formData.append('lifeTestId', lifeTestId)
     formData.append('temperature', temperature)
-    formData.append('day_date', date)
-    formData.append('day', dayNum)
+    formData.append('day_date', date.toString())
+    formData.append('day', dayNum.toString())
 
     const { data } = await qcareApi.put('/life-test/add-day', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -138,10 +139,11 @@ export const useAddDay = () => {
     const queryClient = useQueryClient()
     return useMutation(addDay,
         {
-            onSettled: () => {
+            onSuccess: () => {
                 queryClient.refetchQueries(['lifetest'])
             }
-        })
+        }
+    )
 }
 
 export const useAddLifeImage = () => {

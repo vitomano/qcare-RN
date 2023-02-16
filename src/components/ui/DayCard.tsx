@@ -57,8 +57,8 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
     };
 
 
+    // Add an additional picture
     const addImage = async() => {
-
         await mutateAddImg({
             lifeId,
             dayId: day._id,
@@ -71,7 +71,7 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
 
         launchImageLibrary({
             mediaType: 'photo',
-            selectionLimit: 0,
+            selectionLimit: 3 - day.images.length,
         }, (res) => {
             setImages([])
             if (res.didCancel) return
@@ -81,7 +81,8 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
                 res.assets.length > 0
                     ? (res?.assets!).map(image => {
                         return {
-                            uri: Platform.OS === 'ios' ? image?.uri?.replace('file://', '') : image.uri || undefined,
+                            uri: image.uri,
+                            // uri: Platform.OS === 'ios' ? image?.uri?.replace('file://', '') : image.uri || undefined,
                             type: image.type,
                             name: image.fileName
                         }

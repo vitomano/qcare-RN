@@ -3,50 +3,37 @@ import { View, ScrollView, KeyboardAvoidingView, Platform, TextInput, StyleSheet
 import { globalStyles } from '../theme/globalStyles'
 import { StackScreenProps } from '@react-navigation/stack';
 import { LoadingScreen } from './LoadingScreen';
-import { DataPrereport, DataReports, PalletState } from '../interfaces/intakes.reports';
+import { DataReports, PalletState } from '../interfaces/intakes.reports';
 
-import { MainForm } from '../components/MainForm';
 import ButtonStyled from '../components/ui/ButtonStyled';
 
-import { FRUITS } from '../data/selects';
-import { PickerModal } from '../components/modals/PickerModal';
 import { IntakeContext } from '../context/IntakeContext';
 import { CentredContent } from '../components/CenterContent';
-import { AddPalletButton } from '../components/AddPalletButton';
 import { TextApp } from '../components/ui/TextApp';
-import { validationPrereport } from '../helpers/validations';
 import { alertMsg } from '../helpers/alertMsg';
 import { average } from '../helpers/average';
 import qcareApi from '../api/qcareApi';
-import { PalletIntake } from '../components/PalletIntake';
 import { PreReportsStackParams } from '../navigation/PrereportsStack';
 import { ReportMain } from '../components/ReportMain';
 import { PalletFinishReport } from '../components/PalletFinishReport';
-import { inputStyles } from '../theme/inputStyles';
 import { greenMain } from '../theme/variables';
-import { ModalBlock } from '../components/modals/ModalBlock';
 import { ModalLoading } from '../components/modals/ModalLoading';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 interface Props extends StackScreenProps<PreReportsStackParams, "PreReportFinishScreen"> { };
 
 export const PreReportFinishScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, mainData, pallets, fruit, getMainDataReport, handleFruit, cleanAll } = useContext(IntakeContext)
+  const queryClient = useQueryClient()
 
-  const [startDate, setStartDate] = useState<Date | null>(null)
+  const { isLoading, mainData, pallets, fruit, getMainDataReport, cleanAll } = useContext(IntakeContext)
 
   const [sending, setSending] = useState(false)
 
   const [comments, setComments] = useState<string>(`The results contained within this report were obtained from random samples taken throughout the delivery. Progressive defects that are present may exceed the eventual defect level specified. Sampling does not represents 100% of the real Quality and condition of the fruit and it is only an approximation to reality.
     
   If, or on further processing, the product requires further selection to meet the customer specification, you will be informed of any losses in due course. However, if you would like the product returned or dealt with in any other manner please contact the relevant commercial contact within Growers Packers.`)
-
-  // const comments = 
-
-  useEffect(() => {
-    setStartDate(new Date())
-  }, [])
 
   useEffect(() => {
     getMainDataReport(route.params.id)
@@ -112,7 +99,8 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
               formData.append('palletId', pall.id)
 
               await qcareApi.post('/report/upload-images', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }})
+                headers: { 'Content-Type': 'multipart/form-data' }
+              })
             }
           };
 
@@ -133,7 +121,12 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
           await Promise.all([savePalletInfo(), saveLifeTest()])
 
         })
-      navigation.navigate("ReportsScreen" as any)
+
+      queryClient.resetQueries((['prereports']))
+      queryClient.resetQueries((['reports']))
+      queryClient.resetQueries((['lifeTests']))
+      cleanAll()
+      navigation.navigate("PreReportsScreen" as any)
 
 
     } catch (error) {
@@ -176,13 +169,6 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
                         ))
                         : <TextApp bold style={{ textAlign: "center", marginBottom: 10, marginTop: 20, fontSize: 18 }}>No Pallets</TextApp>
                     }
-
-                    {/* ------------------------------------ */}
-
-                    {/* <AddPalletButton
-                      title='Add Pallet'
-                      handlePress={setNewPallets}
-                    /> */}
 
                     <View style={{ marginVertical: 20 }}>
                       <TextApp bold style={{ marginBottom: 10 }}>Comments</TextApp>

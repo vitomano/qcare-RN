@@ -1,14 +1,13 @@
 import React, { createContext, useState } from 'react'
 import { Platform } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import qcareApi from '../api/qcareApi';
 import { newMainData } from '../data/mainData';
 import { palletNewData } from '../data/newreport';
-import { palletData } from '../data/pallet';
-import { palletPrereport } from '../data/prereport';
-import { formatSplit, totalKilos, totalSamples } from '../helpers/formatSplit';
+import { alertMsg } from '../helpers/alertMsg';
+
 import { fruitType } from '../helpers/fruitType';
-import { PalletState, DetailObject, IntakeSingleResponse, MainInfo, NewGrower } from '../interfaces/intakes.reports';
+import { imagesLength } from '../helpers/imagesLength';
+import { PalletState, DetailObject, MainInfo, NewGrower } from '../interfaces/intakes.reports';
 import { DetailName, Fruit, Status } from '../interfaces/interfaces';
 
 interface Props { children: JSX.Element | JSX.Element[] }
@@ -241,6 +240,9 @@ export const CreateProvider = ({ children }: Props) => {
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
+
+                if( pall.images.length === 0 && imagesLength(pallets) >= 30 ) return pall
+
                 return {
                     ...pall, images: files.map(file => {
                         return {
@@ -254,6 +256,8 @@ export const CreateProvider = ({ children }: Props) => {
             return pall;
         });
         setPallets(newPallet)
+        if(imagesLength(newPallet) >= 30 ) alertMsg("Max. Images","You completed the limit of 30 images per pre report")
+
     };
 
     const cleanAll = () => {

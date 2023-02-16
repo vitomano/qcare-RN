@@ -1,4 +1,4 @@
-package com.qcarern.newarchitecture;
+package com.multimediastars.qcare.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.qcarern.BuildConfig;
-import com.qcarern.newarchitecture.components.MainComponentsRegistry;
-import com.qcarern.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.multimediastars.qcare.BuildConfig;
+import com.multimediastars.qcare.newarchitecture.components.MainComponentsRegistry;
+import com.multimediastars.qcare.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

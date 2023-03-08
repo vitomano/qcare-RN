@@ -101,7 +101,7 @@ export const PalletIntake = ({ pallet, i }: Props) => {
                 {
                     pallet.appareance.length > 0 &&
                     <View style={styles.detailSection}>
-                        <TextApp bold style={{ marginBottom: 10 }}>Appearance</TextApp>
+                        <TextApp bold style={{ marginBottom: 10 }}>Appearance 4</TextApp>
                         {
 
                             pallet.appareance.map((app, i) => (

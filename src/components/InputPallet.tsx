@@ -34,6 +34,8 @@ export const InputPallet = ({ pallet, item, detailName }: Props) => {
 
     const labelAlign = item.name === "weight_check" ? styles.flexTop : styles.flexCenter
 
+    
+
     return (
 
         <View style={{ ...globalStyles.flexBetween, marginBottom: 10 }}>
@@ -69,7 +71,7 @@ export const InputPallet = ({ pallet, item, detailName }: Props) => {
                 item.tipe === "number" &&
                 <View style={{ width: "50%", flexDirection: "row", alignItems: "center" }}>
                     <TextInput
-                        keyboardType='number-pad'
+                        keyboardType={ Platform.OS === "android" ? 'number-pad' : "numbers-and-punctuation" }
                         autoCapitalize="none"
                         value={item.valor as string}
                         autoCorrect={false}
@@ -138,7 +140,8 @@ export const InputPallet = ({ pallet, item, detailName }: Props) => {
                             return (
                                 <TextInput
                                     key={index}
-                                    keyboardType='default'
+                                    // keyboardType='default'
+                                    keyboardType={ Platform.OS === "android" ? 'number-pad' : "numbers-and-punctuation" }
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                     value={val}

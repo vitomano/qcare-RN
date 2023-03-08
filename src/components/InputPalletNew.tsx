@@ -69,7 +69,7 @@ export const InputPalletNew = ({ pallet, item, detailName }: Props) => {
                 item.tipe === "number" &&
                 <View style={{ width: "50%", flexDirection: "row", alignItems: "center" }}>
                     <TextInput
-                        keyboardType='number-pad'
+                        keyboardType={ Platform.OS === "android" ? 'number-pad' : "numbers-and-punctuation" }
                         autoCapitalize="none"
                         value={item.valor as string}
                         autoCorrect={false}
@@ -138,7 +138,8 @@ export const InputPalletNew = ({ pallet, item, detailName }: Props) => {
                             return (
                                 <TextInput
                                     key={index}
-                                    keyboardType='default'
+                                    // keyboardType='default'
+                                    keyboardType={ Platform.OS === "android" ? 'number-pad' : "numbers-and-punctuation" }
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                     value={val}

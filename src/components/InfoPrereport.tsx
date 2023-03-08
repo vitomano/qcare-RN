@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 import { itemValor, valorPallgrow } from '../helpers/eliminarEs';
 import { DetailObject, Pallet, PrereportPallet } from '../interfaces/intakes.reports'
 import { DetailName } from '../interfaces/interfaces';
@@ -147,7 +147,7 @@ export const InfoPrereport = ({ pallet, item, detailName, repId, format = 0, pre
                             {
                                 item.tipe === "number" &&
                                 <TextInput
-                                    keyboardType='number-pad'
+                                    keyboardType={ Platform.OS === "android" ? 'number-pad' : "numbers-and-punctuation" }
                                     autoCapitalize="none"
                                     value={val as string}
                                     autoCorrect={false}

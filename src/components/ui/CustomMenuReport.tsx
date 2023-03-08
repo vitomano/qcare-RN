@@ -18,7 +18,7 @@ interface Props {
     data: Report
 }
 
-export const CustomMenuReport = ({  data, loading }: Props) => {
+export const CustomMenuReport = ({  data }: Props) => {
 
     const [confirmation, setConfirmation] = useState(false)
     const [modalShare, setModalShare] = useState(false)

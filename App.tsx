@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNav } from './src/navigation/StackNav';
 import { AuthProvider } from './src/context/AuthContext';
-import { ReportProvider } from './src/context/ReportContext';
+// import { ReportProvider } from './src/context/ReportContext';
 import { IntakeProvider } from './src/context/IntakeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -59,7 +59,7 @@ export default function App() {
 const AppState = ({ children }: any) => {
   return (
     <AuthProvider>
-      <ReportProvider>
+      {/* <ReportProvider> */}
         <IntakeProvider>
           <FilterProvider>
             <FilterLifeProvider>
@@ -69,7 +69,7 @@ const AppState = ({ children }: any) => {
             </FilterLifeProvider>
           </FilterProvider>
         </IntakeProvider>
-      </ReportProvider>
+      {/* </ReportProvider> */}
     </AuthProvider>
   );
 }

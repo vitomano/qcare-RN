@@ -7,6 +7,7 @@ export const secondaryHover = "#042e38";
 export const primaryClear = "#557D33";
 
 export const text = "#343434";
+export const textGrey = "#7f878b";
 export const mute = "#bcbcbc";
 
 export const green = "#a7c139";
@@ -17,7 +18,9 @@ export const greenMain = "#1a9141";
 // export const greenMain = "#339933";
 export const excel = "#107c41";
 export const check = "#5ac85d";
-export const danger = "#b52c2c";
+// export const danger = "#b52c2c";
+// export const danger = "#f44336";
+export const danger = "#e53935";
 
 export const silver = "#efefef";
 export const lightGrey = "#d8d8d8";

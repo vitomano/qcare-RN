@@ -29,8 +29,8 @@ export const CardContact = ({ contact }: Props) => {
         } catch (error) {
             console.log(error)
         } finally {
-            setLoading(false)
             refresh()
+            setLoading(false)
             setConfirmation(false)
         }
     }

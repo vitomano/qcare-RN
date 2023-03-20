@@ -80,6 +80,7 @@ export const CustomMenuReport = ({  data }: Props) => {
                 message="Are you sure you want to remove this Report"
                 action={handleDelete}
                 loading={isLoading}
+                confirmText="Remove"
             />
 
             <ModalBlock

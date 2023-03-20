@@ -9,10 +9,7 @@ import { TextApp } from '../components/ui/TextApp';
 import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen';
 
-
 import { FilterCollapse } from '../components/ui/FilterCollapse';
-
-
 
 export const ReportsScreen = () => {
 

@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { Prereport } from '../../interfaces/intakes.reports';
 import { globalStyles } from '../../theme/globalStyles';
 import { TextApp } from '../ui/TextApp';
 import { dateFormat } from '../../helpers/dateFormat';
-import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { CardPrereportItem } from './CardPrereportItem';
 import { CustomMenu } from '../ui/CustomMenu';
-import { useRemovePrereport } from '../../api/usePrereports';
-import { ModalLoading } from '../modals/ModalLoading';
 
 
 interface Props {
@@ -20,18 +17,7 @@ export const CardPrereport = ({ prereport }: Props) => {
 
     const navigation = useNavigation()
 
-    const [isDeleting, setIsDeleting] = useState(false)
     const existGrower = prereport.pallets.some(pall => pall.addGrower !== null)
-
-
-    const { mutateAsync, data } = useRemovePrereport()
-
-    const handleDelete = async () => {
-        setIsDeleting(true)
-        await mutateAsync(prereport._id)
-        setIsDeleting(false)
-    };
-
 
     return (
 
@@ -59,15 +45,11 @@ export const CardPrereport = ({ prereport }: Props) => {
                         <TextApp size='xs' style={{ marginRight: 10 }}>{dateFormat(prereport.endDate) || "--"}</TextApp>
 
                         <TouchableWithoutFeedback>
-                            <CustomMenu handleDelete={handleDelete} id={prereport._id}/>
+                            <CustomMenu id={prereport._id}/>
                         </TouchableWithoutFeedback>
 
                     </View>
                 </View>
-
-                <ModalLoading
-                    modal={isDeleting}
-                    text='Deleting Pre Report...' />
 
                 <View style={{ marginTop: 10 }}>
                     {

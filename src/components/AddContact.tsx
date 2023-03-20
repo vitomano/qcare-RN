@@ -54,13 +54,19 @@ export const AddContact = ({ setAddContact }: Props) => {
 
         try {
             await qcareApi.post('/auth/add-contact', { id: uuidv4(), supplier, ref: ref.toUpperCase(), contactName, email })
+            
             Toast.show({
                 type: 'success',
                 text1: 'Success',
                 text2: 'Contact added successfully',
               });
         } catch (error) {
-            seterrorMsg({ error: true, msg: "Something went wrong" })
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Something went wrong',
+              });
+            console.log(error)
         } finally {
             setLoading(false)
 

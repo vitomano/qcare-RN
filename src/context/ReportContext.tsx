@@ -20,11 +20,11 @@ interface ReportContextProps {
     getAllReports: () => void,
     intakes: ReportState,
     getMainData: (id: string) => void,
-    setPallets: (obj: PreReport[]) => void,
-    addNewPallets: (obj: PreReport) => void,
-    updateValue: (id: string, item: keyof PreReport, value: string | null) => void,
-    resetAll: () => void
-    reload: () => void
+    // setPallets: (obj: PreReport[]) => void,
+    // addNewPallets: (obj: PreReport) => void,
+    // updateValue: (id: string, item: keyof PreReport, value: string | null) => void,
+    // resetAll: () => void
+    // reload: () => void
 }
 
 
@@ -45,7 +45,7 @@ export const ReportProvider = ({ children }: any) => {
     };
 
     const getMainData = async (id: string) => {
-        console.log(id)
+        
         // const { data } = await qcareApi.get<IntakesResponse>(`/report/new-report/${id}`)
         // const intake = data.intakes.data
         // const fruit = data.intakes.fruit
@@ -56,21 +56,21 @@ export const ReportProvider = ({ children }: any) => {
         // })
     }
 
-    const setPallets = (obj: PreReport[]) => {
-        dispatch({ type: 'REMOVE_PALLETS' })
-        dispatch({ type: 'SET_PALLETS', payload: obj })
-    }
+    // const setPallets = (obj: PreReport[]) => {
+    //     dispatch({ type: 'REMOVE_PALLETS' })
+    //     dispatch({ type: 'SET_PALLETS', payload: obj })
+    // }
 
-    const addNewPallets = (obj: PreReport) => {
-        dispatch({ type: 'ADD_NEWPALLET', payload: obj })
-    }
+    // const addNewPallets = (obj: PreReport) => {
+    //     dispatch({ type: 'ADD_NEWPALLET', payload: obj })
+    // }
 
-    const updateValue = (id: string, item: keyof PreReport, value: string | null) => {
-        dispatch({ type: 'CHANGE_VALUE', payload: { id, item, value } })
-    }
+    // const updateValue = (id: string, item: keyof PreReport, value: string | null) => {
+    //     dispatch({ type: 'CHANGE_VALUE', payload: { id, item, value } })
+    // }
 
-    const resetAll = () => dispatch({ type: 'REMOVE_PALLETS' })
-    const reload = () => dispatch({ type: 'RELOAD' })
+    // const resetAll = () => dispatch({ type: 'REMOVE_PALLETS' })
+    // const reload = () => dispatch({ type: 'RELOAD' })
 
     return (
         <ReportContext.Provider value={{
@@ -78,11 +78,11 @@ export const ReportProvider = ({ children }: any) => {
             getAllReports,
             intakes,
             getMainData,
-            setPallets,
-            updateValue,
-            resetAll,
-            addNewPallets,
-            reload
+            // setPallets,
+            // updateValue,
+            // resetAll,
+            // addNewPallets,
+            // reload
         }}>
             {children}
         </ReportContext.Provider>

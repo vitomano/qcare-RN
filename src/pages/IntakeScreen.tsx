@@ -165,7 +165,6 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
                     {/* ------------------------------------ */}
 
-
                     {
                       pallets.length > 0
                         ? pallets.map((pallet, i) => (

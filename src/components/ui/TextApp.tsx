@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
-import { blue, danger, greenMain, lightGrey, mediumGrey, mute, text } from '../../theme/variables'
+import { blue, danger, greenMain, lightGrey, mediumGrey, mute, text, textGrey } from '../../theme/variables'
 
 interface Props {
   style?: StyleProp<TextStyle>,
@@ -9,9 +9,10 @@ interface Props {
   center?: boolean
   size?: "xs" | "s" | "m" | "l" | "xl" | "xxl" | "normal"
   color?: "text" | "danger" | "white" | "green" | "mute" | "blue"
+  nowrap?: boolean
 }
 
-export const TextApp = ({ children, style, bold=false, size="normal", color="text", center=false }: Props) => {
+export const TextApp = ({ children, style, bold=false, size="normal", color="text", center=false, nowrap=false }: Props) => {
 
   const textColor = [
     color === "text" && styles.colorNormal,
@@ -38,7 +39,7 @@ export const TextApp = ({ children, style, bold=false, size="normal", color="tex
   ]
 
   return (
-    <Text style={ [...textColor, ...textSize, ...textWeight, ...textCenter ,...[style] as never]}>
+    <Text numberOfLines={nowrap ? 1 : 0} style={ [...textColor, ...textSize, ...textWeight, ...textCenter ,...[style] as never]}>
       {children}
     </Text>
   )
@@ -54,7 +55,8 @@ const styles = StyleSheet.create({
   colorDanger: { color: danger },
   colorWhite: { color: "#fff" },
   colorGreen: { color: greenMain },
-  colorMute: { color: mute },
+  // colorMute: { color: mute },
+  colorMute: { color: textGrey },
   colorBlue: { color: blue },
 
   textXS: { fontSize: 12 },

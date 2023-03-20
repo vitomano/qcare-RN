@@ -1,8 +1,8 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const baseURL = 'https://q-care.info/api'
-// const baseURL = 'http://192.168.1.82:4000/api'
+// const baseURL = 'https://q-care.info/api'
+const baseURL = 'http://192.168.1.82:4000/api'
 
 const qcareApi = axios.create({ baseURL });
 

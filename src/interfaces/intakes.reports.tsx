@@ -12,16 +12,36 @@ export interface CVSResponse {
     ["variety(ies)"]: string;
     ["unit label"]: string;
     ["total boxes"]: string;
-    ["total pallets"]: number;
+    ["total pallets"]: string;
     quality: string;
     transport: string;
     ["purchase order"]: string;
     ["delivery note / awb number"]: string;
     warehouse: string;
+
 }
 
+export interface CSVImport {
+    ["delivery note / awb number"]: string,
+    ["purchase order"]: string,
+    ["total boxes"]: string,
+    ["unit label"]: string,
+    ["gln/ggn number"]: string,
+    ["total pallets"]: string,
+    ["variety(ies)"]: string,
+    ["format"]: string,
+    ["grower"]: string,
+    ["origin"]: string,
+    ["pallet"]: string,
+    ["product"]: string,
+    ["quality"]: string,
+    ["supplier"]: string,
+    ["transport"]: string,
+    ["warehouse"]: string
+}
 
 export interface BatchInfo {
+
     product: string;
     pallet_ref: string;
     format: string;

@@ -89,22 +89,6 @@ export const ImageGallery = ({ images, deleteAction }: Props) => {
             <Icon name='close-circle' size={30} color="#fff" />
           </TouchableOpacity>
 
-          {/* <FlatList
-            style={{ width: width, height: "100%" }}
-            data={images}
-            keyExtractor={(item) => item.key}
-            initialScrollIndex={index}
-            horizontal={true}
-            pagingEnabled
-            renderItem={item =>
-              <FastImage
-                style={{ width: width, height: "100%" }}
-                source={{ uri: item.item.imgURL }}
-                resizeMode={FastImage.resizeMode.contain}
-              />
-            }
-          /> */}
-
           <Carousel
             data={images}
             renderItem={item =>
@@ -112,6 +96,17 @@ export const ImageGallery = ({ images, deleteAction }: Props) => {
                 style={{ width: width, height: "100%" }}
                 source={{ uri: item.item.imgURL }}
                 resizeMode={FastImage.resizeMode.contain}
+
+                // onProgress={ () => {
+                //   return(
+                //     <View
+                //   style={{ position: 'absolute', flex: 1, top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}
+                // >
+                //   <ActivityIndicator size={30} color="#fff" />
+                // </View>
+                //   )
+                // }}
+
                 onLoadStart={() => setLoading(true)}
                 onLoadEnd={() => setLoading(false)}
               />
@@ -119,12 +114,16 @@ export const ImageGallery = ({ images, deleteAction }: Props) => {
             }
             sliderWidth={width}
             itemWidth={width}
+
+            initialNumToRender={index+1}
             firstItem={index}
-            onSnapToItem={(index) => setIndex(index)}
+
+            onSnapToItem={(index) => {
+              setIndex(index)
+            }}
 
           />
 
-          {/* <View style={{ flexDirection: "row", padding: 40, alignContent: "flex-end", justifyContent: "space-between", height: "auto", width }}> */}
           <View style={{
             padding: Platform.OS === "ios" ? 40 : 30,
             position: "absolute", bottom: 0, flexDirection: "row", justifyContent: "space-between", alignItems: "center", height: "auto", width
@@ -149,14 +148,14 @@ export const ImageGallery = ({ images, deleteAction }: Props) => {
             </TouchableOpacity>
           </View>
 
-          {
+          {/* {
             loading &&
             <View
               style={{ position: 'absolute', flex: 1, top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}
             >
               <ActivityIndicator size={30} color="#fff" />
             </View>
-          }
+          } */}
 
         </View>
       </Modal>

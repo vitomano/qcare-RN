@@ -71,6 +71,12 @@ export const Share = ({ data, closeModal }: Props) => {
         })
     };
 
+    useEffect(() => {
+        if( user?.email === "quality@growerspackers.com"){
+            setCC(["quality@growerspackers.com", "quality.gp3@growerspackers.com"])
+        }
+      }, [])
+
     return (
 
         <View style={{ padding: 15 }}>

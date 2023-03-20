@@ -10,6 +10,8 @@ import { ModalBlock } from '../components/modals/ModalBlock'
 import { AddContact } from '../components/AddContact'
 import { ModalConfirmation } from '../components/modals/ModalConfirmation';
 import { useNavigation } from '@react-navigation/native';
+import { sortContact } from '../helpers/sortContacts';
+import { ContactList } from '../components/ContactList';
 
 export const UserScreen = () => {
 
@@ -61,21 +63,19 @@ export const UserScreen = () => {
 
           < View style={{ ...globalStyles.shadow, padding: 10, backgroundColor: "white", borderRadius: 10, marginTop: 10 }}>
             {
-              user?.contacts?.length! > 0
+              user && user.contacts?.length! > 0
                 ?
                 <>
                   <TextApp bold size='m' style={{ marginVertical: 10 }}>Contacts</TextApp>
                   {
-                    user?.contacts?.map(contact => (
-                      <CardContact
-                        key={contact.id}
-                        contact={contact}
-                      />
-                    ))
+                    <ContactList
+                    contacts={ sortContact(user.contacts) }
+                    />
+                   
                   }
                 </>
                 :
-                <TextApp bold center size='m'>No Contacts</TextApp>
+                <TextApp bold center size='m' style={{ marginTop: 10 }}>No Contacts</TextApp>
             }
             <TouchableOpacity
               activeOpacity={.9}
@@ -112,6 +112,7 @@ export const UserScreen = () => {
             }}
             message="Are you sure you want to logout"
             loading={loading}
+            confirmText="Logout"
           />
 
         </View>

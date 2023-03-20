@@ -52,7 +52,7 @@ export const PreReportsScreen = () => {
           </View>
 
           :
-          <View style={{ marginVertical: 50 }}>
+          <View style={{ marginTop: 30 }}>
             <TextApp bold style={{ textAlign: "center", alignSelf: "center", justifyContent: "center" }}>No Pre Reports</TextApp>
           </View>
       }

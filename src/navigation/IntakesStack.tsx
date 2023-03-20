@@ -8,9 +8,11 @@ import { IntakesScreen } from '../pages/IntakesScreen';
 import { IntakeScreen } from '../pages/IntakeScreen';
 import { TouchableOpacity } from 'react-native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { IntakeUploadScreen } from '../pages/IntakeUploadScreen';
 
 export type IntakesStackParams = {
   IntakesScreen: undefined,
+  IntakeUploadScreen: undefined,
   IntakeScreen: { id: string }
 }
 
@@ -53,6 +55,12 @@ export const IntakesStack = ({navigation}:Props) => {
         options={{ title: "Create Pre Report" }}
         name="IntakeScreen"
         component={IntakeScreen}
+      />
+
+      <Stack.Screen
+        options={{ title: "Upload Intake" }}
+        name="IntakeUploadScreen"
+        component={IntakeUploadScreen}
       />
 
     </Stack.Navigator>

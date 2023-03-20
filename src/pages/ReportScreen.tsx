@@ -99,8 +99,6 @@ export const ReportScreen = ({ route }: Props) => {
           </ModalBlock>
 
         </View>
-
-
       </ScrollView>
     </KeyboardAvoidingView>
 

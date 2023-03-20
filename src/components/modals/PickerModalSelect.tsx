@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,.5)'
     },
     modal: {
-        padding: 20,
+        padding: 15,
         backgroundColor: '#fff',
         borderRadius: 20
     },

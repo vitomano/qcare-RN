@@ -63,6 +63,7 @@ export const CustomDrawer = (props: any) => {
                     setConfirmation(false)
                 }}
                 message="Are you sure you want to logout?"
+                confirmText='Logout'
             />
         </View>
     )

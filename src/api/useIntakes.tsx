@@ -28,6 +28,8 @@ export const useIntakes = () => {
 export const useRemoveIntake = () => {
     const queryClient = useQueryClient()
     return useMutation(removeIntake, {
-        onSuccess: () => { queryClient.invalidateQueries(['intakes']) },
+        onSuccess: () => { 
+            queryClient.refetchQueries(['intakes']) 
+        },
     })
 }

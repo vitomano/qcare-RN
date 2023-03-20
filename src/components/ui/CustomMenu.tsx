@@ -5,17 +5,29 @@ import { useRemovePrereport } from '../../api/usePrereports';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { TextApp } from './TextApp';
 import { useNavigation } from '@react-navigation/native';
+import { alertMsg } from '../../helpers/alertMsg';
 
 
 interface Props{
     id:string
-    handleDelete: () => void
 }
 
-export const CustomMenu = ({handleDelete, id}:Props) => {
+export const CustomMenu = ({ id }:Props) => {
 
     const [confirmation, setConfirmation] = useState(false)
     const navigation = useNavigation()
+    
+    const { mutateAsync, isLoading } = useRemovePrereport()
+
+    const handleDelete = async () => {
+        await mutateAsync(id, {
+            onError:() => {
+                alertMsg("Error", "Something went wrong")
+            },
+        })
+        setConfirmation(false)
+    };
+
 
     return (
         <Menu>
@@ -62,6 +74,7 @@ export const CustomMenu = ({handleDelete, id}:Props) => {
                 openModal={ setConfirmation }
                 message="Are you sure you want to remove this Pre Report"
                 action={ handleDelete }
+                loading={isLoading}
             />
 
         </Menu>

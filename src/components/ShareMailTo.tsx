@@ -77,7 +77,7 @@ export const ShareMailTo = ({ mailTo, setMailTo, cc, setCC }: Props) => {
                             />
                             {
                                 mailTo.length > 0 &&
-                                <Tags tags={mailTo} setTags={setMailTo} style={{ marginTop: 5 }} />
+                                <Tags tags={mailTo} setTags={setMailTo} style={{ marginTop: 5 }} nowrap/>
                             }
                         </View>
 
@@ -103,8 +103,8 @@ export const ShareMailTo = ({ mailTo, setMailTo, cc, setCC }: Props) => {
                                 outline
                             />
                             {
-                                mailTo.length > 0 &&
-                                <Tags tags={cc} setTags={setCC} style={{ marginTop: 5 }} />
+                                cc.length >= 0 &&
+                                <Tags tags={cc} setTags={setCC} style={{ marginTop: 5 }} nowrap/>
                             }
 
                         </View>

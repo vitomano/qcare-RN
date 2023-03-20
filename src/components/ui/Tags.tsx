@@ -9,9 +9,10 @@ interface Props{
     tags: string[]
     setTags: (val:string[]) => void
     style?: StyleProp<ViewStyle>
+    nowrap?: boolean
 }
 
-export const Tags = ({tags, setTags, style}:Props) => {
+export const Tags = ({tags, setTags, style, nowrap=false}:Props) => {
     return (
         <>
             {
@@ -22,7 +23,7 @@ export const Tags = ({tags, setTags, style}:Props) => {
                             <View key={cond}
                                 style={{ ...globalStyles.flexRow, flexWrap: "wrap", marginVertical: 3, marginRight: 5, backgroundColor: darkGrey, borderRadius: 50, paddingVertical: 3, paddingHorizontal: 10 }}
                             >
-                                <TextApp size='s' color='white'>{cond}</TextApp>
+                                <TextApp nowrap={nowrap} size='s' color='white' style={{ flex: nowrap ? 1 : 0, overflow: "hidden"}}>{cond}</TextApp>
 
                                 <TouchableOpacity
                                     style={{ marginLeft: 5, width: 20, backgroundColor: darkGrey }}

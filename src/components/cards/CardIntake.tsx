@@ -20,12 +20,10 @@ export const CardIntake = ({ intake }: Props) => {
 
     const [confirmation, setConfirmation] = useState(false)
 
-    const { mutate, isLoading, reset } = useRemoveIntake()
+    const { mutateAsync, isLoading } = useRemoveIntake()
 
     const handleRemove = async (id: string) => {
-        mutate(id, {
-            onError: () => { alertMsg("Error", "Something went wrong", reset) }
-        })
+        await mutateAsync(id)
         setConfirmation(false)
     }
 
@@ -75,8 +73,8 @@ export const CardIntake = ({ intake }: Props) => {
                     action={() => handleRemove(intake._id)}
                     message='Are you sure you want to remove this intake?'
                     loading={isLoading}
+                    confirmText="Remove"
                 />
-
             </View>
         </TouchableOpacity>
     )

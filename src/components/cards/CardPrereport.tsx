@@ -8,7 +8,6 @@ import { dateFormat } from '../../helpers/dateFormat';
 import { CardPrereportItem } from './CardPrereportItem';
 import { CustomMenu } from '../ui/CustomMenu';
 
-
 interface Props {
     prereport: Prereport
 }

@@ -129,8 +129,6 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
 
         })
         
-      // queryClient.invalidateQueries(['reports'])
-      // queryClient.fetchInfiniteQuery(['lifeTests'])
       queryClient.resetQueries((['reports']))
       queryClient.resetQueries((['lifeTests']))
 

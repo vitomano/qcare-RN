@@ -54,7 +54,7 @@ export const GrowerInfo = ({ pallet, repId, prereport=false }: Props) => {
     };
 
     return (
-        <View style={{ flex: 1, marginBottom: 10 }}>
+        <View style={{ flex: 1 }}>
             <View style={{ ...globalStyles.flexBetween, ...styles.header }}>
                 <Text style={{ ...styles.headerTitle }}>Grower / Variety</Text>
                 <Text style={{ ...styles.headerTitle }}>Boxes</Text>

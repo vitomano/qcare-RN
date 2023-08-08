@@ -92,15 +92,12 @@ const styles = StyleSheet.create({
     text: {
         marginVertical: 10,
         fontSize: 20,
-        // fontWeight: 'bold'
+        flex: 1
     },
     selected: {
         flex: 1,
         width: '100%',
         backgroundColor: grey,
         borderRadius: 10,
-        // paddingLeft: 5,
-        // borderColor: greenMain,
-        // borderWidth: .5
     }
 });

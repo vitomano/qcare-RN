@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useCreateLink } from '../api/useReport';
 import { Report, ImageType } from '../interfaces/intakes.reports';
 import { globalStyles } from '../theme/globalStyles'
@@ -16,6 +16,7 @@ import { AuthContext } from '../context/AuthContext';
 import { supplierVal } from '../helpers/eliminarEs';
 import { Contact } from '../interfaces/interfaces.auth';
 import { StepOne } from './StepOne';
+import { subjectString } from '../helpers/subjectString';
 
 interface Props {
     data: Report
@@ -40,9 +41,14 @@ export const Share = ({ data, closeModal }: Props) => {
 
     const [mailTo, setMailTo] = useState<string[]>([])
     const [cc, setCC] = useState<string[]>([])
+    const [subject, setSubject] = useState<string>("")
 
     const [supplierEmails, setSupplierEmails] = useState<Contact[]>([])
 
+    useEffect(() => {
+        setSubject( subjectString(data) )
+    }, [])
+    
 
     useEffect(() => {
         const contactSupplier: Contact[] = user!.contacts.filter(contact => supplierVal(contact.supplier) === supplierVal(data.mainData?.supplier))
@@ -183,6 +189,7 @@ export const Share = ({ data, closeModal }: Props) => {
                         mailTo={mailTo}
                         cc={cc}
                         link={link || ""}
+                        subject={subject}
                         message={message}
                         closeModal={closeModal}
                     />

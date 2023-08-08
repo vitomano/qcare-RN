@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { globalStyles } from '../../theme/globalStyles';
 import { TextApp } from '../ui/TextApp';
-import { inputColor, lightGrey, greenMain, check } from '../../theme/variables';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { ModalConfirmation } from '../modals/ModalConfirmation';
-import { useRemoveIntake } from '../../api/useIntakes';
-import { alertMsg } from '../../helpers/alertMsg';
+import { inputColor, lightGrey,check } from '../../theme/variables';
 import { LifeTest } from '../../interfaces/interface.lifeTest';
-import { StatusLife } from '../ui/StatusLife';
 import { dateFormat } from '../../helpers/dateFormat';
 import { CustomStatus } from '../ui/CustomStatus';
 

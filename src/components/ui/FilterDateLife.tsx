@@ -1,5 +1,5 @@
 
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import DatePicker from 'react-native-date-picker'
 
 import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -7,7 +7,6 @@ import { inputColor } from '../../theme/variables'
 import { TextApp } from './TextApp'
 
 import { dateFormat } from '../../helpers/dateFormat'
-import { FilterContext } from '../../context/FilterContext'
 import { QueryType } from '../../interfaces/interfaces';
 
 

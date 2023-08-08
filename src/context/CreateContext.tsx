@@ -1,13 +1,11 @@
 import React, { createContext, useState } from 'react'
-import { Platform } from 'react-native';
-import { Asset } from 'react-native-image-picker';
 import { newMainData } from '../data/mainData';
 import { palletNewData } from '../data/newreport';
 import { alertMsg } from '../helpers/alertMsg';
 
 import { fruitType } from '../helpers/fruitType';
 import { imagesLength } from '../helpers/imagesLength';
-import { PalletState, DetailObject, MainInfo, NewGrower } from '../interfaces/intakes.reports';
+import { PalletState, DetailObject, MainInfo, NewGrower, ImageTemp } from '../interfaces/intakes.reports';
 import { DetailName, Fruit, Status } from '../interfaces/interfaces';
 
 interface Props { children: JSX.Element | JSX.Element[] }
@@ -20,6 +18,7 @@ interface CreateContextProps {
     pallets: PalletState[],
     totalPallets: number,
     samples: number,
+    limit: number,
     getMainDataNew: (fruit: Fruit) => void;
     handleMain: (val: string, item: keyof MainInfo) => void;
     setNewPallets: () => void;
@@ -31,10 +30,11 @@ interface CreateContextProps {
     handleInputArray: (pid: string, detailName: DetailName, name: string, index: number, valor: string) => void;
     handleStatus: (pid: string, statusName: Status, value: string) => void;
     handleGrower: (pid: string, item: keyof NewGrower, value: string | number) => void;
-    addFiles: (pid: string, files: Asset[]) => void;
+    addTempFiles: (pid: string, files: ImageTemp[]) => void;
     addGrower: () => void;
     addItem: (pid: string, detailName: DetailName, item: DetailObject) => void;
     backGrower: () => void;
+    removeTempFiles: (pid: string, name: string) => void;
     removePallet: (pid: string) => void;
     addRemoveSample: ( action: "add" | "remove", pid: string) => void;
     cleanAll: () => void
@@ -50,6 +50,8 @@ export const CreateProvider = ({ children }: Props) => {
     const [totalPallets, setTotalPallets] = useState(0)
     const [allSamples, setAllSamples] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
+
+    const limit:number = 10
 
     //Prereport --------------------------------------------------------------------------------------
 
@@ -236,28 +238,40 @@ export const CreateProvider = ({ children }: Props) => {
         setPallets(newPallet)
     };
 
-    const addFiles = (pid: string, files: Asset[]) => {
+
+
+    const addTempFiles = (pid: string, files: ImageTemp[]) => {
+
+        const imagesTotal = imagesLength(pallets)
+        if(imagesTotal + files.length > 30){
+            alertMsg("Max. Images","You completed the limit of 30 images in total")
+            return
+        }
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
-
-                if( pall.images.length === 0 && imagesLength(pallets) >= 30 ) return pall
-
+                
                 return {
-                    ...pall, images: files.map(file => {
-                        return {
-                            uri: Platform.OS === 'ios' ? file?.uri?.replace('file://', '') : file.uri || undefined,
-                            type: file.type,
-                            name: file.fileName
-                        }
-                    })
+                    ...pall, images: [...pall.images, ...files]
                 };
             }
             return pall;
         });
         setPallets(newPallet)
-        if(imagesLength(newPallet) >= 30 ) alertMsg("Max. Images","You completed the limit of 30 images per pre report")
+    };
 
+    const removeTempFiles = (pid: string, name: string) => {
+
+        const newPallet = pallets.map(pall => {
+            if (pall.id === pid) {
+                const newImages = pall.images.filter( img => img.name !== name )
+                return {
+                    ...pall, images: newImages
+                };
+            }
+            return pall;
+        });
+        setPallets(newPallet)
     };
 
     const cleanAll = () => {
@@ -339,10 +353,12 @@ export const CreateProvider = ({ children }: Props) => {
             pallets,
             samples: allSamples,
             totalPallets,
+            limit,
             getMainDataNew,
             handleMain,
             setNewPallets,
             addPallet,
+            addTempFiles,
             handleFruit,
 
             handleChecked,
@@ -351,11 +367,11 @@ export const CreateProvider = ({ children }: Props) => {
             handleInputArray,
             handleStatus,
             handleGrower,
-            addFiles,
             addGrower,
             addItem,
             backGrower,
             removePallet,
+            removeTempFiles,
             addRemoveSample,
 
             cleanAll,

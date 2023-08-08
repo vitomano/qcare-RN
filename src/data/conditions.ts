@@ -1,7 +1,7 @@
 export const conditionsData = [
     "Rot",
     "Mold",
-    "Decay ",
+    "Decay",
     "Sensitive",
     "Fruit easily broken to touch",
     "Soft fruit",
@@ -17,16 +17,16 @@ export const conditionsData = [
     "Red drupplets",
     "Shrivelling",
     "Exudated berries",
-    "Wounds ",
+    "Wounds",
     "Cracking",
     "Heavy cracking"
 ]
 
 export const CONDITIONS = [
-    { value: "Select", label: "Select" },
+    // { value: "0", label: "Select conditions" },
     { value: "Rot", label: "Rot" },
     { value: "Mold", label: "Mold" },
-    { value: "Decay ", label: "Decay" },
+    { value: "Decay", label: "Decay" },
     { value: "Sensitive", label: "Sensitive" },
     { value: "Fruit easily broken to touch", label: "Fruit easily broken to touch" },
     { value: "Soft fruit", label: "Soft fruit" },

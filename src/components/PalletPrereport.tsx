@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image'
+import { StyleSheet, View } from 'react-native';
 
 import { ACTION, GRADE, SCORE } from '../data/selects'
 import { PrereportPallet } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
 import { PickerModal } from './modals/PickerModal'
 import { Status } from '../interfaces/interfaces';
-import { ModalConfirmation } from './modals/ModalConfirmation';
 import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
 import { InfoPrereport } from './InfoPrereport';
 import { GrowerInfo } from './GrowerInfo';
 import { alertMsg } from '../helpers/alertMsg';
-import { useDeletePrereportImage, useEditPreCondition, useEditPreGrower } from '../api/usePrereport';
-import { ImageGallery } from './ImageGallery';
+import { useDeletePrereportImage, useEditPreCondition } from '../api/usePrereport';
+import { ImageGalleryViewing } from './ImageGalleryViewing';
 
 interface Props {
     pallet: PrereportPallet,
@@ -25,7 +23,7 @@ interface Props {
 export const PalletPrereport = ({ pallet, i, repId }: Props) => {
 
     const { mutateAsync } = useEditPreCondition()
-    const { mutate:mutateDeleteImage } = useDeletePrereportImage()
+    const { mutate:mutateDeleteImage, isLoading } = useDeletePrereportImage()
 
 
     const [modalGrade, setModalGrade] = useState(false)
@@ -55,7 +53,6 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
             alertMsg("Error", "Something went wrong")
         }
     }
-
 
 
     const removeReportImage = (key:string, key_low:string) => {
@@ -142,11 +139,11 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
                 {
                     pallet.images.length > 0 &&
                     <View style={{ marginBottom: 30 }}>
-                        <ImageGallery images={ pallet.images } deleteAction={removeReportImage}/>
+                        <ImageGalleryViewing images={ pallet.images } deleteAction={removeReportImage} isDeleting={isLoading}/>
                     </View>
                 }
 
-                <View style={{ marginBottom: 20 }}>
+                <View style={{ marginBottom: 10 }}>
 
                     <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
                         <TextApp style={{ width: "50%" }}>QC Appreciation</TextApp>
@@ -174,7 +171,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
                             color={true}
                         />
                     </View>
-                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
+                    <View style={{ ...globalStyles.flexRow }}>
                         <TextApp style={{ width: "50%" }}>Score</TextApp>
 
                         <PickerModal
@@ -191,7 +188,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
 
                 {
                     pallet.addGrower !== null &&
-                    <View style={{ marginBottom: 20 }}>
+                    <View style={{ marginBottom: 10, marginTop: 20}}>
                         <GrowerInfo
                             pallet={pallet}
                             repId={repId}

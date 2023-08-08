@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useAddLifeImage, useDeleteImage } from '../../api/useLifeTest'
 import { Test } from '../../interfaces/interface.lifeTest'
 import { globalStyles } from '../../theme/globalStyles'
 import { bgColor, blue, darkGrey, mediumGrey } from '../../theme/variables'
-import { ImageGallery } from '../ImageGallery'
 import { TextApp } from './TextApp'
 
 import Toast from 'react-native-toast-message'
@@ -15,7 +14,12 @@ import { dateFormat } from '../../helpers/dateFormat'
 import { ModalContainer } from '../modals/ModalContainer';
 import { ImageButton } from './ImageButton'
 import ButtonStyled from './ButtonStyled'
-import { Asset, launchImageLibrary } from 'react-native-image-picker'
+import { Num } from './Num'
+import { ImageTemp } from '../../interfaces/intakes.reports'
+import { ImageSelected } from '../ImageSelected'
+import { alertMsg } from '../../helpers/alertMsg'
+import { useCameraLibrary } from '../../hooks/useCameraLibrary'
+import { ImageGalleryViewing } from '../ImageGalleryViewing'
 
 
 interface Props {
@@ -28,9 +32,9 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
 
     const [modalEditDay, setModalEditDay] = useState(false)
     const [modalAddImg, setModalAddImg] = useState(false)
-    const [images, setImages] = useState<Asset[]>([])
+    const [images, setImages] = useState<ImageTemp[]>([])
 
-    const { mutate } = useDeleteImage()
+    const { mutate, isLoading:isDeleting } = useDeleteImage()
     const { mutateAsync: mutateAddImg, isLoading } = useAddLifeImage()
 
     const removeLifeImage = (key: string, key_low: string) => {
@@ -58,49 +62,41 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
 
 
     // Add an additional picture
-    const addImage = async() => {
+    const addImage = async () => {
+
+        if(images.length === 0) return alertMsg("Alert", "No image has been loaded")
+        
         await mutateAddImg({
             lifeId,
             dayId: day._id,
             images
-        }).then(()=>setModalAddImg(false))
+        }).then(() => setModalAddImg(false))
     };
 
 
-    const openLibrary = () => {
+    const { showImagePicker, allowed } = useCameraLibrary(3, day.images.length + images.length)
 
-        launchImageLibrary({
-            mediaType: 'photo',
-            selectionLimit: 3 - day.images.length,
-        }, (res) => {
-            setImages([])
-            if (res.didCancel) return
-            if (!res.assets) return
-
-            const images =
-                res.assets.length > 0
-                    ? (res?.assets!).map(image => {
-                        return {
-                            uri: image.uri,
-                            // uri: Platform.OS === 'ios' ? image?.uri?.replace('file://', '') : image.uri || undefined,
-                            type: image.type,
-                            name: image.fileName
-                        }
-                    })
-                    : []
-            if (images.length > 3 - day.images.length) return
-
-            setImages(images)
-        })
+    const selectImages = () => {
+       showImagePicker( (res) => {
+        setImages([...images, ...res.files])
+       })
     };
 
+    const removeTempFiles = (pid: string, name: string) => {
+        const newImageArray = images.filter( img => img.name !== name )
+        setImages(newImageArray)
+    };
 
 
     return (
         <View style={{ ...globalStyles.shadow, marginBottom: 5 }}>
             <View style={{ ...globalStyles.card, padding: 10 }}>
-                <View style={{ ...globalStyles.flexBetween, backgroundColor: bgColor, borderRadius: 50, paddingVertical: 5, paddingHorizontal: 10, marginBottom: 10 }}>
-                    <TextApp bold>Day {index + 1}</TextApp>
+                <View style={{ ...globalStyles.flexBetween, backgroundColor: bgColor, borderRadius: 50, paddingVertical: 8, paddingHorizontal: 10, marginBottom: 10 }}>
+
+                    <View style={{ ...globalStyles.flexRow }}>
+                        <Num num={index + 1} style={{ marginRight: 5 }} />
+                        <TextApp bold>{dateFormat(day.day_date)}</TextApp>
+                    </View>
                     <TouchableOpacity
                         activeOpacity={.8}
                         onPress={() => setModalEditDay(true)}
@@ -122,11 +118,6 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
                     </ModalBlock>
 
 
-                </View>
-
-                <View style={{ ...globalStyles.flexRow, marginBottom: 7 }}>
-                    <TextApp style={{ color: mediumGrey }}>Date: </TextApp>
-                    <TextApp size='s'>{dateFormat(day.day_date)}</TextApp>
                 </View>
 
                 <View style={{ ...globalStyles.flexRow, marginBottom: 7 }}>
@@ -158,7 +149,7 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
                 {
                     day.images.length > 0 &&
                     <View style={{ marginTop: 15, marginBottom: 5 }}>
-                        <ImageGallery images={day.images} deleteAction={removeLifeImage} />
+                        <ImageGalleryViewing images={day.images} deleteAction={removeLifeImage} isDeleting={isDeleting}/>
                     </View>
                 }
 
@@ -181,22 +172,37 @@ export const DayCard = ({ index, day, lifeId }: Props) => {
                     openModal={setModalAddImg}
                 >
                     <View>
+                        {
+                            images.length > 0 &&
+                            <View style={{ marginTop: 30 }}>
+                                <ImageSelected images={images} deleteAction={removeTempFiles} pid="" grid={3} />
+                            </View>
+                        }
+
+
+
                         <View style={{ marginVertical: 25 }} >
-                            <ImageButton openLibrary={openLibrary} imagesLength={images} max={3 - day.images.length} />
+                            <ImageButton openLibrary={selectImages} max={ allowed } disabled={allowed === 0}/>
                         </View>
 
 
 
                         <View style={{ ...globalStyles.flexBetween }}>
                             <ButtonStyled
-                                onPress={() => setModalAddImg(false)}
+                                onPress={() => {
+                                    setImages([])
+                                    setModalAddImg(false)
+                                }}
                                 text='Cancel'
                                 outline
                                 blue
                                 width={48}
                             />
                             <ButtonStyled
-                                onPress={addImage}
+                                onPress={()=>{
+                                    addImage()
+                                    setImages([])
+                                }}
                                 text='Add images'
                                 blue
                                 loading={isLoading}

@@ -1,3 +1,4 @@
+import { dateFormat } from "./dateFormat";
 
 export function tituloEs(texto:string):string {
     let text = (texto.charAt(0).toUpperCase() + texto.slice(1)).normalize('NFD').replace(/[\u0300-\u036f]/g, "")
@@ -67,3 +68,8 @@ export function capitalize(text:string):string {
 
 // Solo numeros en input de tipo "number"
 // export const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+
+export function mainDataValue(label:string | number, value:string | number):string | number {
+    if(label === "arrival_date") return dateFormat(value)
+    else return value 
+}

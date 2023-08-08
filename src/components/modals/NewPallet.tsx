@@ -74,47 +74,36 @@ export const NewPallet = ({ repId, grower, openModal }: Props) => {
         } catch (error) {
             console.log(error)
             alertMsg('Error', 'Something went wrong')
-        } finally { setUploading(false)}
+        } finally { setUploading(false) }
     };
 
     return (
         <View style={{ margin: 20 }}>
-
+            <TextApp bold size='m' style={{ marginBottom: 20 }}>Additional Pallet</TextApp>
             {
-                uploading
-                    ?
-                    <ActivityIndicator
-                        size={50}
-                        color="black"
-                    />
-                    :
-                    <>
-                        <TextApp bold size='m' style={{ marginBottom: 10 }}>Additional Pallet</TextApp>
-                        {
-                            pallets.length > 0 &&
-                            <PalletPrereportAdd
-                                pallet={pallets[0] as DataPrereport}
-                            />
-                        }
-
-                        <View style={{ ...globalStyles.flexBetween, marginTop: 25 }}>
-                            <ButtonStyled
-                                onPress={() => openModal(false)}
-                                text='Cancel'
-                                outline
-                                width={48}
-                            />
-                            <ButtonStyled
-                                onPress={sendNewPallet}
-                                text='Confirm'
-                                width={48}
-                            />
-                        </View>
-                    </>
+                pallets.length > 0 &&
+                <PalletPrereportAdd
+                    pallet={pallets[0] as DataPrereport}
+                />
             }
 
-
-
+            <View style={{ ...globalStyles.flexBetween, marginTop: 30, marginBottom: 10 }}>
+                <ButtonStyled
+                    onPress={() => openModal(false)}
+                    text='Cancel'
+                    outline
+                    width={48}
+                    btnDisabled={uploading}
+                />
+                <ButtonStyled
+                    onPress={sendNewPallet}
+                    text='Add Pallet'
+                    width={48}
+                    blue
+                    btnDisabled={uploading}
+                    loading={uploading}
+                />
+            </View>
         </View>
     )
 }

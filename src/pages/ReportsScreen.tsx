@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, ScrollView, RefreshControl } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useReports } from '../api/useReports';
 import { CardReport } from '../components/cards/CardReport';
 import { CentredContent } from '../components/CenterContent';
@@ -15,7 +14,7 @@ export const ReportsScreen = () => {
 
   const { isLoading, hasNextPage, fetchNextPage, refetch, reports, isFetchingNextPage } = useReports()
 
-  if (isLoading) return <LoadingScreen />
+  if (isLoading) return <LoadingScreen />  
 
   return (
 

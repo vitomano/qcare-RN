@@ -1,6 +1,4 @@
-import React, { createContext, useState } from 'react'
-import { Platform } from 'react-native';
-import { Asset } from 'react-native-image-picker';
+import React, { createContext, useEffect, useState } from 'react'
 import qcareApi from '../api/qcareApi';
 import { newMainData } from '../data/mainData';
 import { palletNewData } from '../data/newreport';
@@ -9,9 +7,9 @@ import { palletPrereport } from '../data/prereport';
 import { alertMsg } from '../helpers/alertMsg';
 import { formatSplit, totalKilos, totalSamples } from '../helpers/formatSplit';
 import { fruitType } from '../helpers/fruitType';
-import { imagesLength } from '../helpers/imagesLength';
-import { DataPrereport, DetailObject, IntakeSingleResponse, MainInfo, NewGrower, PalletState, SingleIntake } from '../interfaces/intakes.reports';
+import { DataPrereport, DetailObject, ImageTemp, IntakeSingleResponse, MainInfo, NewGrower, PalletState, SingleIntake } from '../interfaces/intakes.reports';
 import { DetailName, Fruit, Status } from '../interfaces/interfaces';
+import { imagesLength } from '../helpers/imagesLength';
 
 interface Props { children: JSX.Element | JSX.Element[] }
 
@@ -23,11 +21,11 @@ interface IntakeContextProps {
     pallets: DataPrereport[] | PalletState[],
     totalPallets: number,
     samples: number,
+    limit: number,
     getMainData: (id: string) => void;
     getMainDataReport: (id: string) => void;
     getMainDataNew: (fruit: Fruit) => void;
     handleMain: (val: string, item: keyof MainInfo) => void;
-    // setDataPrereport: (totalPallet: number) => void;
     setNewPallets: () => void;
     addPallet: (grower: boolean) => void;
     handleFruit: (fruit: string) => void;
@@ -37,10 +35,11 @@ interface IntakeContextProps {
     handleInputArray: (pid: string, detailName: DetailName, name: string, index: number, valor: string) => void;
     handleStatus: (pid: string, statusName: Status, value: string) => void;
     handleGrower: (pid: string, item: keyof NewGrower, value: string | number) => void;
-    addFiles: (pid: string, files: Asset[]) => void;
+    addTempFiles: (pid: string, files: ImageTemp[]) => void;
     addGrower: () => void;
     addItem: (pid: string, detailName: DetailName, item: DetailObject) => void;
     backGrower: () => void;
+    removeTempFiles: (pid: string, name: string) => void;
     removePallet: (pid: string) => void;
     addRemoveSample: ( action: "add" | "remove", pid: string) => void;
     cleanAll: () => void
@@ -53,9 +52,20 @@ export const IntakeProvider = ({ children }: Props) => {
     const [pallets, setPallets] = useState<DataPrereport[]>([])
     const [mainData, setMainData] = useState<MainInfo | null>(null)
     const [fruit, setFruit] = useState<Fruit>('other')
-    const [totalPallets, setTotalPallets] = useState(0)
+    const [totalPallets, setTotalPallets] = useState<number>(0)
     const [allSamples, setAllSamples] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
+
+    const limit:number = 10
+    // const [limit, setLimit] = useState<number>(10)
+
+    // useEffect(() => {
+    //   const totalImages = imagesLength(pallets)
+    //   if( totalImages <= 20 )  setLimit(10)
+    //   else setLimit( 30 - totalImages )
+
+    // }, [pallets])
+    
 
     //Prereport --------------------------------------------------------------------------------------
 
@@ -68,11 +78,11 @@ export const IntakeProvider = ({ children }: Props) => {
 
             setMainData(newMainData)
 
-            setTotalPallets(Number(newMainData.total_pallets) | 0)
+            setTotalPallets( parseInt(newMainData.total_pallets) || 0)
             setFruit(fruitType(fruit) || "other")
             setAllSamples(Number(newMainData.samples) || 1)
 
-            for (let i = 0; i < (Number(newMainData.total_pallets) || 0); i++) {
+            for (let i = 0; i < (parseInt(newMainData.total_pallets) || 0); i++) {
 
                 setPallets(c => [...c as unknown as PalletState[], {
                     ...palletNewData(fruit, Number(newMainData.samples)) as any}])
@@ -101,11 +111,11 @@ export const IntakeProvider = ({ children }: Props) => {
             })
 
 
-            setTotalPallets(Number(data.intakeReport.data.total_pallets) | 0)
+            setTotalPallets(parseInt(data.intakeReport.data.total_pallets) || 0)
             setFruit(fruitType(data.intakeReport.data.product) || "other")
             setAllSamples(Number(data.intakeReport.data.samples) || 1)
 
-            for (let i = 0; i < (Number(data.intakeReport.data.total_pallets) || 0); i++) {
+            for (let i = 0; i < (parseInt(data.intakeReport.data.total_pallets) || 0); i++) {
                 setPallets(c => [...c as DataPrereport[], palletPrereport()])
             }
 
@@ -134,7 +144,7 @@ export const IntakeProvider = ({ children }: Props) => {
             const { data } = await qcareApi.get<IntakeSingleResponse>(`/report/new-report/${id}`)
 
             setMainData(data.intakeReport.mainData)
-            setTotalPallets(Number(data.intakeReport.mainData?.total_pallets) | 0)
+            setTotalPallets( parseInt(data.intakeReport.mainData!.total_pallets) || 0)
             setFruit(data.intakeReport.fruit || "other")
             setAllSamples(Number(data.intakeReport.mainData?.samples || 1))
 
@@ -301,28 +311,43 @@ export const IntakeProvider = ({ children }: Props) => {
         setPallets(newPallet)
     };
 
-    const addFiles = (pid: string, files: Asset[]) => {
+
+
+    const addTempFiles = (pid: string, files: ImageTemp[]) => {
+
+        const imagesTotal = imagesLength(pallets)
+        if(imagesTotal + files.length > 30){
+            alertMsg("Max. Images","You completed the limit of 30 images in total")
+            return
+        }
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
 
-                if( pall.images.length === 0 && imagesLength(pallets) >= 30 ) return pall
+                // if( pall.images.length === 0 && imagesLength(pallets) >= 30 ) return pall
 
                 return {
-                    ...pall, images: files.map(file => {
-                        return {
-                            // uri: file.uri || undefined,
-                            uri: Platform.OS === 'ios' ? file?.uri?.replace('file://', '') : file.uri || undefined,
-                            type: file.type,
-                            name: file.fileName
-                        }
-                    })
+                    ...pall, images: [...pall.images, ...files]
                 };
             }
             return pall;
         });
         setPallets(newPallet)
-        if(imagesLength(newPallet) >= 30 ) alertMsg("Max. Images","You completed the limit of 30 images per pre report")
+        // if(imagesLength(newPallet) >= 30 ) alertMsg("Max. Images","You completed the limit of 30 images per pre report")
+    };
+
+    const removeTempFiles = (pid: string, name: string) => {
+
+        const newPallet = pallets.map(pall => {
+            if (pall.id === pid) {
+                const newImages = pall.images.filter( img => img.name !== name )
+                return {
+                    ...pall, images: newImages
+                };
+            }
+            return pall;
+        });
+        setPallets(newPallet)
     };
 
     const cleanAll = () => {
@@ -404,13 +429,14 @@ export const IntakeProvider = ({ children }: Props) => {
             pallets,
             samples: allSamples,
             totalPallets,
+            limit,
             getMainData,
             getMainDataReport,
             getMainDataNew,
             handleMain,
-            // setDataPrereport,
             setNewPallets,
             addPallet,
+            addTempFiles,
             handleFruit,
 
             handleChecked,
@@ -419,11 +445,11 @@ export const IntakeProvider = ({ children }: Props) => {
             handleInputArray,
             handleStatus,
             handleGrower,
-            addFiles,
             addGrower,
             addItem,
             backGrower,
             removePallet,
+            removeTempFiles,
             addRemoveSample,
 
             cleanAll,

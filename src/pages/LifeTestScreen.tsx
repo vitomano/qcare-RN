@@ -26,7 +26,7 @@ interface Props extends StackScreenProps<LifeTestStackParams, "LifeTestScreen"> 
 export const LifeTestScreen = ({ route, navigation }: Props) => {
 
   const { data: lifeTest, isLoading, isError, refetch } = useLifeTest(route.params.id)
-  const { mutateAsync } = useDeleteLastDay()
+  const { mutateAsync, isLoading:isDeleting } = useDeleteLastDay()
 
   const [modalAddDay, setModalAddDay] = useState(false)
   const [modalDeleteDay, setModalDeleteDay] = useState(false)
@@ -142,6 +142,7 @@ export const LifeTestScreen = ({ route, navigation }: Props) => {
             action={deleteLastDay}
             modal={modalDeleteDay}
             openModal={setModalDeleteDay}
+            loading={isDeleting}
           />
 
           <ModalBlock

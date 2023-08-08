@@ -1,24 +1,31 @@
-export function formatSplit(format = "0*0") {
+export function formatSplit(valor = "0*0"):number {
 
-    const num = (format.split("*")[1])?.split("g")[0] || 1
-    const total = Number(num) || 1
+    if( valor.includes("k") ){
+        let res = valor.split(/[k*]+/)
+        return +res[res.length-2] * 1000
 
-    if (total) {
-        return total
-    } else {
-        return 1
-    }
+      } else {
+        let res = valor.split(/[g*]+/)
+        return +res[res.length-2]
+      }
 }
 
 export function totalKilos(format = "0*0", totalBoxes = "0") {
 
-    if (format.includes("*") && !isNaN(Number(totalBoxes))) {
+    if(!format || !totalBoxes) return 1
 
-        let num1 = Number(format.split('*')[0]) || 0
-        let num2 = Number((format.split('*')[1]).split('g')[0]) || 0
+    if (format.includes("*")) {
+      let num1:number = Number(format.split('*')[0]) || 1
+      let num2:number
 
-        return ((num1 * num2 * Number(totalBoxes)) / 1000)
-    } else { return 0 }
+      if( format.includes("k") ) num2 = parseInt((format.split('*')[1]).split("k")[0]) * 1000 || 1
+      else num2 = parseInt((format.split('*')[1]).split('g')[0]) || 1
+
+      return ((num1 * num2 * Number(totalBoxes)) / 1000)
+    } else {
+      let num2 = parseInt(format.split("k")[0])*1000 || 1
+      return ((1 * num2 * Number(totalBoxes)) / 1000)
+    }
 };
 
 export function totalSamples(format = "0*0") {

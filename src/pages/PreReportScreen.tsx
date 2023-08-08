@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, ScrollView, KeyboardAvoidingView, Platform, RefreshControl } from 'react-native'
 import { usePrereport } from '../api/usePrereport'
 import { AddPalletButton } from '../components/AddPalletButton'
@@ -9,6 +9,7 @@ import { PalletPrereport } from '../components/PalletPrereport'
 import { ReportMain } from '../components/ReportMain'
 import ButtonStyled from '../components/ui/ButtonStyled'
 import { TextApp } from '../components/ui/TextApp'
+import { IntakeContext } from '../context/IntakeContext'
 import { dateFormat, duration } from '../helpers/dateFormat'
 
 import { PrereportPallet } from '../interfaces/intakes.reports';
@@ -23,6 +24,8 @@ interface Props extends StackScreenProps<PreReportsStackParams, "PreReportScreen
 export const PreReportScreen = ({ route, navigation }: Props) => {
 
   const { isLoading, data, refetch } = usePrereport(route.params.id)
+  const { cleanAll } = useContext(IntakeContext)
+
 
   const [modalAddPallet, setModalAddPallet] = useState(false)
 
@@ -63,7 +66,9 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
           <View style={{ paddingHorizontal: 20, paddingVertical: 20, paddingBottom: 50 }}>
             {
               data?.mainData &&
-              <ReportMain mainData={data.mainData} />
+              <View style={{marginBottom: 5}}>
+                <ReportMain mainData={data.mainData} />
+              </View>
             }
             {
               data?.pallets && data.pallets.length > 0
@@ -81,7 +86,10 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
 
             <AddPalletButton
               title='Add Pallet'
-              handlePress={() => setModalAddPallet(true)}
+              handlePress={() => {
+                cleanAll()
+                setModalAddPallet(true)
+              }}
             />
 
             <ModalBlock
@@ -101,7 +109,6 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
               text='Finish Report'
               blue
               onPress={() => navigation.navigate('PreReportFinishScreen' as never, { id: route.params.id } as never)}
-
             />
 
           </View>

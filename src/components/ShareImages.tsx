@@ -1,22 +1,22 @@
 import React from 'react'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import Icon from 'react-native-vector-icons/Ionicons'
 
 import { ImageType, Report } from '../interfaces/intakes.reports'
 import { check } from '../theme/variables'
 import { PropsPdf } from './Share'
+import { IconBtn } from './ui/IconBtn'
 import { TextApp } from './ui/TextApp'
 
 interface Props {
     data: Report
     pdfImages: PropsPdf[]
-    setPdfImages: (item:PropsPdf[]) => void
+    setPdfImages: (item: PropsPdf[]) => void
 }
 
 const { width } = Dimensions.get("screen")
 
-export const ShareImages = ({data, pdfImages, setPdfImages}:Props) => {
+export const ShareImages = ({ data, pdfImages, setPdfImages }: Props) => {
 
 
     const select = (pid: string, image: ImageType) => {
@@ -61,8 +61,15 @@ export const ShareImages = ({data, pdfImages, setPdfImages}:Props) => {
                                                     style={{ width: "25%", height: width / 4 - 10, position: "relative" }}
                                                     key={image.key}
                                                 >
-                                                    <Icon style={{ position: "absolute", top: 3, right: 3, zIndex: 10 }} name={exist ? "checkmark-circle-sharp" : "ellipse-outline"} size={20} color={exist ? check : "#fff"} />
-                                                    <FastImage style={{ flex: 1, opacity: exist ? 1 : .5 }} source={{ uri: image.imgURL_low }} />
+                                                    <View style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}>
+                                                        {
+                                                            exist
+                                                                ? <IconBtn iconSize={25} action={() => select(pallet.pid, image)} icon="checkmark-circle" background='white' iconColor={check} />
+                                                                : <IconBtn iconSize={25} action={() => select(pallet.pid, image)} icon="ellipse-outline" iconColor="white" />
+                                                        }
+                                                    </View>
+                                                    {/* <Icon style={{ position: "absolute", top: 3, right: 3, zIndex: 10 }} name={exist ? "checkmark-circle-sharp" : "ellipse-outline"} size={20} color={exist ? check : "#fff"} /> */}
+                                                    <FastImage style={{ flex: 1, opacity: exist ? 1 : .6 }} source={{ uri: image.imgURL_low }} />
                                                 </TouchableOpacity>
                                             )
                                         })

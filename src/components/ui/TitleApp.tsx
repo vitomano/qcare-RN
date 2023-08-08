@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, StyleProp, TextStyle } from 'react-native';
+import { StyleSheet, Text, StyleProp, TextStyle } from 'react-native';
 
 interface Props {
     title: string,

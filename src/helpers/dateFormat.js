@@ -1,8 +1,9 @@
+import dayjs from "dayjs"
 
 export function dateFormat(date) {
-    const newDate = new Date(date).toLocaleDateString('en-NL')
-    // const newDate = new Date(date).toLocaleDateString('nl')
-    return newDate
+    // const newDate = new Date(date).toLocaleDateString('en-NL')
+    return dayjs(date).format('DD/MM/YYYY')
+    // return newDate
 }
 
 export function duration(startDate, endDate) {

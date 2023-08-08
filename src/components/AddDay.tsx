@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Platform, TextInput, TouchableOpacity, View } from 'react-native'
+import { TextInput, TouchableOpacity, View } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 
 import { globalStyles } from '../theme/globalStyles'
@@ -7,18 +7,19 @@ import { TextApp } from './ui/TextApp'
 import { Test } from '../interfaces/interface.lifeTest';
 import { dateFormat } from '../helpers/dateFormat';
 import { inputStyles } from '../theme/inputStyles';
-import { PickerModal } from './modals/PickerModal'
 import { CONDITIONS } from '../data/conditions'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { darkGrey } from '../theme/variables';
 import ButtonStyled from './ui/ButtonStyled'
-import { launchImageLibrary } from 'react-native-image-picker'
-import { Asset } from 'react-native-image-picker';
 import { useAddDay } from '../api/useLifeTest';
 import { LoadingScreen } from '../pages/LoadingScreen';
 import { ImageButton } from './ui/ImageButton'
 import { useQueryClient } from '@tanstack/react-query'
+import { PickerModalMultiselect } from './modals/PickerModalMultiselect';
 import Toast from 'react-native-toast-message'
+import { ImageSelected } from './ImageSelected'
+import { ImageTemp } from '../interfaces/intakes.reports'
+import { useCameraLibrary } from '../hooks/useCameraLibrary'
 
 
 interface Props {
@@ -38,40 +39,21 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
 
     const [openCondition, setOpenCondition] = useState(false)
     const [conditions, setConditions] = useState<string[]>([])
-    const [images, setImages] = useState<Asset[]>([])
+    const [images, setImages] = useState<ImageTemp[]>([])
 
     const [temperature, setTemperature] = useState<string>("")
 
-    const handleSelect = (e: string) => {
-        if (!conditions.some(n => n === e)) {
-            setConditions(c => [...c, e])
-        }
-        setOpenCondition(false)
+    const { showImagePicker, allowed } = useCameraLibrary(3, images.length)
+
+    const selectImages = () => {
+       showImagePicker( (res) => {
+        setImages([...images, ...res.files])
+       })
     };
 
-    const openLibrary = () => {
-        launchImageLibrary({
-            mediaType: 'photo',
-            selectionLimit: 3,
-        }, (res) => {
-            setImages([])
-            if (res.didCancel) return
-            if (!res.assets) return
-
-            const images =
-                res.assets.length > 0
-                    ? (res?.assets!).map(image => {
-                        return {
-                            uri: Platform.OS === 'ios' ? image?.uri?.replace('file://', '') : image.uri || undefined,
-                            type: image.type,
-                            name: image.fileName
-                        }
-                    })
-                    : []
-            if (images.length > 3) return
-
-            setImages(images)
-        })
+    const removeTempFiles = ( name: string) => {
+        const newImageArray = images.filter( img => img.name !== name )
+        setImages(newImageArray)
     };
 
     const sendAddDay = async () => {
@@ -151,12 +133,13 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
             <View style={{ ...globalStyles.flexRow }}>
                 <TextApp size='m' style={{ width: "50%" }}>Conditions</TextApp>
 
-                <PickerModal
+                <PickerModalMultiselect
+                    title="Select conditions"
                     modal={openCondition}
                     openModal={setOpenCondition}
                     LIST={CONDITIONS}
-                    setState={handleSelect}
-                    state="Select a condition"
+                    setState={setConditions}
+                    stateArray={conditions}
                 />
 
             </View>
@@ -182,8 +165,15 @@ export const AddDay = ({ lifeTestId, days, setModalAddDay }: Props) => {
                 </View>
             }
 
+            {
+                images.length > 0 &&
+                <View style={{ marginTop: 30 }}>
+                    <ImageSelected images={images} deleteAction={removeTempFiles} pid="" grid={3}/>
+                </View>
+            }
+
             <View style={{ marginVertical: 25 }} >
-                <ImageButton openLibrary={openLibrary} imagesLength={images} max="3" />
+                <ImageButton openLibrary={selectImages} max={allowed} disabled={ allowed === 0 }/>
             </View>
 
 

@@ -8,7 +8,6 @@ import { inputColor } from '../../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { useRemoveIntake } from '../../api/useIntakes';
-import { alertMsg } from '../../helpers/alertMsg';
 
 interface Props {
     intake: Intake,

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { SCORE } from '../data/selects'
-import { Pallet } from '../interfaces/intakes.reports'
+import { ImageTemp, Pallet } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
 import { PickerModal } from './modals/PickerModal'
 import { TextApp } from './ui/TextApp';
@@ -10,10 +10,8 @@ import { PalletNum } from './ui/PalletNum';
 import { InfoPrereport } from './InfoPrereport';
 import { GrowerInfo } from './GrowerInfo';
 import { alertMsg } from '../helpers/alertMsg';
-import { ImageGallery } from './ImageGallery';
 import { PrereportInfo } from './ui/PrereportInfo';
 import { useDeleteReportImage, useEditReport, useUploadImages } from '../api/useReport';
-import { Asset, launchImageLibrary } from 'react-native-image-picker';
 import { ImageButton } from './ui/ImageButton';
 import { blue, lightGrey } from '../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,6 +19,9 @@ import { ModalContainer } from './modals/ModalContainer';
 import ButtonStyled from './ui/ButtonStyled';
 import { ChartPie } from './ui/ChartPie';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCameraLibrary } from '../hooks/useCameraLibrary';
+import { ImageSelected } from './ImageSelected';
+import { ImageGalleryViewing } from './ImageGalleryViewing';
 
 
 interface Props {
@@ -33,15 +34,14 @@ interface Props {
 export const PalletReport = ({ pallet, i, repId, format }: Props) => {
 
     const { mutate } = useEditReport()
-    const { mutate: mutateDeleteImage } = useDeleteReportImage()
+    const { mutateAsync: mutateDeleteImage, isLoading:isDeleting } = useDeleteReportImage()
     const { mutateAsync, isLoading } = useUploadImages()
 
     const queryClient = useQueryClient()
 
-
     const [modalScore, setModalScore] = useState(false)
     const [modalImage, setModalImage] = useState(false)
-    const [images, setImages] = useState<Asset[]>([])
+    const [images, setImages] = useState<ImageTemp[]>([])
 
     const editStatus = async (val: string) => {
 
@@ -63,8 +63,9 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
         }
     }
 
-    const removeReportImage = (key: string, key_low: string) => {
-        mutateDeleteImage({
+    const removeReportImage = async(key: string, key_low: string) => {
+
+        await mutateDeleteImage({
             reportId: repId,
             palletId: pallet.pid,
             key,
@@ -74,32 +75,20 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                 queryClient.invalidateQueries(['reports'])
             }
         })
+
     };
 
-    const openLibrary = () => {
+    const { showImagePicker, allowed } = useCameraLibrary(10, images.length)
 
-        launchImageLibrary({
-            mediaType: 'photo',
-            selectionLimit: 0,
-        }, (res) => {
-            setImages([])
-            if (res.didCancel) return
-            if (!res.assets) return
-
-            const images =
-                res.assets.length > 0
-                    ? (res?.assets!).map(image => {
-                        return {
-                            uri: Platform.OS === 'ios' ? image?.uri?.replace('file://', '') : image.uri || undefined,
-                            type: image.type,
-                            name: image.fileName
-                        }
-                    })
-                    : []
-            if (images.length > 12) return
-
-            setImages(images)
+    const selectImages = () => {
+        showImagePicker((res) => {
+            setImages([...images, ...res.files])
         })
+    };
+
+    const removeTempFiles = (pid: string, name: string) => {
+        const newImageArray = images.filter( img => img.name !== name )
+        setImages(newImageArray)
     };
 
     const uploadImages = async () => {
@@ -114,7 +103,7 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
             })
         } catch (error) {
             console.log(error)
-        } finally { setModalImage(false) }
+        } finally { setImages([]), setModalImage(false) }
     };
 
     return (
@@ -123,13 +112,11 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
         >
             <View style={{ ...globalStyles.card, padding: 15 }}>
                 <View style={{ ...globalStyles.flexBetween, marginBottom: 15 }}>
-
                     <PalletNum num={i + 1} />
                 </View>
 
                 {
                     pallet.addGrower &&
-                    // pallet.addGrower !== null &&
                     <View style={{ marginVertical: 10 }}>
                         <GrowerInfo
                             pallet={pallet}
@@ -203,17 +190,17 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
 
                 {
                     pallet.details.pallgrow &&
-                        <View>
-                            <ChartPie
+                    <View>
+                        <ChartPie
                             pallgrow={pallet.details.pallgrow}
                         />
-                        </View>
+                    </View>
                 }
 
                 {
                     pallet.images.length > 0 &&
                     <View style={{ marginBottom: 30 }}>
-                        <ImageGallery images={pallet.images} deleteAction={removeReportImage} />
+                        <ImageGalleryViewing images={pallet.images} deleteAction={removeReportImage} isDeleting={isDeleting}/>
                     </View>
                 }
 
@@ -234,8 +221,16 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                     modal={modalImage}
                     openModal={setModalImage}
                 >
+                    <View>
+                    {
+                        images.length > 0 &&
+                        <View style={{ marginTop: 30 }}>
+                            <ImageSelected images={images} deleteAction={removeTempFiles} pid="" grid={4} />
+                        </View>
+                    }
+                    </View>
                     <View style={{ marginVertical: 25 }}>
-                        <ImageButton openLibrary={openLibrary} imagesLength={images} max="12" />
+                        <ImageButton openLibrary={selectImages} max={allowed} />
                     </View>
 
                     <View style={{ ...globalStyles.flexBetween }}>
@@ -245,6 +240,7 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                             outline
                             blue
                             width={48}
+                            btnDisabled={isLoading}
                         />
                         <ButtonStyled
                             onPress={uploadImages}
@@ -252,6 +248,7 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                             blue
                             width={48}
                             loading={isLoading}
+                            btnDisabled={isLoading}
                         />
                     </View>
                 </ModalContainer>

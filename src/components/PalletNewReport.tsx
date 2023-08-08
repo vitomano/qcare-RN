@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { launchImageLibrary } from 'react-native-image-picker';
-
 import { SCORE } from '../data/selects'
 import { PalletState } from '../interfaces/intakes.reports'
 import { globalStyles } from '../theme/globalStyles'
@@ -19,7 +17,8 @@ import { NewItemCreate } from './NewItemCreate';
 import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
 import { CreateContext } from '../context/CreateContext';
-import { photosLimit } from '../helpers/imagesLength';
+import { ImageSelected } from './ImageSelected';
+import { useCameraLibrary } from '../hooks/useCameraLibrary';
 
 interface Props {
     pallet: PalletState,
@@ -28,7 +27,7 @@ interface Props {
 
 export const PalletNewReport = ({ pallet, i }: Props) => {
 
-    const { pallets, handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(CreateContext)
+    const { limit, handleStatus, addGrower, backGrower, removePallet, addTempFiles, removeTempFiles } = useContext(CreateContext)
 
     const [modalScore, setModalScore] = useState(false)
 
@@ -40,17 +39,11 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
 
     const handleSelect = (val: string, status: Status) => handleStatus(pallet.id, status, val)
 
-    const openLibrary = () => {
+    const { showImagePicker, allowed } = useCameraLibrary(limit, pallet.images.length)
 
-        launchImageLibrary({
-            mediaType: 'photo',
-            // selectionLimit: 0,
-            selectionLimit: photosLimit(pallets) || 1
-
-        }, (res) => {
-            if (res.didCancel) return
-            if (!res.assets) return
-            addFiles(pallet.id, res.assets)
+    const selectImages = () => {
+        showImagePicker((res) => {
+            addTempFiles(pallet.id, res.files)
         })
     };
 
@@ -172,22 +165,28 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
 
                 }
 
+                {
+                    pallet.images.length > 0 &&
+                    <View style={{ marginTop: 20 }}>
+                        <ImageSelected images={pallet.images} deleteAction={removeTempFiles} pid={pallet.id} />
+                    </View>
+                }
+
                 <CentredContent style={{ marginTop: 20, marginBottom: 10 }}>
-                    <>
-                        <ButtonStyled
-                            text='Select Images'
-                            width={60}
-                            outline
-                            onPress={openLibrary}
-                            icon="camera-outline"
-                        />
-                        {
-                            pallet.images.length > 0
-                                ? <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
-                                : <TextApp size='s' color='mute' style={{ marginTop: 15 }}>Max. {photosLimit(pallets) || 0} images</TextApp>
-                        }
-                    </>
+                    <ButtonStyled
+                        text='Select Images'
+                        width={60}
+                        outline
+                        onPress={selectImages}
+                        icon="camera-outline"
+                        btnDisabled={ allowed === 0 }
+                    />
                 </CentredContent>
+
+                {
+                    allowed > 0 &&
+                    <TextApp center color='mute' size='s'>Max. {allowed} Images</TextApp>
+                }
 
             </View>
         </View>

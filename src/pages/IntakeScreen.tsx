@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
 import { globalStyles } from '../theme/globalStyles'
 import { StackScreenProps } from '@react-navigation/stack';
 import { IntakesStackParams } from '../navigation/IntakesStack';
@@ -8,6 +8,7 @@ import { DataPrereport } from '../interfaces/intakes.reports';
 
 import { MainForm } from '../components/MainForm';
 import ButtonStyled from '../components/ui/ButtonStyled';
+import DatePicker from 'react-native-date-picker'
 
 import { FRUITS } from '../data/selects';
 import { PickerModal } from '../components/modals/PickerModal';
@@ -22,6 +23,9 @@ import qcareApi from '../api/qcareApi';
 import { PalletIntake } from '../components/PalletIntake';
 import { useIntakes } from '../api/useIntakes';
 import { usePrereports } from '../api/usePrereports';
+import { inputStyles } from '../theme/inputStyles';
+import { dateFormat } from '../helpers/dateFormat';
+import dayjs from 'dayjs';
 
 
 interface Props extends StackScreenProps<IntakesStackParams, "IntakeScreen"> { };
@@ -35,6 +39,9 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
   const [modalFruit, setModalFruit] = useState(false)
   const [sending, setSending] = useState(false)
   const [startDate, setStartDate] = useState<Date | null>(null)
+
+  const [open, setOpen] = useState(false)
+  const [arrivalDate, setArrivalDate] = useState<Date>(new Date())
 
 
   useEffect(() => {
@@ -79,7 +86,7 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
 
       await qcareApi.post(`/prereport/main-prereport`, {
-        mainData,
+        mainData: { ...mainData, "arrival_date": arrivalDate },
         fruit,
         pid: route.params.id,
         averageScore: average('score', pallets as DataPrereport[]) || "0",
@@ -150,6 +157,33 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
                     />
 
                     {/* ------------------------------------ */}
+
+                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
+                      <TextApp style={{ width: "50%" }}>Arrival Date</TextApp>
+
+                      <View style={[inputStyles.select, inputStyles.selectShape, { flex: 1 }]}>
+                        <TouchableOpacity
+                          activeOpacity={.9}
+                          onPress={() => setOpen(true)}>
+                          <TextApp size='s'>{ dayjs(arrivalDate).format('DD-MM-YYYY') || '--'}</TextApp>
+                        </TouchableOpacity>
+                      </View>
+
+                      <DatePicker
+                        modal
+                        open={open}
+                        date={arrivalDate}
+
+                        mode="date"
+                        onConfirm={(date) => {
+                          setOpen(false)
+                          setArrivalDate(date)
+                        }}
+                        onCancel={() => {
+                          setOpen(false)
+                        }}
+                      />
+                    </View>
 
                     <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
                       <TextApp style={{ width: "50%" }}>Fruit</TextApp>

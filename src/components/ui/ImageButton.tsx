@@ -1,18 +1,17 @@
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { Asset } from 'react-native-image-picker'
 import  Icon  from 'react-native-vector-icons/Ionicons'
 import { blue } from '../../theme/variables'
 import { TextApp } from './TextApp'
 
 interface Props{
     openLibrary:()=>void
-    imagesLength:Asset[]
     max?:string | number
+    disabled?:boolean
 }
 
 
-export const ImageButton = ({openLibrary, imagesLength, max}:Props) => {
+export const ImageButton = ({openLibrary, max, disabled=false}:Props) => {
   return (
     <View
     style={{ alignItems: "center", justifyContent: "center", alignSelf: "center" }}
@@ -23,17 +22,13 @@ export const ImageButton = ({openLibrary, imagesLength, max}:Props) => {
         <TouchableOpacity
             activeOpacity={.8}
             onPress={openLibrary}
+            disabled={ disabled }
         >
             <Icon name="camera" color="#fff" size={30} />
         </TouchableOpacity>
     </View>
-    {
-        imagesLength.length > 0
-            ?
-            <TextApp size='s' style={{ marginTop: 5 }}>{imagesLength.length} file/s selected</TextApp>
-            : max ? <TextApp size='s' style={{ marginTop: 5, color: blue }}>Max. {max} images</TextApp> : null
-        
-    }
+    <TextApp size='s' style={{ marginTop: 5, color: blue }}>Max. {max} images</TextApp>
+
 </View>
   )
 }

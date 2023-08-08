@@ -298,6 +298,13 @@ export interface ImageType {
     key_low: string;
 }
 
+export interface ImageTemp {
+    uri: string | undefined;
+    type: string | undefined;
+    name: string | undefined 
+
+}
+
 
 // DATA ----------------------------------------------
 
@@ -306,7 +313,7 @@ export interface DataPrereport {
     score: ScoreNum,
     grade: string,
     action: string,
-    images: object[],
+    images: ImageTemp[],
     newGrower: NewGrower | null,
     labels: DetailObject[],
     appareance: DetailObject[],

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { globalStyles } from '../../theme/globalStyles'
 import { grey } from '../../theme/variables'
 import ButtonStyled from '../ui/ButtonStyled'

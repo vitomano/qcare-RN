@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { launchImageLibrary } from 'react-native-image-picker';
-
 import { IntakeContext } from '../context/IntakeContext'
 import { ACTION, GRADE, SCORE } from '../data/selects'
 import { DataPrereport } from '../interfaces/intakes.reports'
@@ -19,7 +17,8 @@ import { ModalConfirmation } from './modals/ModalConfirmation';
 import { NewItem } from './NewItem';
 import { TextApp } from './ui/TextApp';
 import { PalletNum } from './ui/PalletNum';
-import { photosLimit } from '../helpers/imagesLength';
+import { ImageSelected } from './ImageSelected';
+import { useCameraLibrary } from '../hooks/useCameraLibrary';
 
 interface Props {
     pallet: DataPrereport,
@@ -28,7 +27,7 @@ interface Props {
 
 export const PalletIntake = ({ pallet, i }: Props) => {
 
-    const { pallets, handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(IntakeContext)
+    const { handleStatus, addGrower, backGrower, removePallet, addTempFiles, removeTempFiles, limit } = useContext(IntakeContext)
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
@@ -40,19 +39,19 @@ export const PalletIntake = ({ pallet, i }: Props) => {
 
     const [removeModal, setRemoveModal] = useState(false)
 
+
     const handleSelect = (val: string, status: Status) => handleStatus(pallet.id, status, val)
 
-    const openLibrary = () => {
+    // selectionLimit: photosLimit(pallets) || 1
 
-        launchImageLibrary({
-            mediaType: 'photo',
-            selectionLimit: photosLimit(pallets) || 1
-        }, (res) => {
-            if (res.didCancel) return
-            if (!res.assets) return
-            addFiles(pallet.id, res.assets)
-        })        
+    const { showImagePicker, allowed } = useCameraLibrary(limit, pallet.images.length)
+
+    const selectImages = () => {
+        showImagePicker((res) => {
+            addTempFiles(pallet.id, res.files)
+        })
     };
+
 
     return (
         <View
@@ -203,22 +202,27 @@ export const PalletIntake = ({ pallet, i }: Props) => {
 
                 }
 
+                {pallet.images.length > 0 &&
+                    <View style={{ marginTop: 20 }}>
+                        <ImageSelected images={pallet.images} deleteAction={removeTempFiles} pid={pallet.id} />
+                    </View>
+                }
+
                 <CentredContent style={{ marginTop: 20, marginBottom: 10 }}>
-                    <>
-                        <ButtonStyled
-                            text='Select Images'
-                            width={60}
-                            outline
-                            onPress={openLibrary}
-                            icon="camera-outline"
-                        />
-                        {
-                            pallet.images.length > 0 
-                            ? <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
-                            : <TextApp size='s' color='mute' style={{ marginTop: 15 }}>Max. {photosLimit(pallets) || 0} images</TextApp>
-                        }
-                    </>
+                    <ButtonStyled
+                        text='Select Images'
+                        width={60}
+                        outline
+                        onPress={selectImages}
+                        icon="camera-outline"
+                        btnDisabled={allowed === 0}
+                    />
                 </CentredContent>
+
+                {
+                    allowed > 0 &&
+                    <TextApp center color='mute' size='s'>Max. {allowed} Images</TextApp>
+                }
 
             </View>
         </View>

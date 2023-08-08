@@ -5,7 +5,7 @@ import { ActionNum, GradeNum } from '../../interfaces/interfaces';
 import { globalStyles } from '../../theme/globalStyles';
 import { ActionColor } from '../ui/ActionColor';
 import { GradeColor } from '../ui/GradeColor';
-import { bgColor, inputColor } from '../../theme/variables';
+import { bgColor } from '../../theme/variables';
 import { TextApp } from '../ui/TextApp';
 
 

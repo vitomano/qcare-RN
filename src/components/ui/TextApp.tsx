@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
-import { blue, danger, greenMain, lightGrey, mediumGrey, mute, text, textGrey } from '../../theme/variables'
+import { blue, danger, greenMain, text, textGrey } from '../../theme/variables'
 
 interface Props {
   style?: StyleProp<TextStyle>,

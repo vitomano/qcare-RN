@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { tituloEs } from '../helpers/eliminarEs'
+import { mainDataValue, tituloEs } from '../helpers/eliminarEs'
 import objToArray from '../helpers/objToArray'
 import { MainInfo } from '../interfaces/intakes.reports'
 import { TextApp } from './ui/TextApp'
@@ -29,7 +29,7 @@ export const ReportMain = ({ mainData }:Props) => {
                             }
                         </View>
 
-                        <TextApp bold style={{width: '45%'}}>{item[1] || "--"}</TextApp>
+                        <TextApp bold style={{width: '45%'}}>{ mainDataValue(item[0], item[1]) || "--"}</TextApp>
                     </View>
                 ))
 

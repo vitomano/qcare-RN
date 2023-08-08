@@ -1,7 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-
-import { launchImageLibrary } from 'react-native-image-picker';
+import { StyleSheet, View } from 'react-native';
 
 import { IntakeContext } from '../context/IntakeContext'
 import { ACTION, GRADE, SCORE } from '../data/selects'
@@ -13,12 +11,11 @@ import { PickerModal } from './modals/PickerModal'
 import { Status } from '../interfaces/interfaces';
 import ButtonStyled from './ui/ButtonStyled'
 import { CentredContent } from './CenterContent';
-import { AddItemButton } from './AddItemButton';
 import { GrowerInputs } from './GrowerInputs';
-import { ModalConfirmation } from './modals/ModalConfirmation';
 import { NewItem } from './NewItem';
 import { TextApp } from './ui/TextApp';
-import { PalletNum } from './ui/PalletNum';
+import { useCameraLibrary } from '../hooks/useCameraLibrary';
+import { ImageSelected } from './ImageSelected';
 
 interface Props {
     pallet: DataPrereport,
@@ -26,7 +23,7 @@ interface Props {
 
 export const PalletPrereportAdd = ({ pallet }: Props) => {
 
-    const { handleStatus, addFiles, addGrower, backGrower, removePallet } = useContext(IntakeContext)
+    const { handleStatus, addTempFiles, removeTempFiles } = useContext(IntakeContext)
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
@@ -38,15 +35,11 @@ export const PalletPrereportAdd = ({ pallet }: Props) => {
 
     const handleSelect = (val: string, status: Status) => handleStatus(pallet.id, status, val)
 
-    const openLibrary = () => {
+    const { showImagePicker, allowed } = useCameraLibrary(10, pallet.images.length)
 
-        launchImageLibrary({
-            mediaType: 'photo',
-            selectionLimit: 0,
-        }, (res) => {
-            if (res.didCancel) return
-            if (!res.assets) return
-            addFiles(pallet.id, res.assets)
+    const selectImages = () => {
+        showImagePicker((res) => {
+            addTempFiles(pallet.id, res.files)
         })
     };
 
@@ -167,24 +160,29 @@ export const PalletPrereportAdd = ({ pallet }: Props) => {
 
             {
                 pallet.newGrower !== null &&
-                    <GrowerInputs pallet={pallet} />
+                <GrowerInputs pallet={pallet} />
+            }
+
+            {
+                pallet.images.length > 0 &&
+                <View style={{ marginTop: 20 }}>
+                    <ImageSelected images={pallet.images} deleteAction={removeTempFiles} pid={pallet.id} />
+                </View>
             }
 
             <CentredContent style={{ marginTop: 20, marginBottom: 10 }}>
-                <>
-                    <ButtonStyled
-                        text='Select Images'
-                        width={60}
-                        outline
-                        onPress={openLibrary}
-                        icon="camera-outline"
-                    />
-                    {
-                        pallet.images.length > 0 &&
-                        <TextApp size='s' style={{ marginTop: 15 }}>{pallet.images.length} file/s selected</TextApp>
-                    }
-                </>
+                <ButtonStyled
+                    text='Select Images'
+                    width={60}
+                    outline
+                    onPress={selectImages}
+                    icon="camera-outline"
+                />
             </CentredContent>
+            {
+                allowed > 0 &&
+                <TextApp center color='mute' size='s'>Max. {allowed} Images</TextApp>
+            }
         </View>
 
     )

@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useRemovePrereport } from '../../api/usePrereports';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { TextApp } from './TextApp';
-import { useNavigation } from '@react-navigation/native';
 import { ModalBlock } from '../modals/ModalBlock';
 import { Share } from '../Share';
 import { Report } from '../../interfaces/intakes.reports';

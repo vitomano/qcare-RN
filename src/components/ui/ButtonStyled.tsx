@@ -17,6 +17,7 @@ interface Props {
     onPress?: () => void,
     icon?: string
     iconSize?: number
+    btnDisabled?: boolean
     style?: StyleProp<ViewStyle>
     styleText?: StyleProp<TextStyle>
 }
@@ -28,6 +29,7 @@ export default function ButtonStyled({
     secondary,
     danger,
     iconSize=25,
+    btnDisabled=false,
     disabled = false,
     blue,
     width,
@@ -90,7 +92,7 @@ export default function ButtonStyled({
                 activeOpacity={0.8}
                 style={button}
                 onPress={onPress}
-                disabled={loading}
+                disabled={btnDisabled || loading}
             >
                 {
 

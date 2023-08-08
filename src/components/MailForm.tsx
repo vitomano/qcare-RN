@@ -12,7 +12,7 @@ import { Tags } from './ui/Tags'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { isEmail } from '../helpers/isEmail';
 
-import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+import {  RichEditor } from "react-native-pell-rich-editor";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { AuthContext } from '../context/AuthContext'
 
@@ -23,9 +23,10 @@ interface Props {
     link: string
     message: string
     closeModal: (b: boolean) => void
+    subject: string
 }
 
-export const MailForm = ({ mailTo, cc, link, message, closeModal }: Props) => {
+export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Props) => {
 
     const { mutate, isLoading } = useSendEmail()
 
@@ -45,6 +46,7 @@ export const MailForm = ({ mailTo, cc, link, message, closeModal }: Props) => {
     useEffect(() => {
         setMails(mailTo)
         setCcs(cc)
+        setCurrentSubject(subject)
     }, [mailTo, cc])
 
     useEffect(() => {

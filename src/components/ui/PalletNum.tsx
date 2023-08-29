@@ -5,13 +5,14 @@ import { text } from '../../theme/variables'
 import { TextH3 } from './TextH3'
 
 interface Props {
-  num: number
+  num: number,
+  title?: string
 }
 
-export const PalletNum = ({ num }: Props) => {
+export const PalletNum = ({ num, title="Pallet" }: Props) => {
   return (
     <View style={{ ...globalStyles.flexRow }}>
-      <TextH3 style={{ marginRight: 5 }}>Pallet</TextH3>
+      <TextH3 style={{ marginRight: 5 }}>{title}</TextH3>
       <View style={{ backgroundColor: text, borderRadius: 50, width: 18, height: 18, justifyContent: "center", alignItems: "center" }}>
         <Text style={{ fontSize: 12, fontWeight: 'bold', textAlign: "center", color: "#fff" }}>{num}</Text>
       </View>

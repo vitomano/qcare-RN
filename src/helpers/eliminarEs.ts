@@ -1,5 +1,9 @@
 import { dateFormat } from "./dateFormat";
 
+
+const mainDataDate = [ "arrival_date", "loading_date" ]
+
+
 export function tituloEs(texto:string):string {
     let text = (texto.charAt(0).toUpperCase() + texto.slice(1)).normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     return text.split('_').join(' ');
@@ -69,7 +73,16 @@ export function capitalize(text:string):string {
 // Solo numeros en input de tipo "number"
 // export const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 
-export function mainDataValue(label:string | number, value:string | number):string | number {
-    if(label === "arrival_date") return dateFormat(value)
+export function mainDataValue(label:string, value:string | number):string | number {
+    // if(label === "arrival_date") return dateFormat(value)
+    if( mainDataDate.includes(label) ) return dateFormat(value)
     else return value 
 }
+
+
+export const optionValue = ( value:string|number ) => {
+    return value === "0" ? 0 : value
+};
+
+//Convert header CSV name to string. e.g: "Tracker / ID" => "tracker_id"
+export const headerToJSON = ( str:string ):string => str.split(/[^A-Za-z0-9]+/).join('_').toLowerCase();

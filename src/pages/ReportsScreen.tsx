@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ScrollView, RefreshControl } from 'react-native'
 import { useReports } from '../api/useReports';
 import { CardReport } from '../components/cards/CardReport';
@@ -9,12 +9,16 @@ import { globalStyles } from '../theme/globalStyles'
 import { LoadingScreen } from './LoadingScreen';
 
 import { FilterCollapse } from '../components/ui/FilterCollapse';
+import { TeamSelector } from '../components/TeamSelector';
 
 export const ReportsScreen = () => {
 
-  const { isLoading, hasNextPage, fetchNextPage, refetch, reports, isFetchingNextPage } = useReports()
+  const [page, setPage] = useState(1)
+  const [team, setTeam] = useState<string | undefined>(undefined)
 
-  if (isLoading) return <LoadingScreen />  
+  const { isLoading, hasNextPage, fetchNextPage, refetch, reports, isFetchingNextPage } = useReports(page, team)
+
+  if (isLoading) return <LoadingScreen />
 
   return (
 
@@ -25,16 +29,24 @@ export const ReportsScreen = () => {
           onRefresh={refetch}
         />
       }
-      style={{ ...globalStyles.container, paddingTop: 10, paddingHorizontal: 10 }}>
+      style={{ ...globalStyles.container, marginTop: 10, paddingHorizontal: 10 }}>
+
+      <FilterCollapse />
+
+      <TeamSelector
+        style={{ marginHorizontal: 5, marginBottom: 15, marginTop: 5, width: "60%" }}
+        allTitle='All Reports'
+        team={team}
+        setPage={setPage}
+        setTeam={setTeam}
+      />
+
       {
         reports.length > 0
           ?
           <View style={{ marginBottom: 60 }}>
 
-            <FilterCollapse />
-
             {
-
               reports.map(report => (
                 <CardReport
                   key={report._id}

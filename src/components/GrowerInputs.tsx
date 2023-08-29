@@ -7,46 +7,47 @@ import { darkGreen, greenMain, lightGreen } from '../theme/variables';
 import { IntakeContext } from '../context/IntakeContext';
 import { CreateContext } from '../context/CreateContext';
 
-interface Props{
+interface Props {
     pallet: DataPrereport | PalletState,
-    createNew?:boolean
+    createNew?: boolean
 }
 
-export const GrowerInputs = ({ pallet, createNew=false }:Props) => {
+export const GrowerInputs = ({ pallet, createNew = false }: Props) => {
 
     const { handleGrower } = useContext(IntakeContext)
     const { handleGrower: handleGrowerCreate } = useContext(CreateContext)
 
-  return (
-    <View style={{ flex: 1, marginBottom: 10 }}>
-        <View style={{...globalStyles.flexBetween, ...styles.header }}>
-            <Text style={{...styles.headerTitle}}>Grower / Variety</Text>
-            <Text style={{...styles.headerTitle}}>Boxes</Text>
+    return (
+        <View style={{ flex: 1, marginBottom: 10 }}>
+            <View style={{ ...globalStyles.flexBetween, ...styles.header }}>
+                <Text style={{ ...styles.headerTitle }}>Grower / Variety</Text>
+                <Text style={{ ...styles.headerTitle }}>Boxes</Text>
+            </View>
+            <View style={{ ...globalStyles.flexBetween }}>
+                <TextInput
+                    style={{ ...inputStyles.inputOutline, maxWidth: "49%" }}
+                    onChangeText={(e) =>
+                        createNew
+                            ? handleGrowerCreate(pallet.id, "grower_variety", e)
+                            : handleGrower(pallet.id, "grower_variety", e)
+                    }
+                />
+
+                <TextInput
+                    style={{ ...inputStyles.inputOutline, maxWidth: "49%" }}
+                    onChangeText={(e) =>
+                        createNew
+                            ? handleGrowerCreate(pallet.id, "boxes", e)
+                            : handleGrower(pallet.id, "boxes", e)
+                    }
+                />
+            </View>
         </View>
-        <View style={{...globalStyles.flexBetween}}>
-            <TextInput 
-            style={{...inputStyles.inputOutline, width: "48%"}}
-            onChangeText={ (e) =>
-                createNew
-                ? handleGrowerCreate(pallet.id, "grower_variety", e)
-                : handleGrower(pallet.id, "grower_variety", e)
-            }
-            />
-            <TextInput 
-            style={{...inputStyles.inputOutline, width: "48%"}}
-            onChangeText={ (e) =>
-                createNew
-                ? handleGrowerCreate(pallet.id, "boxes", e)
-                : handleGrower(pallet.id, "boxes", e)
-        }
-            />
-        </View>
-    </View>
-  )
+    )
 }
 
 const styles = StyleSheet.create({
-    header:{
+    header: {
         backgroundColor: lightGreen,
         height: 30,
         borderColor: greenMain,
@@ -54,10 +55,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10
     },
-    headerTitle:{
-        width:"48%",
+    headerTitle: {
+        width: "48%",
         color: darkGreen,
         fontWeight: 'bold',
-        textAlign:'center',
+        textAlign: 'center',
     }
 });

@@ -22,6 +22,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCameraLibrary } from '../hooks/useCameraLibrary';
 import { ImageSelected } from './ImageSelected';
 import { ImageGalleryViewing } from './ImageGalleryViewing';
+import { PhotoGallery } from './PhotoGallery';
+import { usePhoto } from '../hooks/usePhoto';
 
 
 interface Props {
@@ -34,7 +36,7 @@ interface Props {
 export const PalletReport = ({ pallet, i, repId, format }: Props) => {
 
     const { mutate } = useEditReport()
-    const { mutateAsync: mutateDeleteImage, isLoading:isDeleting } = useDeleteReportImage()
+    const { mutateAsync: mutateDeleteImage, isLoading: isDeleting } = useDeleteReportImage()
     const { mutateAsync, isLoading } = useUploadImages()
 
     const queryClient = useQueryClient()
@@ -42,6 +44,9 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
     const [modalScore, setModalScore] = useState(false)
     const [modalImage, setModalImage] = useState(false)
     const [images, setImages] = useState<ImageTemp[]>([])
+
+    const { photos } = usePhoto(pallet)
+
 
     const editStatus = async (val: string) => {
 
@@ -63,7 +68,7 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
         }
     }
 
-    const removeReportImage = async(key: string, key_low: string) => {
+    const removeReportImage = async (key: string, key_low: string) => {
 
         await mutateDeleteImage({
             reportId: repId,
@@ -87,7 +92,7 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
     };
 
     const removeTempFiles = (pid: string, name: string) => {
-        const newImageArray = images.filter( img => img.name !== name )
+        const newImageArray = images.filter(img => img.name !== name)
         setImages(newImageArray)
     };
 
@@ -198,10 +203,25 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                 }
 
                 {
+                    photos.length > 0 &&
+                    <PhotoGallery
+                        photos={photos}
+                        pid={pallet.pid}
+                        reportId={repId}
+                        prereport
+                    />
+                }
+
+                {
                     pallet.images.length > 0 &&
-                    <View style={{ marginBottom: 30 }}>
-                        <ImageGalleryViewing images={pallet.images} deleteAction={removeReportImage} isDeleting={isDeleting}/>
+                    <View>
+                        <ImageGalleryViewing images={pallet.images} deleteAction={removeReportImage} isDeleting={isDeleting} />
                     </View>
+                }
+
+                {
+                    (photos.length > 0 || pallet.images.length > 0) &&
+                    <View style={{ marginBottom: 30 }} />
                 }
 
                 <View style={{ marginBottom: 20, alignSelf: "center" }} >
@@ -222,12 +242,12 @@ export const PalletReport = ({ pallet, i, repId, format }: Props) => {
                     openModal={setModalImage}
                 >
                     <View>
-                    {
-                        images.length > 0 &&
-                        <View style={{ marginTop: 30 }}>
-                            <ImageSelected images={images} deleteAction={removeTempFiles} pid="" grid={4} />
-                        </View>
-                    }
+                        {
+                            images.length > 0 &&
+                            <View style={{ marginTop: 30 }}>
+                                <ImageSelected images={images} deleteAction={removeTempFiles} pid="" grid={4} />
+                            </View>
+                        }
                     </View>
                     <View style={{ marginVertical: 25 }}>
                         <ImageButton openLibrary={selectImages} max={allowed} />

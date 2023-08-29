@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import { useLifeTests } from '../api/useLifeTests'
 import { CardLifeTest } from '../components/cards/CardLifeTest'
@@ -9,13 +9,17 @@ import { TextApp } from '../components/ui/TextApp'
 import { globalStyles } from '../theme/globalStyles'
 import { inputColor } from '../theme/variables'
 import { LoadingScreen } from './LoadingScreen'
+import { TeamSelector } from '../components/TeamSelector'
 
 
 export const LifeTestsScreen = () => {
 
-  const { lifeTests, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = useLifeTests()
+  const [page, setPage] = useState(1)
+  const [team, setTeam] = useState<string | undefined>(undefined)
 
-  if (isLoading) return <LoadingScreen />  
+  const { lifeTests, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = useLifeTests(page, team)
+
+  if (isLoading) return <LoadingScreen />
 
   return (
 
@@ -26,13 +30,22 @@ export const LifeTestsScreen = () => {
           onRefresh={refetch}
         />
       }
-      style={{ ...globalStyles.container, paddingHorizontal: 10 }}>
+      style={{ ...globalStyles.container, marginTop: 10, paddingHorizontal: 10 }}>
+
+      <FilterCollapse lifeTestFilter />
+
+      <TeamSelector
+        style={{ marginHorizontal: 5, marginBottom: 15, marginTop: 5, width: "60%" }}
+        allTitle='All Life Tests'
+        team={team}
+        setPage={setPage}
+        setTeam={setTeam}
+      />
+
       {
         lifeTests.length > 0
           ?
           <View style={{ marginBottom: 50, marginTop: 10 }}>
-
-            <FilterCollapse lifeTestFilter/>
 
             <View style={{ ...globalStyles.flexRow, backgroundColor: inputColor, marginTop: 5, paddingVertical: 4, borderRadius: 50, marginBottom: 5 }}>
               <View style={{ width: 80 }}>

@@ -2,9 +2,17 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { AllLifeTestResponse, LifeTest } from '../interfaces/interface.lifeTest';
 import qcareApi from "./qcareApi";
 
+interface QueryParams{
+    page: number;
+    team?: string;
+}
 
-const getLifeTests = async ( page:number = 1 ) => {
-    const { data } = await qcareApi.get<AllLifeTestResponse>(`/life-test?page=${page}`)
+const getLifeTests = async ( page:number, team: string | undefined ) => {
+
+    const params:QueryParams = { page }
+    if (team) { params.team = team }
+
+    const { data } = await qcareApi.get<AllLifeTestResponse>("/life-test", { params })
     return data
 };
 
@@ -16,9 +24,10 @@ const getLifeTests = async ( page:number = 1 ) => {
 
 // ------------------------- HOOKS -------------------------
 
-export const useLifeTests = ( ) => {
+export const useLifeTests = ( page:number, team: string | undefined ) => {
     const result = useInfiniteQuery(
-        ['lifeTests'], ({ pageParam = 1 }) => getLifeTests(pageParam),
+        ['lifeTests', page, team],
+        ({ pageParam = page }) => getLifeTests(pageParam, team),
         {
             getNextPageParam: (lastPage) => {
                 if (lastPage.page === lastPage.totalPages) return false;

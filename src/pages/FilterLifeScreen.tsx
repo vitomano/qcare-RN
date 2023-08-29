@@ -1,7 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext } from 'react'
 import { View, ScrollView, RefreshControl, TouchableOpacity, StyleSheet } from 'react-native'
-import { CardReport } from '../components/cards/CardReport';
 import { CentredContent } from '../components/CenterContent';
 import ButtonStyled from '../components/ui/ButtonStyled';
 import { TextApp } from '../components/ui/TextApp';
@@ -17,7 +16,7 @@ interface Props extends StackScreenProps<LifeTestStackParams, "FilterLifeScreen"
 
 export const FilterLifeScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch, lifeTests } = useFilterLife(route.params.query)
+  const { isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, refetch, lifeTests } = useFilterLife( route.params.query )
   const { cleanAll } = useContext(FilterLifeContext)
 
   if (isLoading) return <LoadingScreen />
@@ -32,6 +31,7 @@ export const FilterLifeScreen = ({ route, navigation }: Props) => {
         />
       }
       style={{ ...globalStyles.container, paddingTop: 10, paddingHorizontal: 10 }}>
+
       {
         lifeTests.length > 0
           ?

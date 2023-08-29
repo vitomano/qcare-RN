@@ -52,7 +52,7 @@ export const LifeTestStack = ({ navigation }: Props) => {
       />
 
       <Stack.Screen
-        options={{ title: "Filter" }}
+        options={{ title: "Life Test Result" }}
         name="FilterLifeScreen"
         component={FilterLifeScreen}
       />

@@ -6,9 +6,12 @@ import { GradeColor } from '../ui/GradeColor'
 import { TextApp } from '../ui/TextApp'
 import { PickerModalSelect } from './PickerModalSelect'
 import { ScoreColor } from '../ui/ScoreColor';
+import { globalStyles } from '../../theme/globalStyles'
+import Icon from 'react-native-vector-icons/Ionicons';
+import { text } from '../../theme/variables'
 
 
-interface ListType {
+export interface ListType {
     label: string
     value: string
 }
@@ -22,9 +25,10 @@ interface Props<T> {
     option?: any
     color?: boolean
     outline?: boolean
+    nowrap?: boolean
 }
 
-export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setState, state, option = undefined, color = false, outline=false }: Props<T>) => {
+export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setState, state, option = undefined, color = false, outline=false, nowrap=false }: Props<T>) => {
 
     const [current, setCurrent] = useState<T>(LIST[0] as T)
 
@@ -50,7 +54,6 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
         }
     }
 
-
     return (
 
         <>
@@ -70,11 +73,12 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
                             onPress={() => openModal(true)}
                             style={
                                 outline
-                                ?[inputStyles.selectGrey, inputStyles.selectShape]
-                                :[inputStyles.select, inputStyles.selectShape]
+                                ?[inputStyles.selectGrey, inputStyles.selectShape, globalStyles.flexBetween]
+                                :[inputStyles.select, inputStyles.selectShape, globalStyles.flexBetween]
                             }
                         >
-                            <TextApp size='s'>{current.label}</TextApp>
+                            <TextApp size='normal' nowrap>{current.label}</TextApp>
+                            <Icon name='chevron-down-outline' size={15} color={text}/>
                         </TouchableOpacity>
                 }
 
@@ -94,6 +98,7 @@ export const PickerModal = <T extends ListType>({ LIST, openModal, modal, setSta
                     setCurrent={setCurrent}
                     state={current.value}
                     option={option}
+                    nowrap={nowrap}
                 />
 
             </Modal>

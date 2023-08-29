@@ -6,14 +6,18 @@ import { Image, Platform, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { TextApp } from '../components/ui/TextApp'
 import { AuthContext } from '../context/AuthContext'
-import { bgColor, lightGrey, mediumGrey } from '../theme/variables'
+import { bgColor, mediumGrey } from '../theme/variables'
 import { globalStyles } from '../theme/globalStyles';
 import { ModalConfirmation } from '../components/modals/ModalConfirmation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const CustomDrawer = (props: any) => {
 
     const { user, logout } = useContext(AuthContext)
     const [confirmation, setConfirmation] = useState(false)
+
+    const queryClient = useQueryClient()
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -60,6 +64,7 @@ export const CustomDrawer = (props: any) => {
                 modal={confirmation}
                 action={() => {
                     logout()
+                    queryClient.clear()
                     setConfirmation(false)
                 }}
                 message="Are you sure you want to logout?"

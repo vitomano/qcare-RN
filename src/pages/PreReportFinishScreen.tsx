@@ -19,6 +19,7 @@ import { PalletFinishReport } from '../components/PalletFinishReport';
 import { greenMain } from '../theme/variables';
 import { ModalLoading } from '../components/modals/ModalLoading';
 import { useQueryClient } from '@tanstack/react-query';
+import { photoToUpload, uploadPhoto } from '../helpers/photoToUpload';
 
 
 interface Props extends StackScreenProps<PreReportsStackParams, "PreReportFinishScreen"> { };
@@ -27,7 +28,7 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
 
   const queryClient = useQueryClient()
 
-  const { isLoading, mainData, pallets, fruit, getMainDataReport, cleanAll } = useContext(IntakeContext)
+  const { isLoading, mainData, pallets, fruit, team, getMainDataReport, cleanAll } = useContext(IntakeContext)
 
   const [sending, setSending] = useState(false)
 
@@ -39,7 +40,6 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
     getMainDataReport(route.params.id)
     return () => cleanAll()
   }, [route.params.id])
-
 
   const handleSend = async () => {
 
@@ -78,16 +78,32 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
         averageScore: average('score', pallets) || "0",
         pallets: newPallets,
         commentsForm: comments,
-        formatGr: Number(mainData?.format_gr) || "0"
+        formatGr: Number(mainData?.format_gr) || "0",
+        team
       })
+
+      .then(async (res) => {
+
+        const preId = res.data.rid
+        const files = photoToUpload(preId, pallets)
+
+        if (files.length > 0) {
+            const uploadPromises = files.map(file => uploadPhoto(file));
+            await Promise.all(uploadPromises)
+        }
+
+        return preId
+    })
 
         .then(async (res) => {
 
           const savePalletInfo = async () => {
 
-            const repId = res.data.rid
+            const repId = res
 
             for (const pall of pallets) {
+
+              if (pall.images.length === 0) { continue; }
 
               const formData = new FormData();
 
@@ -110,10 +126,11 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
 
             for (const gro of growers) {
               await qcareApi.post('/life-test/create-life-test', {
-                reportId: res.data.rid,
+                reportId: res,
                 grower: gro.grower,
                 score: gro.score,
-                palletRef: mainData?.pallet_ref || "--"
+                palletRef: mainData?.pallet_ref || "--",
+                team
               })
             }
           }
@@ -125,15 +142,17 @@ export const PreReportFinishScreen = ({ route, navigation }: Props) => {
       queryClient.resetQueries((['prereports']))
       queryClient.resetQueries((['reports']))
       queryClient.resetQueries((['lifeTests']))
-      cleanAll()
+      
       navigation.navigate("PreReportsScreen" as any)
-
 
     } catch (error) {
       console.log(error)
       alertMsg("Error", 'Something went wrong')
 
-    } finally { setSending(false) }
+    } finally { 
+      setSending(false)
+      cleanAll()
+    }
 
   }
 

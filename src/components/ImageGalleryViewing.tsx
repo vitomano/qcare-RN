@@ -34,14 +34,14 @@ export const ImageGalleryViewing = ({ images, isDeleting = false, deleteAction }
 
   return (
 
-    <View style={{ flexDirection: "row", flexWrap: "wrap", width: "99%", alignSelf: "center", paddingLeft: "1%" }}>
-      {
+    <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", alignSelf: "center", paddingLeft: "1%" }}>
+    {
         images.map((image, i) => (
 
           <TouchableOpacity
             activeOpacity={.9}
             key={image.key}
-            style={{ width: "33%", height: width / 3.7 }}
+            style={{ position:'relative', overflow:'hidden', width: "33%", aspectRatio: 1 }}
             onPress={() => {
               setIndex(i)
               setModalImage(true)

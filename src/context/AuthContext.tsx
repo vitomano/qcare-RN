@@ -1,11 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import { createContext } from "react";
 import qcareApi from '../api/qcareApi';
-import { LoginResponse, User, LoginData, RegisterData } from '../interfaces/interfaces.auth';
+import { LoginResponse, User, LoginData, RegisterData, Teams } from '../interfaces/interfaces.auth';
 import { authReducer, AuthState } from './authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { useEmail } from '../hooks/useEmail';
+import { activeMembersAllTeams, allTeamsMembers } from '../helpers/teamFilter';
 
 
 type AuthContextProps = {
@@ -55,20 +56,25 @@ export const AuthProvider = ({ children }: any) => {
             // if(resp.status !== 200) {
             //     return dispatch({ type: 'LOGOUT' })
             // }
-            
+
             await AsyncStorage.setItem('token', data?.token!);
 
             dispatch({
                 type: 'LOGIN', payload: {
-                    uid: data?.uid!,
-                    name: data?.name!,
-                    email: data?.email!,
-                    lastname: data?.lastname!,
-                    profile: data?.profile!,
-                    company: data?.company!,
-                    phone: data?.phone,
-                    contacts: data?.contacts!,
-                    rol: data?.rol!
+                    uid: data.uid,
+                    name: data.name,
+                    email: data.email,
+                    lastname: data.lastname,
+                    profile: data.profile,
+                    company: data.company || "",
+                    phone: data.phone || "",
+                    contacts: data.contacts || [],
+                    rol: data.rol,
+
+                    teamsOwner: allTeamsMembers(data.teamsOwner),
+                    teamsAdmin: activeMembersAllTeams(data.teamsAdmin),
+                    teamsUser: activeMembersAllTeams(data.teamsUser),
+                    teams: [...data.teamsAdmin.map(r => ({ _id: r._id, name: r.name })), ...data.teamsUser.map(r => ({ _id: r._id, name: r.name }))] || [],
                 }
             })
 
@@ -92,10 +98,15 @@ export const AuthProvider = ({ children }: any) => {
                     email: data.email,
                     lastname: data.lastname,
                     profile: data.profile,
-                    phone: data?.phone,
-                    company: data.company,
-                    contacts: data.contacts,
-                    rol: data.rol
+                    company: data.company || "",
+                    phone: data.phone || "",
+                    contacts: data.contacts || [],
+                    rol: data.rol,
+
+                    teamsOwner: allTeamsMembers(data.teamsOwner) || [],
+                    teamsAdmin: activeMembersAllTeams(data.teamsAdmin) || [],
+                    teamsUser: activeMembersAllTeams(data.teamsUser) || [],
+                    teams: [...data.teamsAdmin.map(r => ({ _id: r._id, name: r.name })), ...data.teamsUser.map(r => ({ _id: r._id, name: r.name }))] || [],
                 }
             })
 
@@ -141,10 +152,16 @@ export const AuthProvider = ({ children }: any) => {
                     name: data.name,
                     email: data.email,
                     lastname: data.lastname,
-                    phone: data?.phone,
                     profile: data.profile,
-                    company: data.company,
-                    contacts: data.contacts
+                    company: data.company || "",
+                    phone: data.phone || "",
+                    contacts: data.contacts! || [],
+                    rol: data.rol,
+
+                    teamsOwner: allTeamsMembers(data.teamsOwner) || [],
+                    teamsAdmin: activeMembersAllTeams(data.teamsAdmin) || [],
+                    teamsUser: activeMembersAllTeams(data.teamsUser) || [],
+                    teams: [...data.teamsAdmin.map(r => ({ _id: r._id, name: r.name })), ...data.teamsUser.map(r => ({ _id: r._id, name: r.name }))] || [],
                 }
             })
 

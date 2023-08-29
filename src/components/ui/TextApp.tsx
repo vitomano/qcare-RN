@@ -1,18 +1,22 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
-import { blue, danger, greenMain, text, textGrey } from '../../theme/variables'
+import { blue, danger, done, greenMain, inactive, red, text, textGrey } from '../../theme/variables'
+
+export type TypeSizes = "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl" | "normal"
+export type TypeColor = "text" | "danger" | "white" | "green" | "mute" | "blue" | "done" | "inactive"
 
 interface Props {
   style?: StyleProp<TextStyle>,
   children: JSX.Element | JSX.Element[] | string | number | Element
   bold?: boolean
   center?: boolean
-  size?: "xs" | "s" | "m" | "l" | "xl" | "xxl" | "normal"
-  color?: "text" | "danger" | "white" | "green" | "mute" | "blue"
+  size?: TypeSizes
+  color?: TypeColor
   nowrap?: boolean
+  numberOfLines?: number
 }
 
-export const TextApp = ({ children, style, bold=false, size="normal", color="text", center=false, nowrap=false }: Props) => {
+export const TextApp = ({ children, style, bold=false, size="normal", color="text", center=false, nowrap=false, numberOfLines=0 }: Props) => {
 
   const textColor = [
     color === "text" && styles.colorNormal,
@@ -20,8 +24,9 @@ export const TextApp = ({ children, style, bold=false, size="normal", color="tex
     color === "danger" && styles.colorDanger,
     color === "green" && styles.colorGreen,
     color === "mute" && styles.colorMute,
+    color === "inactive" && styles.colorInactive,
     color === "blue" && styles.colorBlue,
-    
+    color === "done" && styles.colorDone,
   ]
 
   const textWeight = [ bold ? styles.bold : styles.normal ]
@@ -29,6 +34,7 @@ export const TextApp = ({ children, style, bold=false, size="normal", color="tex
   const textCenter = [ center ? styles.center : null ]
 
   const textSize = [
+    size === "xxs" && styles.textXXS,
     size === "xs" && styles.textXS,
     size === "s" && styles.textS,
     size === "normal" && styles.textNormal,
@@ -39,7 +45,7 @@ export const TextApp = ({ children, style, bold=false, size="normal", color="tex
   ]
 
   return (
-    <Text numberOfLines={nowrap ? 1 : 0} style={ [...textColor, ...textSize, ...textWeight, ...textCenter ,...[style] as never]}>
+    <Text numberOfLines={nowrap ? 1 : ( numberOfLines ?? 0)} style={ [...textColor, ...textSize, ...textWeight, ...textCenter ,...[style] as never]}>
       {children}
     </Text>
   )
@@ -52,13 +58,16 @@ const styles = StyleSheet.create({
   center: { textAlign: 'center' },
 
   colorNormal: { color: text },
-  colorDanger: { color: danger },
+  colorDanger: { color: red },
   colorWhite: { color: "#fff" },
   colorGreen: { color: greenMain },
   // colorMute: { color: mute },
   colorMute: { color: textGrey },
+  colorInactive: { color: inactive },
   colorBlue: { color: blue },
+  colorDone: { color: done },
 
+  textXXS: { fontSize: 10 },
   textXS: { fontSize: 12 },
   textS: { fontSize: 14 },
   textNormal: { fontSize: 16 },

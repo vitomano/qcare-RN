@@ -48,15 +48,12 @@ export const PalletNewReport = ({ pallet, i }: Props) => {
     };
 
     return (
-        <View
-            style={{ ...globalStyles.shadow, marginVertical: 2 }}
-        >
+        <View style={{ ...globalStyles.shadow, marginVertical: 2 }}>
+
             <View style={{ ...globalStyles.card, padding: 15 }}>
                 <View style={{ ...globalStyles.flexBetween, marginBottom: 20 }}>
                     <PalletNum num={i + 1} />
-                    <TouchableOpacity
-                        onPress={() => setRemoveModal(true)}
-                    >
+                    <TouchableOpacity onPress={() => setRemoveModal(true)} >
                         <TextApp color="danger" size='s'>remove</TextApp>
                         <ModalConfirmation
                             modal={removeModal}

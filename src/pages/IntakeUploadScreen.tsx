@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { ScrollView, Switch, View } from 'react-native'
 import { CentredContent } from '../components/CenterContent'
 import ButtonStyled from '../components/ui/ButtonStyled'
 import Toast from 'react-native-toast-message'
@@ -10,8 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Papa from 'papaparse'
 
 import DocumentPicker, { types } from 'react-native-document-picker'
-import { } from '../theme/globalStyles';
-import { BatchInfo, CVSResponse } from '../interfaces/intakes.reports';
+import { IntakeCSV, ObjectType } from '../interfaces/intakes.reports';
 import { IntakeList } from '../components/IntakeList';
 import qcareApi from '../api/qcareApi';
 import { StackScreenProps } from '@react-navigation/stack'
@@ -19,13 +18,22 @@ import { IntakesStackParams } from '../navigation/IntakesStack'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoadingScreen } from './LoadingScreen'
 import { TextApp } from '../components/ui/TextApp'
+import { AuthContext } from '../context/AuthContext'
+import { objectToJson } from '../helpers/objToArray'
+import { globalStyles } from '../theme/globalStyles'
+import { ModalContainer } from '../components/modals/ModalContainer'
+import { AssignTeam } from '../components/AssignTeam'
 
 interface Props extends StackScreenProps<IntakesStackParams, "IntakeUploadScreen"> { };
 
+export const IntakeUploadScreen = ({ navigation }: Props) => {
 
-export const IntakeUploadScreen = ({ navigation }:Props) => {
+    const { user } = useContext(AuthContext)
 
-    const [csvFile, setCsvFile] = useState<BatchInfo[]>([])
+    const [intakes, setIntakes] = useState<IntakeCSV[]>([])
+    const [assign, setAssign] = useState<boolean>(false)
+    const [modalTeam, setModalTeam] = useState<boolean>(false)
+
     const [isLoading, setIsLoading] = useState(false)
     const queryClient = useQueryClient()
 
@@ -38,7 +46,6 @@ export const IntakeUploadScreen = ({ navigation }:Props) => {
                 // "type": "text/comma-separated-values"
                 // "type": "text/csv"
 
-
                 fetch(resp.uri)
                     .then(async (response) => {
 
@@ -50,32 +57,30 @@ export const IntakeUploadScreen = ({ navigation }:Props) => {
                             transformHeader: (headerName) => headerName.toLowerCase(),
                             complete: function (results: any) {
 
-                                let newCsvJson = []
-                                let data: CVSResponse[] = results.data
+                                let csvFile: IntakeCSV[] = []
+                                let asignOneTeam = user?.teams.length === 1
+
+                                let data: ObjectType[] = results.data
 
                                 for (let item of data) {
-                                    newCsvJson.push({
 
-                                        product: item.product || "",
-                                        pallet_ref: item.pallet || "",
-                                        format: item.format || "",
-                                        supplier: item.supplier || "",
-                                        grower: item.grower || "",
-                                        origin: item.origin || "",
-                                        gln_ggn: item['gln/ggn number'] || "",
-                                        variety: item['variety(ies)'] || "",
-                                        unit_label: item['unit label'] || "",
-                                        total_boxes: item['total boxes'] || "",
-                                        total_pallets: item['total pallets'] || "0",
-                                        quality: item.quality || "",
-                                        transport: item.transport || "",
-                                        purchase_order: item['purchase order'] || "",
-                                        delivery_note: item['delivery note / awb number'] || "",
-                                        warehouse: item.warehouse || ""
+                                    const { pallet, pallet_ref, pallet_reference, kilos, total_kilos, ...rest } = objectToJson(item)
+
+                                    csvFile.push({
+                                        id: uuidv4(),
+                                        data: {
+                                            pallet_ref: pallet || pallet_ref || pallet_reference || "",
+                                            ...rest,
+                                            kilos: kilos || total_kilos || "",
+                                        },
+                                        inCharge: null,
+                                        team: asignOneTeam ? user?.teams[0]._id! : null
                                     })
                                 }
 
-                                setCsvFile(newCsvJson)
+                                setIntakes(csvFile)
+                                setAssign(asignOneTeam)
+
                             }
                         });
 
@@ -94,33 +99,58 @@ export const IntakeUploadScreen = ({ navigation }:Props) => {
         setIsLoading(true)
 
         try {
-            await qcareApi.post('/intakes/new', csvFile)
+            await qcareApi.post('/intakes/new', intakes)
             Toast.show({
                 type: 'success',
                 text1: 'Intakes uploaded successfully'
-              });
-              queryClient.invalidateQueries(['intakes'])
-              navigation.navigate("IntakesScreen" as never)
+            });
+            queryClient.invalidateQueries(['intakes'])
+            navigation.navigate("IntakesScreen" as never)
         } catch (error) {
             Toast.show({
                 type: 'error',
                 text1: 'Something went wrong'
-              });
+            });
         } finally {
             setIsLoading(false)
         }
     }
 
-    if(isLoading){
-        return <LoadingScreen text='Uploading Intakes...'/>
-    }
+    //----------------- Managing teams -----------------
 
+    const handleToggle = () => {
+        if (assign) {
+            setIntakes(intakes.map(intake => ({ ...intake, team: null })))
+            setAssign(false)
+        } else {
+            if (user?.teams.length === 1) {
+                setIntakes(intakes.map(intake => ({ ...intake, team: user.teams[0]._id })))
+                setAssign(true)
+            } else {
+                setModalTeam(true)
+            }
+            setAssign(!assign)
+        }
+    };
+
+    const assignToAll = (team: string) => {
+        if( team === "0" ) return setModalTeam(false)
+        setIntakes(intakes.map(intake => ({ ...intake, team, inCharge: null })))
+        setAssign(true)
+        setModalTeam(false)
+    };
+
+    //----------------- END Managing teams -----------------
+
+    if (isLoading) {
+        return <LoadingScreen text='Uploading Intakes...' />
+    }
 
     return (
         <ScrollView>
 
             <View>
-                <CentredContent style={{ marginTop: 20, marginBottom: 20 }}>
+                <CentredContent style={{ marginTop: 30, marginBottom: 30 }}>
                     <ButtonStyled
                         text='Select CSV File'
                         width={60}
@@ -130,38 +160,67 @@ export const IntakeUploadScreen = ({ navigation }:Props) => {
                 </CentredContent>
             </View>
 
+
             {
-                csvFile.length > 0 
-                
-                ?
-                <View style={{ paddingHorizontal: 20, marginBottom: 50 }}>
-                    {
-                        csvFile.map((csv, index) => (
-                            <IntakeList
-                                key={uuidv4()}
-                                csv={csv}
-                                index={index}
-                            />
+                user &&
+                user.teams.length > 0 && intakes.length > 0 &&
 
-                        ))
-                    }
-
-                    <CentredContent style={{ marginTop: 10, marginBottom: 20 }}>
-                        <ButtonStyled
-                            text='Upload Intakes'
-                            blue
-                            width={60}
-                            icon='document-text-outline'
-                            onPress={handleSubmit}
+                <>
+                    <ModalContainer
+                        modal={modalTeam}
+                        openModal={setModalTeam}
+                    >
+                        <AssignTeam
+                            closeModal={() => setModalTeam(false)}
+                            assignToAll={assignToAll}
+                            setAssign={setAssign}
                         />
-                    </CentredContent>
+                    </ModalContainer>
 
-                </View>
+                    <View style={{ ...globalStyles.flexRow, paddingHorizontal: 20, marginBottom: 20 }}>
+                        <Switch
+                            onValueChange={handleToggle}
+                            value={assign}
+                        />
+                        <TextApp style={{ marginLeft: 10 }}>Assign {`${user.teams.length === 1 ? user.teams[0].name : "Team"}`} to all</TextApp>
+                    </View>
+                </>
+            }
 
-                :
-                <View style={{paddingHorizontal: 50}}>
-                    <TextApp center size='xs' color='mute'>We recommend to upload the CSV file in the web version www.q-care.info</TextApp>
-                </View>
+
+            {
+                intakes.length > 0 && user
+
+                    ?
+                    <View style={{ paddingHorizontal: 20, marginBottom: 50 }}>
+                        {
+                            intakes.map((intake, index) => (
+                                <IntakeList
+                                    key={uuidv4()}
+                                    intake={intake}
+                                    setIntakes={setIntakes}
+                                    index={index}
+                                    hasTeams={user.teams.length > 0}
+                                />
+
+                            ))
+                        }
+
+                        <CentredContent style={{ marginTop: 10, marginBottom: 20 }}>
+                            <ButtonStyled
+                                text='Upload Intakes'
+                                width={70}
+                                icon='document-text-outline'
+                                onPress={handleSubmit}
+                            />
+                        </CentredContent>
+
+                    </View>
+
+                    :
+                    <View style={{ paddingHorizontal: 50 }}>
+                        <TextApp center size='xs' color='mute'>We recommend to upload the CSV file in the web version www.q-care.info</TextApp>
+                    </View>
             }
 
         </ScrollView>

@@ -8,7 +8,7 @@ import { PalletState } from '../interfaces/intakes.reports';
 import ButtonStyled from '../components/ui/ButtonStyled';
 
 import { FRUITS } from '../data/selects';
-import { PickerModal } from '../components/modals/PickerModal';
+import { ListType, PickerModal } from '../components/modals/PickerModal';
 import { CentredContent } from '../components/CenterContent';
 import { AddPalletButton } from '../components/AddPalletButton';
 import { TextApp } from '../components/ui/TextApp';
@@ -23,15 +23,35 @@ import { average } from '../helpers/average';
 import { greenMain } from '../theme/variables';
 import { useQueryClient } from '@tanstack/react-query';
 import { MainForm } from '../components/MainForm';
+import { DateSelector } from '../components/DateSelector';
+import { photoToUpload, uploadPhoto } from '../helpers/photoToUpload';
+import { AuthContext } from '../context/AuthContext';
 
 
 interface Props extends StackScreenProps<CreateStackParams, "NewReportScreen"> { };
 
 export const NewReportScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, mainData, pallets, fruit, getMainDataNew, handleFruit, cleanAll, setNewPallets } = useContext(CreateContext)
-
   const queryClient = useQueryClient()
+
+  const { isLoading, mainData, pallets, fruit, team, getMainDataNew, handleFruit, cleanAll, setNewPallets, handleTeam } = useContext(CreateContext)
+
+  const { user } = useContext(AuthContext)
+
+  const [modalTeam, setModalTeam] = useState<boolean>(false)
+  const [TEAMS, setTEAMS] = useState<ListType[]>([])
+
+
+  useEffect(() => {
+    const teams = user?.teams.map(team => ({ value: team._id, label: team.name })) ?? []
+    setTEAMS([{ value: 'No Team', label: 'No Team' }, ...teams])
+  }, [user])
+
+  const [openArrival, setOpenArrival] = useState(false)
+  const [openLoading, setOpenLoading] = useState(false)
+
+  const [arrivalDate, setArrivalDate] = useState(new Date());
+  const [loadingDate, setLoadingDate] = useState(new Date());
 
   const [modalFruit, setModalFruit] = useState(false)
   const [sending, setSending] = useState(false)
@@ -45,6 +65,10 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
     return () => cleanAll()
   }, [route.params.fruit])
 
+  const selectTeam = ( team: string ) => {
+      if( team === 'No Team' ) return handleTeam(null)
+      handleTeam(team)
+  };
 
 
   const sendPrereport = async () => {
@@ -80,21 +104,38 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
       }
 
       await qcareApi.post(`/report/report`, {
-        mainData,
+        mainData: { ...mainData, "loading_date": loadingDate, "arrival_date": arrivalDate },
         fruit,
+        pid: "none",
         averageScore: average('score', pallets) || "0",
         pallets: newPallets,
         commentsForm: comments,
-        formatGr: Number(mainData?.format_gr) || "0"
+        formatGr: Number(mainData?.format_gr) || "0",
+        team: team || null,
       })
+
+        .then(async (res) => {
+
+          const preId = res.data.rid
+          const files = photoToUpload(preId, pallets)
+
+          if (files.length > 0) {
+            const uploadPromises = files.map(file => uploadPhoto(file));
+            await Promise.all(uploadPromises)
+          }
+
+          return preId
+        })
 
         .then(async (res) => {
 
           const savePalletInfo = async () => {
 
-            const repId = res.data.rid
+            const repId = res
 
             for (const pall of pallets) {
+
+              if (pall.images.length === 0) { continue; }
 
               const formData = new FormData();
 
@@ -117,10 +158,12 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
 
             for (const gro of growers) {
               await qcareApi.post('/life-test/create-life-test', {
-                reportId: res.data.rid,
+                reportId: res,
                 grower: gro.grower,
                 score: gro.score,
-                palletRef: mainData?.pallet_ref || "--"
+                palletRef: mainData?.pallet_ref || "--",
+                team: team || null
+
               })
             }
           }
@@ -128,7 +171,7 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
           await Promise.all([savePalletInfo(), saveLifeTest()])
 
         })
-        
+
       queryClient.resetQueries((['reports']))
       queryClient.resetQueries((['lifeTests']))
 
@@ -160,12 +203,44 @@ export const NewReportScreen = ({ route, navigation }: Props) => {
             <ScrollView style={{ ...globalStyles.containerFlex }}>
 
               <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 50 }}>
+
+
                 {
                   mainData &&
                   <>
+                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
+                      <TextApp style={{ width: "50%" }}>Assign to a Team</TextApp>
+
+                      <PickerModal
+                        modal={ modalTeam }
+                        openModal={ setModalTeam }
+                        LIST={ TEAMS }
+                        setState={ selectTeam }
+                        state={ team || 'No Team' }
+                      />
+                    </View>
+
                     <MainForm
                       mainData={mainData}
                       createNew
+                    />
+
+                    {/* ------------------------------------ */}
+
+                    <DateSelector
+                      label='Loading Date'
+                      date={loadingDate}
+                      setDate={setLoadingDate}
+                      open={openLoading}
+                      setOpen={setOpenLoading}
+                    />
+
+                    <DateSelector
+                      label='Arrival Date'
+                      date={arrivalDate}
+                      setDate={setArrivalDate}
+                      open={openArrival}
+                      setOpen={setOpenArrival}
                     />
 
                     {/* ------------------------------------ */}

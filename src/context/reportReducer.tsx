@@ -1,17 +1,16 @@
-import { PreReport } from '../helpers/preReport';
-import { BatchInfo, MainInfo, Report } from "../interfaces/intakes.reports"
+import { MainData, Report } from "../interfaces/intakes.reports"
 
 
 export interface ReportState {
-    mainData: MainInfo | null,
+    mainData: MainData | null,
     pallets: Report[] ,
     fruit: string,
     reload: boolean
 }
 
 type ActionType =
-    | { type: 'ADD_MAINDATA', payload: {intake:MainInfo, fruit:string} }
-    | { type: 'REMOVE_MAINDATA', payload: BatchInfo }
+    | { type: 'ADD_MAINDATA', payload: {intake:MainData, fruit:string} }
+    | { type: 'REMOVE_MAINDATA', payload: MainData }
     | { type: 'SET_PALLETS', payload: Report[] }
     | { type: 'ADD_NEWPALLET', payload: Report }
     | { type: 'CHANGE_VALUE', payload: { id: string, item: keyof Report, value: string | null} }

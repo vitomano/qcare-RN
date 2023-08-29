@@ -1,3 +1,11 @@
+import { ObjectArray, ObjectType } from "../interfaces/intakes.reports";
+import { headerToJSON } from "./eliminarEs";
+
+export interface MainDataSelect {
+    check: boolean;
+    key: string;
+    value: string;
+}
 
 function objToArray(objeto:Object) {
     const restArray = Object.entries(objeto)
@@ -6,32 +14,37 @@ function objToArray(objeto:Object) {
 
 export default objToArray
 
+export const objectToCheckArray = ( object:ObjectType ): MainDataSelect[] => {
+
+    const array = [];
+    const exclude = [ "supplier", "grower", "gln_ggn", "samples", "pallet_ref", "unit_label" ]
+
+    for (const key in object) {
+      if (object.hasOwnProperty(key)) {
+        array.push({check: exclude.includes(key) ? false : true, key, value: object[key]});
+      }
+    }
+    return array;
+  };
+
+  export const objectToArray = ( objectType:ObjectType ) => {
+    const array:ObjectArray[] = [];
+    for (const key in objectType) {
+      if( !objectType[key]) continue;
+      if( objectType.hasOwnProperty(key) ) {
+        array.push({ key, value: objectType[key] || "" });
+      }
+    }
+    return array;
+  };
 
 
-/* const DataSet = [
-    {
-        //xSteps: 1, // Will start putting cell with 1 empty cell on left most
-        ySteps: 3, 
-        columns: [{ title: "Label" }],
-        data: [
-            [{ value: "Johnson" }, { value: "Finance" }],
-            [{ value: "Monika" }, { value: "IT" }],
-            [{ value: "Konstantina" }, { value: "IT Billing" }],
-            [{ value: "John" }, { value: "HR" }],
-            [{ value: "Josef" }, { value: "Testing" }],
-        ]
-    },
-
-    {
-        ySteps: 3, 
-        columns: [{ title: "Appareance" }],
-        data: [
-            [{ value: "Johnson" }, { value: "Finance" }],
-            [{ value: "Monika" }, { value: "IT" }],
-            [{ value: "Konstantina" }, { value: "IT Billing" }],
-            [{ value: "John" }, { value: "HR" }],
-            [{ value: "Josef" }, { value: "Testing" }],
-        ]
-    },
-
-] */
+  export const objectToJson = ( object:ObjectType ) => {
+    const newJson:ObjectType = {};
+    for (const key in object) {
+      if( object.hasOwnProperty(key) ) {
+        newJson[headerToJSON(key)] = (object[key] || "")
+      }
+    }
+    return newJson;
+  };

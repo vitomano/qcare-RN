@@ -1,4 +1,4 @@
-import { DataPrereport, MainInfo } from '../interfaces/intakes.reports';
+import { DataPrereport, MainData } from '../interfaces/intakes.reports';
 
 type Response = {
  error: string,
@@ -6,19 +6,19 @@ type Response = {
 }
 
 
-export const validationPrereport = (mainData:MainInfo, pallets?:DataPrereport[]):Response => {
+export const validationPrereport = (mainData:MainData, pallets?:DataPrereport[]):Response => {
 
-    if (mainData?.pallet_ref.trim().length === 0) return {
+    if (mainData?.pallet_ref?.trim().length === 0) return {
         error:`"Pallet Reference" is missing`,
         ok: false
     }
 
-    if (mainData?.format_gr.trim().length === 0 || mainData?.format_gr === "0") return {
+    if (mainData?.format_gr?.trim().length === 0 || mainData?.format_gr === "0") return {
         error:`"Format gr" value is missing`,
         ok: false
     }
     
-    if (mainData?.kilos.trim().length === 0 || mainData?.kilos === "0") return {
+    if (mainData?.kilos?.trim().length === 0 || mainData?.kilos === "0") return {
         error:`"Kilos" value is missing`,
         ok: false
     }

@@ -1,6 +1,6 @@
 import { Report, SingleReport } from "../interfaces/intakes.reports";
 
-export const subjectString = (data:SingleReport | Report) => {
+export const subjectString = (data:SingleReport | Report):string => {
     let newSubject = "Quality report"
 
     if (data.mainData.pallet_ref && data.mainData.pallet_ref.trim().length>0) {

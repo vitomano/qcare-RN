@@ -12,7 +12,7 @@ import { Tags } from './ui/Tags'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { isEmail } from '../helpers/isEmail';
 
-import {  RichEditor } from "react-native-pell-rich-editor";
+import { RichEditor } from "react-native-pell-rich-editor";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { AuthContext } from '../context/AuthContext'
 
@@ -22,11 +22,15 @@ interface Props {
     cc: string[]
     link: string
     message: string
-    closeModal: (b: boolean) => void
+    closeModal: () => void
     subject: string
+    setStep: React.Dispatch<React.SetStateAction<number>>
+    step: number
+    existImages: boolean
+
 }
 
-export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Props) => {
+export const MailForm = ({ mailTo, cc, link, message, subject, closeModal, setStep, step, existImages }: Props) => {
 
     const { mutate, isLoading } = useSendEmail()
 
@@ -57,14 +61,8 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
 
     const sendEmail = () => {
 
-        // console.log(richText.current)
-        // return
-
         if (mails.length === 0) return alertMsg("Error", 'There are not contacts to send')
         if (currentSubject.length < 1) return alertMsg("Error", 'Add a Subject')
-        // if (!richText.current || richText.current === "<p><br></p>") return alertMsg("Error", 'Add a Message')
-
-        // return console.log(richText.current, richText.current === "<p><br></p>")
 
         mutate({
             mailTo: mails,
@@ -80,7 +78,7 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
                     text1: 'Success!',
                     text2: 'The email has been sent'
                 })
-                closeModal(false)
+                closeModal()
             }
         })
     };
@@ -118,6 +116,7 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
 
     return (
         <View>
+            <TextApp size='m' bold style={{ marginBottom: 25 }}>Select images</TextApp>
             <View>
 
                 <TextApp style={styles.label}>Mail to:</TextApp>
@@ -232,13 +231,6 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
 
                 <View style={{ ...globalStyles.flexRow, marginBottom: 20 }}>
 
-                    {/* <input
-    type="checkbox"
-    className='check-on-off'
-    checked={signature}
-    onChange={(e) => setSignature(e.target.checked)}
-/> */}
-
                     <BouncyCheckbox
                         isChecked={signature}
                         size={20}
@@ -248,9 +240,9 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
                         onPress={(e) => setSignature(!signature)}
                     />
 
-                    <View style={{...globalStyles.flexRow}}>
+                    <View style={{ ...globalStyles.flexRow }}>
                         <Image source={require("../assets/qc-logo-color.png")} style={{ width: 70, height: 70 }} resizeMode="contain" />
-                        <View style={{marginLeft:10}}>
+                        <View style={{ marginLeft: 10 }}>
                             <TextApp bold>{user?.name} {user?.lastname}</TextApp>
                             {
                                 user?.phone &&
@@ -264,13 +256,27 @@ export const MailForm = ({ mailTo, cc, link, message, subject, closeModal }: Pro
             </View>
 
             <View style={{ ...globalStyles.flexBetween, marginBottom: 10, marginTop: 10 }}>
-                <ButtonStyled
-                    onPress={() => closeModal(false)}
+                {/* <ButtonStyled
+                    onPress={() => closeModal()}
                     text='Close'
                     outline
                     blue
                     width={48}
+                /> */}
+
+                <ButtonStyled
+                    disabled={isLoading}
+                    text='Previous'
+                    onPress={() => {
+                        if (step === 4 && !existImages) {
+                            setStep(2)
+                        } else { setStep(c => c - 1) }
+                    }}
+                    blue
+                    width={48}
+                    icon='chevron-back-outline'
                 />
+
                 <ButtonStyled
                     onPress={sendEmail}
                     text='Send'

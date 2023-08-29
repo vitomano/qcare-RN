@@ -17,15 +17,16 @@ export const CustomMenu = ({ id }:Props) => {
     const [confirmation, setConfirmation] = useState(false)
     const navigation = useNavigation()
     
-    const { mutateAsync, isLoading } = useRemovePrereport()
+    const { mutate, isLoading } = useRemovePrereport()
 
     const handleDelete = async () => {
-        await mutateAsync(id, {
+        mutate(id, {
             onError:() => {
                 alertMsg("Error", "Something went wrong")
             },
+            onSuccess:() => setConfirmation(false)
         })
-        setConfirmation(false)
+        
     };
 
 

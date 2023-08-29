@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, TextStyle, ActivityIndicator, TextProps } from 'react-native';
 import React from 'react'
-import { blue, danger, greenMain, inputColor } from '../../theme/variables';
+import { blue, danger, greenMain, inputColor, lightBlue } from '../../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../../theme/globalStyles';
 
@@ -14,12 +14,15 @@ interface Props {
     danger?: boolean,
     disabled?: boolean,
     blue?: boolean,
+    lightBlue?: boolean,
     onPress?: () => void,
     icon?: string
     iconSize?: number
+    iconAfter?: boolean
     btnDisabled?: boolean
     style?: StyleProp<ViewStyle>
     styleText?: StyleProp<TextStyle>
+    numberOfLines?: number
 }
 
 export default function ButtonStyled({
@@ -32,11 +35,14 @@ export default function ButtonStyled({
     btnDisabled=false,
     disabled = false,
     blue,
+    lightBlue,
     width,
     onPress,
     icon = undefined,
+    iconAfter = false,
     style,
-    styleText
+    styleText,
+    numberOfLines=undefined
 }: Props) {
 
     const buttonStyle = [
@@ -64,6 +70,9 @@ export default function ButtonStyled({
         (disabled) && styles.buttonDisabled,
         (!outline && blue) && styles.buttonBlue,
         (outline && blue) && styles.buttonOutlineBlue,
+
+        (!outline && lightBlue) && styles.buttonLightBlue,
+        (outline && lightBlue) && styles.buttonOutlineLightBlue,
     ]
 
     const textStyle = [
@@ -73,17 +82,20 @@ export default function ButtonStyled({
         (outline && secondary) && styles.textSecondary,
         (outline && danger) && styles.textDanger,
         (outline && blue) && styles.textBlue,
+        (outline && lightBlue) && styles.textBlue,
+        (!outline && lightBlue) && styles.textBlue,
         styleText
     ]
 
     const iconStyle = [
-        styles.marginIcon,
+        // styles.marginIcon,
         styles.imagePrimary,
         (!outline || secondary) && styles.imageWhite,
         (outline && secondary) && styles.imageSecondary,
         (outline && danger) && styles.textDanger,
         (outline && blue) && styles.textBlue,
-    ]
+        (outline && lightBlue) && styles.textBlue,
+        (!outline && lightBlue) && styles.textBlue,    ]
 
     return (
 
@@ -98,10 +110,14 @@ export default function ButtonStyled({
 
                     <View style={{ ...globalStyles.flexRow }}>
                         {
-                            icon &&
-                            <Icon name={icon} style={iconStyle} size={iconSize} />
+                            (icon && !iconAfter) &&
+                            <Icon name={icon} style={[...iconStyle, { marginRight: 5 }]} size={iconSize} />
                         }
-                        <Text style={textStyle} >{text}</Text>
+                        <Text numberOfLines={numberOfLines} style={textStyle}>{text}</Text>
+                        {
+                            (icon && iconAfter) &&
+                            <Icon name={icon} style={[...iconStyle, { marginLeft: 5 }]} size={iconSize} />
+                        }
                         {
                             loading &&
                             <ActivityIndicator
@@ -136,6 +152,7 @@ const styles = StyleSheet.create({
     },
     buttonDisabled: { backgroundColor: inputColor },
     buttonBlue: { backgroundColor: blue },
+    buttonLightBlue: { backgroundColor: lightBlue },
     buttonFilled: { backgroundColor: greenMain },
     buttonFilledSecondary: { backgroundColor: "#a7c139" },
     buttonFilledDanger: { backgroundColor: danger },
@@ -157,6 +174,11 @@ const styles = StyleSheet.create({
         borderColor: blue,
     },
 
+    buttonOutlineLightBlue: {
+        borderWidth: 1,
+        borderColor: lightBlue,
+    },
+
     buttonText: {
         textAlign: 'center',
         fontSize: 18,
@@ -173,6 +195,6 @@ const styles = StyleSheet.create({
     imageDanger: { color: danger },
     imageBlue: { color: blue },
 
-    marginIcon: { marginRight: 5, alignSelf: 'center' }
+    // marginIcon: { alignSelf: 'center' }
 
 })

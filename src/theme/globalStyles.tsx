@@ -88,4 +88,8 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
+    flexCenter:{
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 });

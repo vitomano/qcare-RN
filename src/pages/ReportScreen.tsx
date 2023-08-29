@@ -14,7 +14,6 @@ import { ModalBlock } from '../components/modals/ModalBlock';
 import { Share } from '../components/Share';
 import { dateFormat } from '../helpers/dateFormat';
 
-
 interface Props extends StackScreenProps<ReportsStackParams, "ReportScreen"> { };
 
 export const ReportScreen = ({ route }: Props) => {
@@ -52,6 +51,7 @@ export const ReportScreen = ({ route }: Props) => {
         </View>
 
         <View style={{ paddingHorizontal: 20, paddingVertical: 20, paddingBottom: 50 }}>
+
           {
             data?.mainData &&
             <ReportMain mainData={data.mainData} />
@@ -84,7 +84,7 @@ export const ReportScreen = ({ route }: Props) => {
             <TouchableOpacity
               onPress={() => setModalShare(true)}
               activeOpacity={.9} style={{ ...styles.mainIcon, backgroundColor: blue }}>
-              <Icon name="link" size={25} color="#fff" />
+              <Icon name="mail" size={25} color="#fff" />
             </TouchableOpacity>
           </View>
 
@@ -92,10 +92,11 @@ export const ReportScreen = ({ route }: Props) => {
             modal={modalShare}
             openModal={setModalShare}
           >
-              <Share
-                closeModal={setModalShare}
-                data={data!}
-              />
+            <Share
+              closeModal={() => setModalShare(false)}
+              data={data!}
+              supplier={data?.mainData?.supplier || null}
+            />
           </ModalBlock>
 
         </View>

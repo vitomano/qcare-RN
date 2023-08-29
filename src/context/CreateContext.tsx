@@ -5,7 +5,7 @@ import { alertMsg } from '../helpers/alertMsg';
 
 import { fruitType } from '../helpers/fruitType';
 import { imagesLength } from '../helpers/imagesLength';
-import { PalletState, DetailObject, MainInfo, NewGrower, ImageTemp } from '../interfaces/intakes.reports';
+import { PalletState, DetailObject, MainData, NewGrower, ImageTemp } from '../interfaces/intakes.reports';
 import { DetailName, Fruit, Status } from '../interfaces/interfaces';
 
 interface Props { children: JSX.Element | JSX.Element[] }
@@ -13,17 +13,20 @@ interface Props { children: JSX.Element | JSX.Element[] }
 
 interface CreateContextProps {
     isLoading: boolean,
-    mainData: MainInfo | null,
+    mainData: MainData | null,
     fruit: Fruit,
     pallets: PalletState[],
     totalPallets: number,
     samples: number,
     limit: number,
+    team: string | null,
+
     getMainDataNew: (fruit: Fruit) => void;
-    handleMain: (val: string, item: keyof MainInfo) => void;
+    handleMain: (val: string, item: keyof MainData) => void;
     setNewPallets: () => void;
     addPallet: (grower: boolean) => void;
     handleFruit: (fruit: string) => void;
+    handleTeam: (team: string | null) => void;
     handleChecked: (pid: string, detailName: DetailName, name: string) => void;
     handleSwitch: (pid: string, detailName: DetailName, name: string) => void;
     handleInputText: (pid: string, detailName: DetailName, name: string, valor: string | number) => void;
@@ -31,12 +34,14 @@ interface CreateContextProps {
     handleStatus: (pid: string, statusName: Status, value: string) => void;
     handleGrower: (pid: string, item: keyof NewGrower, value: string | number) => void;
     addTempFiles: (pid: string, files: ImageTemp[]) => void;
+    addTempPhoto: (pid: string, file: ImageTemp, detailName: DetailName, nameId: string) => void;
     addGrower: () => void;
     addItem: (pid: string, detailName: DetailName, item: DetailObject) => void;
     backGrower: () => void;
     removeTempFiles: (pid: string, name: string) => void;
+    removeTempPhoto: (pid: string, detailName: DetailName, name: string) => void;
     removePallet: (pid: string) => void;
-    addRemoveSample: ( action: "add" | "remove", pid: string) => void;
+    addRemoveSample: (action: "add" | "remove", pid: string) => void;
     cleanAll: () => void
 }
 
@@ -45,13 +50,15 @@ export const CreateContext = createContext({} as CreateContextProps)
 export const CreateProvider = ({ children }: Props) => {
 
     const [pallets, setPallets] = useState<PalletState[]>([])
-    const [mainData, setMainData] = useState<MainInfo | null>(null)
+    const [mainData, setMainData] = useState<MainData | null>(null)
     const [fruit, setFruit] = useState<Fruit>('other')
     const [totalPallets, setTotalPallets] = useState(0)
     const [allSamples, setAllSamples] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
 
-    const limit:number = 10
+    const [team, setTeam] = useState<string | null>(null)
+
+    const limit: number = 10
 
     //Prereport --------------------------------------------------------------------------------------
 
@@ -80,11 +87,15 @@ export const CreateProvider = ({ children }: Props) => {
 
     };
 
-    const handleMain = (val: string, item: keyof MainInfo) => {
+    const handleMain = (val: string, item: keyof MainData) => {
         setMainData({
-            ...mainData as MainInfo,
+            ...mainData as MainData,
             [item]: val
         })
+    }
+
+    const handleTeam = (team: string | null) => {
+        setTeam(team || null)
     }
 
 
@@ -243,14 +254,14 @@ export const CreateProvider = ({ children }: Props) => {
     const addTempFiles = (pid: string, files: ImageTemp[]) => {
 
         const imagesTotal = imagesLength(pallets)
-        if(imagesTotal + files.length > 30){
-            alertMsg("Max. Images","You completed the limit of 30 images in total")
+        if (imagesTotal + files.length > 30) {
+            alertMsg("Max. Images", "You completed the limit of 30 images in total")
             return
         }
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
-                
+
                 return {
                     ...pall, images: [...pall.images, ...files]
                 };
@@ -260,17 +271,60 @@ export const CreateProvider = ({ children }: Props) => {
         setPallets(newPallet)
     };
 
+    //-------------------------------------------------------
+
+    const addTempPhoto = (pid: string, file: ImageTemp, detailName: DetailName, nameId: string) => {
+
+        const newPallet = pallets.map(pall => {
+            if (pall.id === pid) {
+                return {
+                    ...pall,
+                    [detailName]: pall[detailName].map(w => {
+                        if (w.name === nameId) {
+                            return { ...w, photo: file }
+                        }
+                        return w
+                    })
+                };
+            }
+            return pall;
+        });
+
+        setPallets(newPallet)
+    };
+
+    //-------------------------------------------------------
+
     const removeTempFiles = (pid: string, name: string) => {
 
         const newPallet = pallets.map(pall => {
             if (pall.id === pid) {
-                const newImages = pall.images.filter( img => img.name !== name )
+                const newImages = pall.images.filter(img => img.name !== name)
                 return {
                     ...pall, images: newImages
                 };
             }
             return pall;
         });
+        setPallets(newPallet)
+    };
+
+    const removeTempPhoto = (pid: string, detailName: DetailName, name: string) => {
+        const newPallet = pallets.map(pall => {
+            if (pall.id === pid) {
+                return {
+                    ...pall,
+                    [detailName]: pall[detailName].map( w => {
+                        if( w.name === name ){
+                            return { ...w, photo: null }
+                        }
+                        return w
+                    } )
+                };
+            }
+            return pall;
+        });
+
         setPallets(newPallet)
     };
 
@@ -323,7 +377,7 @@ export const CreateProvider = ({ children }: Props) => {
         setPallets(newPallet)
     }
 
-    const addRemoveSample = (action:"add" | "remove", pid:string ) => {
+    const addRemoveSample = (action: "add" | "remove", pid: string) => {
 
         const newPallet = pallets.map(newItem => {
             if (newItem.id === pid) {
@@ -354,13 +408,15 @@ export const CreateProvider = ({ children }: Props) => {
             samples: allSamples,
             totalPallets,
             limit,
+            team,
             getMainDataNew,
             handleMain,
             setNewPallets,
             addPallet,
             addTempFiles,
             handleFruit,
-
+            handleTeam,
+            addTempPhoto,
             handleChecked,
             handleSwitch,
             handleInputText,
@@ -372,6 +428,7 @@ export const CreateProvider = ({ children }: Props) => {
             backGrower,
             removePallet,
             removeTempFiles,
+            removeTempPhoto,
             addRemoveSample,
 
             cleanAll,

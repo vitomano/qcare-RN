@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { globalStyles } from '../theme/globalStyles'
 import { StackScreenProps } from '@react-navigation/stack';
 import { IntakesStackParams } from '../navigation/IntakesStack';
 import { LoadingScreen } from './LoadingScreen';
-import { DataPrereport } from '../interfaces/intakes.reports';
+import { DataPrereport, ObjectType } from '../interfaces/intakes.reports';
 
 import { MainForm } from '../components/MainForm';
 import ButtonStyled from '../components/ui/ButtonStyled';
-import DatePicker from 'react-native-date-picker'
 
 import { FRUITS } from '../data/selects';
 import { PickerModal } from '../components/modals/PickerModal';
@@ -21,27 +20,31 @@ import { alertMsg } from '../helpers/alertMsg';
 import { average } from '../helpers/average';
 import qcareApi from '../api/qcareApi';
 import { PalletIntake } from '../components/PalletIntake';
-import { useIntakes } from '../api/useIntakes';
-import { usePrereports } from '../api/usePrereports';
-import { inputStyles } from '../theme/inputStyles';
-import { dateFormat } from '../helpers/dateFormat';
-import dayjs from 'dayjs';
+import { DateSelector } from '../components/DateSelector';
+import { Discrepancies } from '../components/Discrepancies';
+import { photoToUpload, uploadPhoto } from '../helpers/photoToUpload';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 interface Props extends StackScreenProps<IntakesStackParams, "IntakeScreen"> { };
 
 export const IntakeScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, mainData, pallets, fruit, getMainData, handleFruit, cleanAll, setNewPallets } = useContext(IntakeContext)
-  const { refetch } = useIntakes()
-  const { refetch: recargar } = usePrereports()
+  const { isLoading, mainData, pallets, fruit, team, getMainData, handleFruit, cleanAll, setNewPallets } = useContext(IntakeContext)
 
   const [modalFruit, setModalFruit] = useState(false)
   const [sending, setSending] = useState(false)
   const [startDate, setStartDate] = useState<Date | null>(null)
 
-  const [open, setOpen] = useState(false)
+  const [openArrival, setOpenArrival] = useState(false)
+  const [openLoading, setOpenLoading] = useState(false)
+
   const [arrivalDate, setArrivalDate] = useState<Date>(new Date())
+  const [loadingDate, setLoadingDate] = useState<Date>(new Date())
+
+  const [discrepancies, setDiscrepancies] = useState<ObjectType | null>(null)
+
+  const queryClient = useQueryClient()
 
 
   useEffect(() => {
@@ -55,7 +58,6 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
 
   const sendPrereport = async () => {
-
 
     const { error, ok } = validationPrereport(mainData!, pallets as DataPrereport[])
 
@@ -86,7 +88,8 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
 
       await qcareApi.post(`/prereport/main-prereport`, {
-        mainData: { ...mainData, "arrival_date": arrivalDate },
+        mainData: { ...mainData, "loading_date": loadingDate, "arrival_date": arrivalDate },
+        discrepancies,
         fruit,
         pid: route.params.id,
         averageScore: average('score', pallets as DataPrereport[]) || "0",
@@ -94,14 +97,30 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
         averageAction: average('action', pallets as DataPrereport[]) || "0",
         startDate: startDate,
         endDate: new Date(),
-        pallets: newPallets
+        pallets: newPallets,
+        team: team || null,
       })
+
+      .then(async (res) => {
+
+        const preId = res.data.preId
+        const files = photoToUpload(preId, pallets)
+
+        if (files.length > 0) {
+            const uploadPromises = files.map(file => uploadPhoto(file, true));
+            await Promise.all(uploadPromises)
+        }
+
+        return preId
+    })
 
         .then(async (res) => {
 
-          const preId = res.data.preId
+          const preId = res
 
           for (let i = 0; i < pallets.length; i++) {
+
+            if (pallets[i].images.length === 0) { continue; }
 
             const formData = new FormData();
 
@@ -119,15 +138,14 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
           }
         })
 
-      refetch()
-      recargar()
+        await queryClient.invalidateQueries(['intakes'])
+        await queryClient.invalidateQueries(['prereports'])
+
       navigation.navigate('IntakesScreen' as never)
 
     } catch (error) {
       console.log(error)
     } finally {
-      refetch()
-      recargar()
       setSending(false)
     }
   };
@@ -158,32 +176,21 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
 
                     {/* ------------------------------------ */}
 
-                    <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
-                      <TextApp style={{ width: "50%" }}>Arrival Date</TextApp>
+                    <DateSelector
+                      label='Loading Date'
+                      date={loadingDate}
+                      setDate={setLoadingDate}
+                      open={openLoading}
+                      setOpen={setOpenLoading}
+                    />
 
-                      <View style={[inputStyles.select, inputStyles.selectShape, { flex: 1 }]}>
-                        <TouchableOpacity
-                          activeOpacity={.9}
-                          onPress={() => setOpen(true)}>
-                          <TextApp size='s'>{ dayjs(arrivalDate).format('DD-MM-YYYY') || '--'}</TextApp>
-                        </TouchableOpacity>
-                      </View>
-
-                      <DatePicker
-                        modal
-                        open={open}
-                        date={arrivalDate}
-
-                        mode="date"
-                        onConfirm={(date) => {
-                          setOpen(false)
-                          setArrivalDate(date)
-                        }}
-                        onCancel={() => {
-                          setOpen(false)
-                        }}
-                      />
-                    </View>
+                    <DateSelector
+                      label='Arrival Date'
+                      date={arrivalDate}
+                      setDate={setArrivalDate}
+                      open={openArrival}
+                      setOpen={setOpenArrival}
+                    />
 
                     <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
                       <TextApp style={{ width: "50%" }}>Fruit</TextApp>
@@ -196,6 +203,12 @@ export const IntakeScreen = ({ route, navigation }: Props) => {
                         state={fruit}
                       />
                     </View>
+
+                    <Discrepancies
+                      discrepancies={discrepancies}
+                      setDiscrepancies={setDiscrepancies}
+                      mainData={mainData}
+                    />
 
                     {/* ------------------------------------ */}
 

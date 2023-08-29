@@ -13,6 +13,8 @@ import { GrowerInfo } from './GrowerInfo';
 import { alertMsg } from '../helpers/alertMsg';
 import { useDeletePrereportImage, useEditPreCondition } from '../api/usePrereport';
 import { ImageGalleryViewing } from './ImageGalleryViewing';
+import { usePhoto } from '../hooks/usePhoto';
+import { PhotoGallery } from './PhotoGallery';
 
 interface Props {
     pallet: PrereportPallet,
@@ -23,12 +25,14 @@ interface Props {
 export const PalletPrereport = ({ pallet, i, repId }: Props) => {
 
     const { mutateAsync } = useEditPreCondition()
-    const { mutate:mutateDeleteImage, isLoading } = useDeletePrereportImage()
+    const { mutate: mutateDeleteImage, isLoading } = useDeletePrereportImage()
 
 
     const [modalGrade, setModalGrade] = useState(false)
     const [modalAction, setModalAction] = useState(false)
     const [modalScore, setModalScore] = useState(false)
+
+    const { photos } = usePhoto(pallet)
 
     const editStatus = async (val: string, status: Status) => {
 
@@ -55,7 +59,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
     }
 
 
-    const removeReportImage = (key:string, key_low:string) => {
+    const removeReportImage = (key: string, key_low: string) => {
         mutateDeleteImage({
             reportId: repId,
             palletId: pallet.pid,
@@ -63,8 +67,6 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
             key_low
         })
     };
-
-
 
     return (
         <View
@@ -137,10 +139,24 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
                 }
 
                 {
+                    photos.length > 0 &&
+                    <PhotoGallery
+                        photos={photos}
+                        pid={pallet.pid}
+                        reportId={repId}
+                        prereport
+                    />
+                }
+
+                {
                     pallet.images.length > 0 &&
-                    <View style={{ marginBottom: 30 }}>
-                        <ImageGalleryViewing images={ pallet.images } deleteAction={removeReportImage} isDeleting={isLoading}/>
+                    <View>
+                        <ImageGalleryViewing images={pallet.images} deleteAction={removeReportImage} isDeleting={isLoading} />
                     </View>
+                }
+                {
+                    (photos.length > 0 || pallet.images.length > 0) &&
+                    <View style={{ marginBottom: 30 }} />
                 }
 
                 <View style={{ marginBottom: 10 }}>
@@ -188,7 +204,7 @@ export const PalletPrereport = ({ pallet, i, repId }: Props) => {
 
                 {
                     pallet.addGrower !== null &&
-                    <View style={{ marginBottom: 10, marginTop: 20}}>
+                    <View style={{ marginBottom: 10, marginTop: 20 }}>
                         <GrowerInfo
                             pallet={pallet}
                             repId={repId}

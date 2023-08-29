@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, Image, KeyboardAvoidingView, Platform, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import { CardContact } from '../components/cards/CardContact'
+import React, { useContext, useState } from 'react'
+import { Image, KeyboardAvoidingView, Platform, RefreshControl, ScrollView, TouchableOpacity, View } from 'react-native'
+// import { CardContact } from '../components/cards/CardContact'
 import { TextApp } from '../components/ui/TextApp';
 import { AuthContext } from '../context/AuthContext'
 import { globalStyles } from '../theme/globalStyles'

@@ -31,9 +31,18 @@ export const mediumGrey = "#80868B";
 export const darkGrey = "#363636";
 
 export const blue = "#1A73E8";
+export const lightBlue = "#dfeeff";
 export const pdf = "#F40F02";
 export const filterRed = "#FF4D4D";
 
+
+export const done = "#1a9141";
+export const doneBg = "#cdeece";
+export const inactive = "#80868b";
+export const inactiveBg = "#e3e4e5";
+export const red = "#FF4D4D";
+export const redBg = "#FFD6D6";
+export const redBg2 = "#ffe6e6";
 
 
 /* GRADE */

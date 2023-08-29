@@ -4,28 +4,27 @@ import FastImage from 'react-native-fast-image'
 
 import { ImageType, Report } from '../interfaces/intakes.reports'
 import { check } from '../theme/variables'
-import { PropsPdf } from './Share'
+import { PropsPdfImages } from './Share'
 import { IconBtn } from './ui/IconBtn'
 import { TextApp } from './ui/TextApp'
 
 interface Props {
     data: Report
-    pdfImages: PropsPdf[]
-    setPdfImages: (item: PropsPdf[]) => void
+    pdfImages: PropsPdfImages[]
+    setPdfImages: (item: PropsPdfImages[]) => void
 }
 
 const { width } = Dimensions.get("screen")
 
 export const ShareImages = ({ data, pdfImages, setPdfImages }: Props) => {
 
-
     const select = (pid: string, image: ImageType) => {
         const newImages = pdfImages.map(newImg => {
             if (newImg.pid === pid) {
-                const exist = newImg.images.some(i => i.key === image.key)
+                const exist = newImg.images.some(i => i.imgURL === image.key)
                 if (exist) return {
                     pid: newImg.pid,
-                    images: newImg.images.filter(img => img.key !== image.key)
+                    images: newImg.images.filter(img => img.imgURL !== image.key)
                 }
 
                 else return {
@@ -52,7 +51,7 @@ export const ShareImages = ({ data, pdfImages, setPdfImages }: Props) => {
                                     {
                                         pallet.images.map(image => {
 
-                                            const exist = pdfImages[index].images.some(img => img.key === image.key)
+                                            const exist = pdfImages[index].images.some(img => img.imgURL === image.imgURL)
 
                                             return (
                                                 <TouchableOpacity

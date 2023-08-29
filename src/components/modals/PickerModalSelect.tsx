@@ -17,13 +17,14 @@ interface Props<T> {
     setCurrent: (val: T) => void
     state: string
     option?: any
+    nowrap?: boolean
 
 }
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option }: Props<T>) => {
+export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setState, setCurrent, state, option, nowrap }: Props<T>) => {
 
     const onPressItem = (val: T) => {
         if(val.value === "0") return activeModal(false)
@@ -61,6 +62,8 @@ export const PickerModalSelect = <T extends ListType>({ LIST, activeModal, setSt
                                     </View>
                                     <Text
                                         style={styles.text}
+                                        numberOfLines={nowrap ? 1 : 0}
+
                                     >{option.label}
                                     </Text>
                                 </View>
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     },
     text: {
         marginVertical: 10,
-        fontSize: 20,
+        fontSize: 18,
         flex: 1
     },
     selected: {

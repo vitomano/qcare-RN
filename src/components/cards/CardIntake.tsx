@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Intake } from '../../interfaces/intakes.reports'
 import { globalStyles } from '../../theme/globalStyles';
 import { TextApp } from '../ui/TextApp';
-import { inputColor } from '../../theme/variables';
+import { inputColor, text } from '../../theme/variables';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ModalConfirmation } from '../modals/ModalConfirmation';
 import { useRemoveIntake } from '../../api/useIntakes';
+import { Badge } from '../ui/Badge';
+
 
 interface Props {
     intake: Intake,
@@ -44,18 +46,39 @@ export const CardIntake = ({ intake }: Props) => {
             activeOpacity={0.95}
             onPress={() => navigation.navigate('IntakeScreen' as never, { id: intake._id } as never)}
         >
-            <View style={{ ...globalStyles.card, ...globalStyles.flexRow, position: "relative", padding: 15 }}>
-                <View style={{ width: "35%" }}>
-                    <TextApp bold>{intake.data.pallet_ref || "--"}</TextApp>
-                    <TextApp size='xs'>{intake.data.product || "--"}</TextApp>
+            <View style={{ ...globalStyles.card, ...globalStyles.flexRow, position: "relative", paddingLeft: 15, paddingVertical: 15 }}>
+
+                {
+                    intake.team &&
+                    <View style={{ position: "absolute", top: 12, left: 15, ...globalStyles.flexRow }}>
+                        <Icon name="people-outline" size={17} />
+                        {
+                            intake.inCharge &&
+                            <Badge>
+                                {intake.inCharge.name + " " + (intake.inCharge.lastname.charAt(0) + ".")}
+                            </Badge>
+                        }
+                    </View>
+                }
+
+                <View style={{ width: "40%", marginRight: 5 }}>
+                    <Text numberOfLines={2} style={{ fontWeight: "bold", fontSize: 15, marginBottom: 2, color: text }}>{intake.data?.pallet_ref || "--"}</Text>
+                    <TextApp size='xs' nowrap>{intake.data.product || "--"}</TextApp>
                 </View>
 
-                <View style={{ borderLeftWidth: 1, borderLeftColor: inputColor, paddingLeft: 15 }}>
-                    <TextApp size='xs'>{intake.data.supplier || "--"}</TextApp>
-                    <TextApp size='xs'>{intake.data.format || "--"}</TextApp>
-                    <TextApp size='xs'>{intake.data.total_pallets || "--"}</TextApp>
-                    <TextApp size='xs'>{intake.data.total_boxes || "--"}</TextApp>
-                    <TextApp size='xs'>{intake.data.transport || "--"}</TextApp>
+                <View style={{
+                    borderLeftWidth: 1,
+                    borderLeftColor: inputColor,
+                    paddingLeft: 10,
+                    marginRight: 30,
+                    paddingVertical: 10,
+                    flex: 1
+                }}>
+                    <TextApp size='xs' nowrap>{intake.data.supplier || "--"}</TextApp>
+                    <TextApp size='xs' nowrap>{intake.data.format || "--"}</TextApp>
+                    <TextApp size='xs' nowrap>{intake.data.total_pallets || "--"}</TextApp>
+                    <TextApp size='xs' nowrap>{intake.data.total_boxes || "--"}</TextApp>
+                    <TextApp size='xs' nowrap>{intake.data.transport || "--"}</TextApp>
                 </View>
 
                 <TouchableOpacity

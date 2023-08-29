@@ -21,15 +21,16 @@ export const CustomMenuReport = ({  data }: Props) => {
     const [confirmation, setConfirmation] = useState(false)
     const [modalShare, setModalShare] = useState(false)
 
-    const { mutateAsync, isLoading } = useRemoveReport()
+    const { mutate, isLoading } = useRemoveReport()
 
     const handleDelete = async() => {
-        await mutateAsync( data._id, {
+        mutate( data._id, {
             onError:() => {
                 alertMsg("Error", "Something went wrong")
             },
+            onSuccess:() => setConfirmation(false)
         } )
-        setConfirmation(false)
+        
     };
 
     return (

@@ -10,7 +10,7 @@ export function formatSplit(valor = "0*0"):number {
       }
 }
 
-export function totalKilos(format = "0*0", totalBoxes = "0") {
+export function totalKilos(format:string = "0*0", totalBoxes:string = "0") {
 
     if(!format || !totalBoxes) return 1
 
@@ -28,7 +28,7 @@ export function totalKilos(format = "0*0", totalBoxes = "0") {
     }
 };
 
-export function totalSamples(format = "0*0") {
+export function totalSamples(format:string = "0*0") {
 
     if ( format.includes("*") ) {
         let samples = Number(format.split('*')[0]) || 0

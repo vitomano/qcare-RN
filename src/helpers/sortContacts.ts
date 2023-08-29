@@ -16,3 +16,17 @@ export const sortContact = (contacts:Contact[]):Contact[] => {
 };
 
 
+export const combinedContacts = (contacts:Contact[], teamsContact:Contact[]) => {
+    const contactEmails = contacts.map((contact) => contact.email);
+    const filteredTeamsContact = teamsContact.filter(
+        (teamContact) => !contactEmails.includes(teamContact.email)
+    );
+    return contacts.concat(filteredTeamsContact);
+};
+
+
+export const filterContactsByEmail = (contacts:Contact[], teamsContact:Contact[]) => {
+    const contactEmails = contacts.map((contact) => contact.email);
+    return teamsContact.filter((teamContact) => !contactEmails.includes(teamContact.email));
+  };
+

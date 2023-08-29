@@ -1,90 +1,170 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { BatchInfo } from '../interfaces/intakes.reports'
+import React, { useContext, useState } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { IntakeCSV } from '../interfaces/intakes.reports';
 import { globalStyles } from '../theme/globalStyles'
-import { inputColor } from '../theme/variables'
+import { inputColor, red, redBg2 } from '../theme/variables'
 import { PalletNum } from './ui/PalletNum'
 import { TextApp } from './ui/TextApp'
+import { jsonKeyToString } from '../helpers/jsonToString'
+import { v4 as uuidv4 } from 'uuid';
+import { CentredContent } from './CenterContent'
+import ButtonStyled from './ui/ButtonStyled'
+import { ModalConfirmation } from './modals/ModalConfirmation';
+import { AuthContext } from '../context/AuthContext';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { ModalContainer } from './modals/ModalContainer';
+import { InChargeSelector } from './InChargeSelector';
 
 interface Props {
-    csv: BatchInfo,
-    index: number
+    intake: IntakeCSV,
+    setIntakes: React.Dispatch<React.SetStateAction<IntakeCSV[] | []>>,
+    index: number,
+    hasTeams: boolean
 }
 
-export const IntakeList = ({ csv, index }: Props) => {
-    return (
-        <View
-            style={globalStyles.shadowCard}
-        >
+export const IntakeList = ({ intake, setIntakes, index, hasTeams }: Props) => {
 
+    const { user } = useContext(AuthContext)
+
+    const [modalInCharge, setModalInCharge] = useState<boolean>(false)
+    const [modalConfirmation, setModalConfirmation] = useState<boolean>(false)
+
+    const members = user ? [...user.teamsAdmin, ...user.teamsUser].map(team => team.members).flat() : []
+
+    const addInCharge = (team:string , member:string) => {
+        setIntakes( intakes => intakes.map(item => {
+            if (item.id === intake.id) {
+                return {
+                    ...item,
+                    team: team.toString() === "0" ? null : team,
+                    inCharge: member.toString() === "0" ? null : member
+                }
+            }
+            else return item
+        }) )
+        setModalInCharge(false)
+    };
+
+    const cleanInCharge = (cardId: string) => {
+        setIntakes(intakes => intakes.map(intake => {
+            if (intake.id === cardId) {
+                return {
+                    ...intake,
+                    team: null,
+                    inCharge: null
+                }
+            }
+            else return intake
+        }))
+    };
+
+    const deleteIntake = (intakeId: string) => {
+        setIntakes(prev => prev.filter(intake => intake.id !== intakeId))
+    };
+
+    return (
+        <View style={globalStyles.shadowCard} >
             <View style={styles.container}>
 
-                <View style={{ marginBottom: 20, marginTop: 10 }}>
-                    <PalletNum num={index + 1} />
+                <View style={{ ...globalStyles.flexBetween, marginBottom: 20, marginTop: 10 }}>
+
+                    <PalletNum num={index + 1} title='Intake' />
+
+                    <ModalConfirmation
+                        title='Delete intake'
+                        message='Are you sure you want to delete this intake?'
+                        action={() => deleteIntake(intake.id)}
+                        modal={modalConfirmation}
+                        openModal={setModalConfirmation}
+                    />
+
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => setModalConfirmation(true)}
+                        style={{ backgroundColor: redBg2, paddingHorizontal: 15, paddingVertical: 4, borderRadius: 50 }}
+                    >
+                        <TextApp size='s' style={{ color: red }}>remove</TextApp>
+                    </TouchableOpacity>
+
                 </View>
 
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Product</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.product}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Format</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.format}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Supplier</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.supplier}</TextApp></View>
-                </View>
+                {
+                    Object.entries(intake.data).map(item => (
+                        <View style={styles.intake} key={uuidv4()}>
+                            <TextApp style={styles.label}>{jsonKeyToString(item[0])}</TextApp>
+                            <View style={styles.valueContainer}><TextApp style={styles.value}>{item[1]}</TextApp></View>
+                        </View>
+                    ))
+                }
 
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Grower</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.grower}</TextApp></View>
-                </View>
 
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Origin</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.origin}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>GLN/GGN</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.gln_ggn}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Variety(ies)</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.variety}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Unit TextApp</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.unit_label}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Total Boxes</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.total_boxes}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Total Pallets</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.total_pallets}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Quality</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.quality}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Transport</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.transport}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Purchase Order</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.purchase_order}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Delivery Note / AWB Number</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.delivery_note}</TextApp></View>
-                </View>
-                <View style={styles.intake}>
-                    <TextApp style={styles.label}>Warehouse</TextApp>
-                    <View style={styles.valueContainer}><TextApp style={styles.value}>{csv.warehouse}</TextApp></View>
-                </View>
+                <ModalContainer
+                    modal={modalInCharge}
+                    openModal={setModalInCharge}
+                >
+                    <InChargeSelector
+                        closeModal={() => setModalInCharge(false)}
+                        addInCharge={addInCharge}
+                        intake={intake}
+                    />
+                </ModalContainer>
+
+
+                {
+                    hasTeams && !intake.team
+                        ?
+                        <CentredContent style={{ marginVertical: 20 }}>
+                            <ButtonStyled
+                                text='Assign to a team'
+                                width={60}
+                                blue
+                                icon='person-add-outline'
+                                onPress={() => setModalInCharge(true)}
+                                iconSize={20}
+                            />
+                        </CentredContent>
+
+                        :
+                        intake.team && user &&
+
+                        <CentredContent style={{ marginVertical: 20 }}>
+                            <ButtonStyled
+                                text={user.teams.find(team => team._id === intake.team)?.name ?? ""}
+                                width={90}
+                                blue
+                                onPress={() => setModalInCharge(true)}
+                                style={{ marginBottom: 10, overflow: "hidden" }}
+                                styleText={{paddingHorizontal: 15}}
+                                numberOfLines={1}
+                            />
+
+                            {
+                                intake.inCharge &&
+                                <ButtonStyled
+                                    text={members?.find(member => member.uid === intake.inCharge)?.email ?? ""}
+                                    width={90}
+                                    blue
+                                    outline
+                                    onPress={() => setModalInCharge(true)}
+                                    style={{ marginBottom: 10 }}
+                                    styleText={{paddingHorizontal: 15}}
+                                    numberOfLines={1}
+                                />
+                            }
+
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                style={{ alignItems: "center", justifyContent: "center", backgroundColor: 'black', height: 25, width: 25, borderRadius: 50, marginTop: 10 }}
+                                onPress={() => cleanInCharge(intake.id)}
+                            >
+                                <Icon name='close' size={20} color="white" />
+                            </TouchableOpacity>
+
+                        </CentredContent>
+
+
+                }
+
             </View>
         </View>
 

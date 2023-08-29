@@ -39,7 +39,6 @@ export const PalletIntake = ({ pallet, i }: Props) => {
 
     const [removeModal, setRemoveModal] = useState(false)
 
-
     const handleSelect = (val: string, status: Status) => handleStatus(pallet.id, status, val)
 
     // selectionLimit: photosLimit(pallets) || 1
@@ -52,7 +51,6 @@ export const PalletIntake = ({ pallet, i }: Props) => {
         })
     };
 
-
     return (
         <View
             style={{ ...globalStyles.shadow, marginVertical: 2 }}
@@ -60,9 +58,7 @@ export const PalletIntake = ({ pallet, i }: Props) => {
             <View style={{ ...globalStyles.card, padding: 15 }}>
                 <View style={{ ...globalStyles.flexBetween, marginBottom: 20 }}>
                     <PalletNum num={i + 1} />
-                    <TouchableOpacity
-                        onPress={() => setRemoveModal(true)}
-                    >
+                    <TouchableOpacity onPress={() => setRemoveModal(true)} >
                         <TextApp color="danger" size='s'>remove</TextApp>
                         <ModalConfirmation
                             modal={removeModal}
@@ -87,6 +83,7 @@ export const PalletIntake = ({ pallet, i }: Props) => {
                                 />
                             ))
                         }
+
                         <NewItem
                             pallet={pallet}
                             detailName="labels"
@@ -166,7 +163,7 @@ export const PalletIntake = ({ pallet, i }: Props) => {
                     {
                         !!pallet.action &&
                         <View style={{ ...globalStyles.flexRow, marginBottom: 10 }}>
-                            <TextApp style={{ width: "50%" }}>Suggested commercial action</TextApp>
+                            <TextApp style={{ width: "50%" }} numberOfLines={2}>Suggested commercial action</TextApp>
 
                             <PickerModal
                                 modal={modalAction}

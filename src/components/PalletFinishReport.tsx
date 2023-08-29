@@ -49,8 +49,8 @@ export const PalletFinishReport = ({ pallet, i }: Props) => {
 
     return (
         <View
-            style={{ ...globalStyles.shadow, marginVertical: 2 }}
-        >
+            style={{ ...globalStyles.shadow, marginVertical: 2 }}>
+                
             <View style={{ ...globalStyles.card, padding: 15 }}>
                 <View style={{ ...globalStyles.flexBetween, marginBottom: 20 }}>
                     <PalletNum num={i + 1} />
@@ -176,9 +176,7 @@ export const PalletFinishReport = ({ pallet, i }: Props) => {
 
                 {pallet.images.length > 0 &&
                     <View style={{ marginBottom: 20 }}>
-
                         <ImageSelected images={pallet.images} deleteAction={removeTempFiles} pid={pallet.id} />
-
                     </View>
                 }
 

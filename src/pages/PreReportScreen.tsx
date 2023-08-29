@@ -17,20 +17,30 @@ import { PreReportsStackParams } from '../navigation/PrereportsStack'
 import { globalStyles } from '../theme/globalStyles'
 import { blue } from '../theme/variables'
 import { LoadingScreen } from './LoadingScreen'
+import { Discrepancies } from '../components/Discrepancies'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface Props extends StackScreenProps<PreReportsStackParams, "PreReportScreen"> { };
 
 
 export const PreReportScreen = ({ route, navigation }: Props) => {
 
-  const { isLoading, data, refetch } = usePrereport(route.params.id)
+  const { isLoading, data, isError, refetch } = usePrereport(route.params.id)
   const { cleanAll } = useContext(IntakeContext)
 
+  const queryClient = useQueryClient()
 
   const [modalAddPallet, setModalAddPallet] = useState(false)
 
   //-----------------------------------------------------------------------
 
+  const getOut = async() => {
+    await queryClient.invalidateQueries(['prereports'])
+    navigation.navigate('PreReportsScreen' as never)
+  };
+
+  if (isError) getOut()
+  
   if (isLoading) return <LoadingScreen />
 
   return (
@@ -65,13 +75,23 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
 
           <View style={{ paddingHorizontal: 20, paddingVertical: 20, paddingBottom: 50 }}>
             {
-              data?.mainData &&
-              <View style={{marginBottom: 5}}>
+              data &&
+              <View style={{ marginBottom: 5 }}>
                 <ReportMain mainData={data.mainData} />
+
+                <Discrepancies
+                  discrepancies={data.discrepancies}
+                  mainData={data.mainData}
+
+                  reportId={data._id}
+                  dbDiscrepancy
+                  prereport
+                />
+
               </View>
             }
             {
-              data?.pallets && data.pallets.length > 0
+              data.pallets && data.pallets.length > 0
 
                 ? data.pallets.map((pallet, i) => (
                   <PalletPrereport
@@ -84,13 +104,13 @@ export const PreReportScreen = ({ route, navigation }: Props) => {
                 : <TextApp bold style={{ textAlign: "center", marginBottom: 10, marginTop: 20, fontSize: 18 }}>No Pallets</TextApp>
             }
 
-            <AddPalletButton
+            {/* <AddPalletButton
               title='Add Pallet'
               handlePress={() => {
                 cleanAll()
                 setModalAddPallet(true)
               }}
-            />
+            /> */}
 
             <ModalBlock
               modal={modalAddPallet}

@@ -11,18 +11,18 @@ export const inputStyles = StyleSheet.create({
     },
     input: {
         paddingHorizontal: 10,
-        paddingVertical: Platform.OS === 'android' ? 7 : 10,
+        paddingVertical: Platform.OS === 'android' ? 5 : 10,
         borderRadius: 10,
         backgroundColor: inputColor,
     },
     inputOutline: {
+        flex: 1,
         paddingHorizontal: 10,
-        paddingVertical: Platform.OS === 'android' ? 7 : 10,
+        paddingVertical: Platform.OS === 'android' ? 5 : 10,
         borderRadius: 10,
         borderColor: greenMain,
         borderWidth: 1,
         backgroundColor: "transparent",
-        // color: greenMain
     },
     selectShape: {
         padding: 10,

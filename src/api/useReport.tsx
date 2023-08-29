@@ -3,7 +3,7 @@ import { SingleReportResponse } from "../interfaces/intakes.reports";
 import qcareApi from "./qcareApi";
 import Toast from 'react-native-toast-message'
 import { Asset } from "react-native-image-picker";
-import { PropsPdf } from "../components/Share";
+import { PropsPdfImages } from "../components/Share";
 
 
 interface PropsDelete {
@@ -27,7 +27,7 @@ interface PdfResponse {
 
 interface PropsCreate {
     reportId: string,
-    pdfImages: PropsPdf[],
+    pdfImages: PropsPdfImages[],
 }
 
 interface PropsEmail {

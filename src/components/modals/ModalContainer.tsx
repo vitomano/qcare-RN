@@ -5,7 +5,7 @@ import { Dimensions, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleShe
 interface Props {
     modal: boolean
     openModal: (b: boolean) => void
-    children: JSX.Element | JSX.Element[] 
+    children: JSX.Element | JSX.Element[]
 }
 
 export const ModalContainer = ({ openModal, modal, children }: Props) => {
@@ -26,22 +26,22 @@ export const ModalContainer = ({ openModal, modal, children }: Props) => {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
                 >
-                <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={() => openModal(false)}
-                    style={styles.container}
-                >
                     <TouchableOpacity
                         activeOpacity={1}
-                        onPress={() => openModal(true)}
-                        style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }} >
-                        <ScrollView style={{padding: 20}}>
-                            {children }
-                        </ScrollView>
-                    </TouchableOpacity>
+                        onPress={() => openModal(false)}
+                        style={styles.container}
+                    >
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => openModal(true)}
+                            style={{ ...styles.modal, width: WIDTH - 40, height: "auto", maxHeight: HEIGHT - 80 }} >
+                            <ScrollView style={{ padding: 20 }}>
+                                {children}
+                            </ScrollView>
+                        </TouchableOpacity>
 
-                </TouchableOpacity>
-                                </KeyboardAvoidingView>
+                    </TouchableOpacity>
+                </KeyboardAvoidingView>
 
             </Modal>
         </>

@@ -6,10 +6,10 @@ import { Fruit } from '../interfaces/interfaces';
 
 
 const newlabels:DetailObject[] = [
-    { check: true, tipe: "checkbox", label: "Box Label", name: "box_label", valor: true },
-    { check: true, tipe: "select", label: "Pallet Type", name: "pallet_type", valor: "" },
+    { check: true, tipe: "checkbox", label: "Box Label", name: "box_label", valor: true, photo: null },
+    { check: true, tipe: "select", label: "Pallet Type", name: "pallet_type", valor: "", photo: null },
+    { check: true, tipe: "checkbox", label: "Punnet Label", name: "punnet_label", valor: true, photo: null },
 
-    { check: true, tipe: "checkbox", label: "Punnet Label", name: "punnet_label", valor: true },
     { check: true, tipe: "checkbox", label: "Name & Weight", name: "name_weight", valor: true },
     { check: true, tipe: "text", label: "L Code", name: "l_code", valor: "" },
     { check: true, tipe: "text", label: "T Code", name: "t_code", valor: "" },
@@ -18,20 +18,20 @@ const newlabels:DetailObject[] = [
 ]
 
 const newappareance:DetailObject[] = [
-    { check: true, tipe: "checkbox", label: "Insect", name: "insect", valor: true },
+    { check: true, tipe: "checkbox", label: "Insect", name: "insect", valor: true, photo: null },
     { check: true, tipe: "range", label: "Fresh", name: "fresh", minVal: 1, maxVal: 10, valor: 1 },
     { check: true, tipe: "range", label: "Size", name: "size", minVal: 1, maxVal: 10, valor: 1 },
     { check: true, tipe: "range", label: "Coloration", name: "coloration", minVal: 1, maxVal: 10, valor: 1 },
     { check: true, tipe: "range", label: "Taste", name: "taste", minVal: 1, maxVal: 10, valor: 1 },
-    { check: true, tipe: "checkbox", label: "Pollution", name: "pollution", valor: true },
-    { check: true, tipe: "checkbox", label: "Humidity", name: "humidity", valor: true },
+    { check: true, tipe: "checkbox", label: "Pollution", name: "pollution", valor: true, photo: null },
+    { check: true, tipe: "checkbox", label: "Humidity", name: "humidity", valor: true, photo: null },
     { check: true, tipe: "checkbox", label: "Juicing", name: "juicing", valor: true },
-    { check: true, tipe: "checkbox", label: "Wet", name: "wet", valor: true },
+    { check: true, tipe: "checkbox", label: "Wet", name: "wet", valor: true, photo: null },
 
-    { check: true, tipe: "range", label: "Pallet Integrity", name: "pallet_integrity", minVal: 1, maxVal: 10, valor: 1 },
-    { check: true, tipe: "number", label: "Temperature C", name: "temperature_c", valor: "" },
-    { check: true, tipe: "arrays", name: "brix", label: "Brix", arrays: 2, valor: ["", ""] },
-    { check: true, tipe: "arrays", name: "weight_check", label: "Weight Check", arrays: 4, valor: ["", "", "", ""] },
+    { check: true, tipe: "arrays", name: "brix", label: "Brix", arrays: 2, valor: ["", ""], photo: null },
+    { check: true, tipe: "arrays", name: "weight_check", label: "Weight Check", arrays: 4, valor: ["", "", "", ""], photo: null },
+    { check: true, tipe: "range", label: "Pallet Integrity", name: "pallet_integrity", minVal: 1, maxVal: 10, valor: 1, photo: null },
+    { check: true, tipe: "number", label: "Temperature C", name: "temperature_c", valor: "", photo: null },
 ]
 
 export const palletDataBerries = (allSamples = 1):PalletState => {

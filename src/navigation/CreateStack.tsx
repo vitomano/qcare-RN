@@ -44,12 +44,12 @@ export const CreateStack = ({navigation}:Props) => {
     }}
     >
       <Stack.Screen
-        options={{ title: "Create New" }}
+        options={{ title: "Create Report" }}
         name="NewReportSelectScreen"
         component={NewReportSelectScreen}
       />
       <Stack.Screen
-        options={{ title: "Create New" }}
+        options={{ title: "Create Report" }}
         name="NewReportScreen"
         component={NewReportScreen}
       />

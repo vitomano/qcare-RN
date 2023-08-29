@@ -2,9 +2,17 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { Prereport, PrereportsResponse } from "../interfaces/intakes.reports";
 import qcareApi from "./qcareApi";
 
+interface QueryParams{
+    page: number;
+    team?: string;
+}
 
-const getAllPrereports = async ( page:number = 1 ) => {
-    const { data } = await qcareApi.get<PrereportsResponse>(`/prereport?page=${page}`)
+const getAllPrereports = async ( page:number, team: string | undefined ) => {
+
+    const params:QueryParams = { page }
+    if (team) { params.team = team }
+
+    const { data } = await qcareApi.get<PrereportsResponse>("/prereport", { params })
     return data
 };
 
@@ -17,9 +25,10 @@ export const removePrereport = async (id:string) => {
 
 // ------------------------- HOOKS -------------------------
 
-export const usePrereports = ( ) => {
+export const usePrereports = ( page:number, team: string | undefined ) => {
     const result = useInfiniteQuery(
-        ['prereports'], ({ pageParam = 1 }) => getAllPrereports(pageParam),
+        ['prereports', page, team],
+        ({ pageParam = page }) => getAllPrereports(pageParam, team),
         {
             getNextPageParam: (lastPage) => {
                 if (lastPage.page === lastPage.totalPages) return false;
@@ -43,6 +52,7 @@ export const usePrereports = ( ) => {
 export const useRemovePrereport = () => {
     const queryClient = useQueryClient()
     return useMutation(removePrereport, {
-        onSuccess: () => { queryClient.fetchInfiniteQuery(['prereports']) }
+        onSuccess: async() => { await queryClient.invalidateQueries(['prereports']) }
+        // onSuccess: () => { queryClient.fetchInfiniteQuery(['prereports']) }
     })
 }

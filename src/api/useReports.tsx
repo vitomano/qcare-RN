@@ -2,9 +2,17 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { AllReportsResponse, SingleReport } from '../interfaces/intakes.reports';
 import qcareApi from "./qcareApi";
 
+interface QueryParams{
+    page: number;
+    team?: string;
+}
 
-const getAllReports = async (page: number = 1) => {
-    const { data } = await qcareApi.get<AllReportsResponse>(`/report?page=${page}`)
+const getAllReports = async ( page:number, team: string | undefined ) => {
+
+    const params:QueryParams = { page }
+    if (team) { params.team = team }
+
+    const { data } = await qcareApi.get<AllReportsResponse>("/report", { params })
     return data
 };
 
@@ -17,9 +25,10 @@ export const removeReport = async (id: string) => {
 
 // ------------------------- HOOKS -------------------------
 
-export const useReports = () => {
+export const useReports = ( page:number, team: string | undefined ) => {
     const result = useInfiniteQuery(
-        ['reports'], ({ pageParam = 1 }) => getAllReports(pageParam),
+        ['reports', page, team],
+        ({ pageParam = page }) => getAllReports(pageParam, team),
         {
             getNextPageParam: (lastPage) => {
                 if (lastPage.page === lastPage.totalPages) return false;
@@ -42,9 +51,9 @@ export const useReports = () => {
 export const useRemoveReport = () => {
     const queryClient = useQueryClient()
     return useMutation(removeReport, {
-        onSuccess: () => {
-            queryClient.fetchInfiniteQuery(['reports'])
-            queryClient.resetQueries((['lifeTests']))
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(['reports'])
+            await queryClient.invalidateQueries((['lifeTests']))
         }
     })
 }
